@@ -17,6 +17,7 @@ import 'package:ia_bet/domain/usecases/get_text_messages_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_url_file_usecase.dart';
 import 'package:ia_bet/domain/usecases/is_sign_in_usecase.dart';
 import 'package:ia_bet/domain/usecases/send_text_message_usecase.dart';
+import 'package:ia_bet/domain/usecases/set_user_token_usecase.dart';
 import 'package:ia_bet/domain/usecases/sign_in_with_email_usecase.dart';
 import 'package:ia_bet/domain/usecases/sign_in_with_phone_number_usecase.dart';
 import 'package:ia_bet/domain/usecases/sign_out_usecase.dart';
@@ -58,6 +59,7 @@ Future<void> init() async {
   sl.registerFactory<UserCubit>(() => UserCubit(
         createOneToOneChatChannelUseCase: sl.call(),
         getAllUserUseCase: sl.call(),
+        setUserTokenUseCase: sl.call(),
         getCurrentUserUseCase: sl.call()
       ));
 
@@ -87,6 +89,8 @@ Future<void> init() async {
       () => GetAllUserUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetCurrentUserUseCase>(
       () => GetCurrentUserUseCase(repository: sl.call()));
+  sl.registerLazySingleton<SetUserTokenUseCase>(
+      () => SetUserTokenUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetMyChatUseCase>(
       () => GetMyChatUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetTextMessagesUseCase>(

@@ -5,6 +5,7 @@ import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/domain/usecases/create_one_to_one_chat_channel_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_all_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_current_usercase.dart';
+import 'package:ia_bet/domain/usecases/set_user_token_usecase.dart';
 
 part 'user_state.dart';
 
@@ -12,11 +13,13 @@ class UserCubit extends Cubit<UserState> {
   final GetAllUserUseCase getAllUserUseCase;
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final CreateOneToOneChatChannelUseCase createOneToOneChatChannelUseCase;
+  final SetUserTokenUseCase setUserTokenUseCase;
   var allusersGlobal;
 
   UserCubit(
       {required this.getAllUserUseCase,
       required this.createOneToOneChatChannelUseCase,
+      required this.setUserTokenUseCase,
       required this.getCurrentUserUseCase})
       : super(UserInitial());
 
@@ -52,6 +55,10 @@ class UserCubit extends Cubit<UserState> {
       //Escuta alterações no firebase de usuario
     });
     return userStreamData.first;
+  }
+
+  Future<void> setUserToken(String token) async {
+    setUserTokenUseCase.call(token);
   }
 
   Future<void> createChatChannel({required String uid, required name}) async {

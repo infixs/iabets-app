@@ -51,7 +51,6 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
   @override
   Stream<UserEntity> getCurrentUser() {
-    print('tentando resgatar');
     final userCollection = fireStore.collection("users");
     final uid = auth.currentUser!.uid;
     return userCollection.doc(uid).snapshots().map((snapshot) {
@@ -61,6 +60,13 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
   @override
   Future<bool> isSignIn() async => auth.currentUser!.uid != null;
+
+  @override
+  Future<void> setUserToken(String token) async{
+    final userCollection = fireStore.collection("users");
+    final uid = auth.currentUser!.uid;
+    await userCollection.doc(uid).update({'token': token});
+  }
 
   @override
   Future<void> signInWithPhoneNumber(String smsPinCode) async {

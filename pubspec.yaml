@@ -48,6 +48,7 @@ dependencies:
   #file_picker
   file_picker: ^4.4.0
   timeago: ^3.2.2
+  firebase_messaging: ^11.2.8
 
 dev_dependencies:
   flutter_test:

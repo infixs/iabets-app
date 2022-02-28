@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
 import 'package:ia_bet/presentation/pages/canal_page.dart';
 import 'package:ia_bet/presentation/pages/perfil_page.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'dart:async' show Timer;
 
@@ -26,6 +28,25 @@ class HomePage extends StatefulWidget {
 TextEditingController _canalController = TextEditingController();
 
 class _HomePageState extends State<HomePage> {
+  Future<void> setupInteractedMessage() async {
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    if (message.data['type'] == 'chat') {
+/*       Navigator.pushNamed(context, '/chat', 
+        arguments: ChatArguments(message),
+      ); */
+    }
+  }
+
   @override
   void initState() {
     BlocProvider.of<MyChatCubit>(context).getMyChat(uid: '111');
@@ -34,6 +55,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    requestNotificationPermission(context);
     print('Home Page: Estou no build...');
     return WillPopScope(
       onWillPop: () async => false,
@@ -359,7 +381,7 @@ class _HomePageState extends State<HomePage> {
             });
   }
 
-  void handleMenuClick (String value) async{
+  void handleMenuClick(String value) async {
     switch (value) {
       case 'config':
         Navigator.push(
@@ -416,4 +438,30 @@ class _HomePageState extends State<HomePage> {
 
 void launchURL(url) async {
   if (!await launch(url)) throw 'Could not launch $url';
+}
+
+void requestNotificationPermission(context) async {
+  String token = await FirebaseMessaging.instance.getToken() as String;
+
+  BlocProvider.of<UserCubit>(context).setUserToken(token);
+
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('User granted permission');
+  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+    print('User granted provisional permission');
+  } else {
+    print('User declined or has not accepted permission');
+  }
 }

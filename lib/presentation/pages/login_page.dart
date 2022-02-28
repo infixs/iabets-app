@@ -34,9 +34,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userAuth = context.watch<AuthCubit>().state;
-    final isAuth = userAuth is Authenticated ? userAuth.uid : false;
-    print("Login: Usuario está autenticado?" + isAuth.toString());
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(

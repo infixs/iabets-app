@@ -51,6 +51,9 @@ class FirebaseRepositoryImpl implements FirebaseRepository{
       remoteDataSource.getCurrentUser();
 
   @override
+  Future<void> setUserToken(String token) => remoteDataSource.setUserToken(token);
+
+  @override
   Stream<List<TextMessageEntity>> getMessages(String channelId) {
     return remoteDataSource.getMessages(channelId);
   }
