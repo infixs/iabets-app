@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "141556199031",
+    "project_id": "ia-bet",
+    "storage_bucket": "ia-bet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:141556199031:android:4e43418a495c6cf9b3e072",
+        "android_client_info": {
+          "package_name": "com.example.ia_bet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "141556199031-hfl02l5v50sc9t3lr28mmspmuo77ca62.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC69bBsRHOIkKqFYH6KIQcTgrxf4QCHNUk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "141556199031-hfl02l5v50sc9t3lr28mmspmuo77ca62.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

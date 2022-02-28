@@ -1,0 +1,380 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:ia_bet/constants/cores_constants.dart';
+import 'package:ia_bet/domain/entities/user_entity.dart';
+import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../bloc/communication/communication_cubit.dart';
+
+TextEditingController _textMessageController = TextEditingController();
+ScrollController _scrollController = ScrollController();
+
+class CanalPage extends StatefulWidget {
+  final String senderUID;
+  final String senderName;
+  final String canalName;
+  final UserEntity userInfo;
+
+  const CanalPage(
+      {Key? key,
+      required this.senderUID,
+      required this.senderName,
+      required this.canalName,
+      required this.userInfo})
+      : super(key: key);
+
+  @override
+  State<CanalPage> createState() => _CanalPageState();
+}
+
+class _CanalPageState extends State<CanalPage> {
+  final MaskTextInputFormatter celularMask = MaskTextInputFormatter(
+      mask: '(##) #####-####', filter: {"#": RegExp(r'[0-9]')});
+
+  @override
+  void initState() {
+    BlocProvider.of<CommunicationCubit>(context).getMessages(
+      senderId: widget.senderUID,
+      canalName: widget.canalName,
+    );
+    _textMessageController.addListener(() {});
+    super.initState();
+  }
+/*
+  @override
+  void dispose() {
+    super.dispose();
+  }
+*/
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle(
+          // Status bar color
+          statusBarColor: Colors.transparent,
+
+          // Status bar brightness (optional)
+          statusBarIconBrightness: Brightness.light, // For Android (dark icons)
+          statusBarBrightness: Brightness.light, // For iOS (dark icons)
+        ),
+        leading: BackButton(color: kBackgroundColor),
+        elevation: 0,
+        centerTitle: false,
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(widget.canalName,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                ))
+          ],
+        ),
+        actions: [
+          Container(
+            margin: EdgeInsets.all(10),
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+                image: new DecorationImage(
+                    fit: BoxFit.contain,
+                    alignment: Alignment.center,
+                    image: AssetImage("assets/images/canal-image.png"))),
+          ),
+        ],
+      ),
+      body: BlocBuilder<CommunicationCubit, CommunicationState>(
+          builder: (_, communicationState) {
+        print('ChatPage: Estou no comunicState');
+
+        return BlocBuilder<UserCubit, UserState>(builder: (context, userState) {
+          print('ChatPage: Estou no userState');
+
+          return Stack(clipBehavior: Clip.none, children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  image: new DecorationImage(
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
+                    image: AssetImage(
+                      "assets/images/chat-background.png",
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            if (communicationState is CommunicationLoaded)
+              Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom:
+                      userState is CurrentUserChanged && userState.user.isAdmin
+                          ? 64
+                          : 0,
+                  child: mensagesChatWidget(communicationState)
+              ),
+            if (communicationState is! CommunicationLoaded)
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            Positioned(
+                bottom: 10,
+                left: 10,
+                right: 10,
+                child: userState is CurrentUserChanged && userState.user.isAdmin
+                    ? writeMessageWidget()
+                    : Container())
+          ]);
+        });
+      }),
+    );
+  }
+
+  Widget mensagesChatWidget(CommunicationLoaded messages) {
+    return Container(
+      child: ListView.builder(
+        controller: _scrollController,
+        itemCount: messages.messages.length,
+        padding: EdgeInsets.only(top: 10, bottom: 0),
+        itemBuilder: (context, index) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(width: 5),
+              messages.messages[index].recipientUID != widget.senderUID
+                  ? Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.only(bottomLeft: Radius.circular(125)),
+                        color: (messages.messages[index].recipientUID ==
+                                widget.senderUID
+                            ? Color(0xFFF2F2F7)
+                            : Color(0x00FFFFFF)),
+                      ),
+                    )
+                  : Container(),
+              Flexible(
+                child: Container(
+                  padding:
+                      messages.messages[index].recipientUID != widget.senderUID
+                          ? EdgeInsets.only(bottom: 10, right: 50)
+                          : EdgeInsets.only(bottom: 10, left: 50),
+                  child: Align(
+                    alignment: (messages.messages[index].recipientUID !=
+                            widget.senderUID
+                        ? Alignment.topLeft
+                        : Alignment.topRight),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromARGB(255, 207, 207, 207),
+                              spreadRadius: 0,
+                              blurRadius: 1,
+                              offset: Offset(0, 1))
+                        ],
+                        borderRadius: messages.messages[index].recipientUID ==
+                                widget.senderUID
+                            ? BorderRadius.only(
+                                topRight: Radius.circular(8),
+                                bottomLeft: Radius.circular(8),
+                                topLeft: Radius.circular(8))
+                            : BorderRadius.only(
+                                topRight: Radius.circular(8),
+                                topLeft: Radius.circular(8),
+                                bottomRight: Radius.circular(8)),
+                        color: (messages.messages[index].recipientUID ==
+                                widget.senderUID
+                            ? Color.fromARGB(255, 244, 252, 225)
+                            : Colors.white),
+                      ),
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+                                child: Text(
+                              messages.messages[index].message,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: (messages.messages[index].recipientUID ==
+                                        widget.senderUID
+                                    ? Colors.black
+                                    : Colors.black),
+                              ),
+                            )),
+                            Container(
+                                child: Text(
+                              DateFormat('HH:mm').format(
+                                  messages.messages[index].time.toDate()),
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w400,
+                                color: (messages.messages[index].recipientUID ==
+                                        widget.senderUID
+                                    ? Color.fromARGB(255, 136, 136, 136)
+                                    : Color.fromARGB(255, 136, 136, 136)),
+                              ),
+                            )),
+                          ]),
+                    ),
+                  ),
+                ),
+              ),
+              messages.messages[index].recipientUID == widget.senderUID
+                  ? Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.only(bottomRight: Radius.circular(0)),
+                        color: (messages.messages[index].recipientUID ==
+                                widget.senderUID
+                            ? Color(0x00F2F2F7)
+                            : kPrimaryColor),
+                      ),
+                    )
+                  : Container()
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget writeMessageWidget() {
+    return Container(
+      width: MediaQuery.of(context).size.width - 20,
+      child: Material(
+        elevation: 1.5,
+        shadowColor: Color.fromARGB(100, 241, 241, 241),
+        borderRadius: new BorderRadius.circular(25),
+        child: TextField(
+          controller: _textMessageController,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+              hintText: 'Mensagem...',
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding:
+                  const EdgeInsets.only(left: 15.0, bottom: 8.0, top: 8.0),
+              hintStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey),
+              labelStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey),
+              focusedBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: Colors.white),
+                borderRadius: new BorderRadius.circular(25),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: Colors.white),
+                borderRadius: new BorderRadius.circular(25),
+              ),
+              prefixIcon: IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.sentiment_satisfied_alt),
+                color: textSilver,
+              ),
+              suffixIcon: Container(
+                child: Row(
+                  mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween, // added line
+                  mainAxisSize: MainAxisSize.min, // added line
+                  children: [
+                    Container(
+                      child: IconButton(
+                        onPressed: () {
+                          _sendFile();
+                        },
+                        icon: Icon(Icons.attach_file),
+                        color: textSilver,
+                      ),
+                    ),
+                    Container(
+                      child: IconButton(
+                        onPressed: () {
+                          _sendMessage();
+                        },
+                        icon: Icon(Icons.send),
+                        color: Colors.black,
+                      ),
+                    )
+                  ],
+                ),
+              )),
+        ),
+      ),
+    );
+  }
+
+  _sendMessage() async {
+    print('oi_sendMessage2');
+    if (_textMessageController.text.isNotEmpty) {
+      await BlocProvider.of<CommunicationCubit>(context).sendTextMessage(
+          senderId: widget.senderUID,
+          message: _textMessageController.text,
+          canalName: widget.canalName,
+          type: 'TEXT',
+          element: widget.userInfo);
+      print('oi_sendMessage');
+      _textMessageController.clear();
+    }
+  }
+
+  _sendFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowedExtensions: ['jpg', 'pdf', 'doc'],
+    );
+    if (result != null) {
+      final name = result.files.first.name;
+      _textMessageController.text = name;
+      var file = result.files.first.bytes;
+      var extension = result.files.first.extension;
+
+      BlocProvider.of<CommunicationCubit>(context).sendFile(
+          canalName: widget.canalName,
+          file: file!,
+          name: '$name.$extension',
+          senderId: widget.senderUID,
+          type: 'FILE',
+          element: widget.userInfo);
+    }
+  }
+
+  _getUrl(canal, name) {
+    return BlocProvider.of<CommunicationCubit>(context)
+        .getUrl(canalName: canal, name: name);
+  }
+}
+
+void _launchURL(url) async {
+  if (!await launch(url)) throw 'Could not launch $url';
+}
