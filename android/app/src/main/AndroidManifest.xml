@@ -1,12 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ia_bet">
+    package="com.br.iabetsoficial.app">
 
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="IA BET"
+        android:label="IA BETS"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
+            android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -43,22 +44,22 @@
     <queries>
   <!-- If your app opens https URLs -->
       <intent>
-        <action android:name="android.intent.action.VIEW" />
+        <action android:name="android.intent.action.VIEW" android:exported="false"/>
         <data android:scheme="https" />
       </intent>
       <!-- If your app makes calls -->
       <intent>
-        <action android:name="android.intent.action.DIAL" />
+        <action android:name="android.intent.action.DIAL" android:exported="false"/>
         <data android:scheme="tel" />
       </intent>
       <!-- If your sends SMS messages -->
       <intent>
-        <action android:name="android.intent.action.SENDTO" />
+        <action android:name="android.intent.action.SENDTO" android:exported="false"/>
         <data android:scheme="smsto" />
       </intent>
       <!-- If your app sends emails -->
       <intent>
-        <action android:name="android.intent.action.SEND" />
+        <action android:name="android.intent.action.SEND" android:exported="false"/>
         <data android:mimeType="*/*" />
       </intent>
     </queries>

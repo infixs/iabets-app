@@ -1,8 +1,9 @@
 name: ia_bet
-description: A new Flutter project.
+description: IA Bets, sua trader de inteligência artificial.
 
 publish_to: 'none' 
-version: 2.0.0+2
+version: 2.0.0+3
+homepage: http://placar.iabetsoficial.com.br/
 
 environment:
   sdk: ">=2.12.0 <3.0.0"  
@@ -27,7 +28,6 @@ dependencies:
   firebase_storage: 
 
   responsive_builder: 
-  camera: 
 
   #message shape bubble
   bubble: 

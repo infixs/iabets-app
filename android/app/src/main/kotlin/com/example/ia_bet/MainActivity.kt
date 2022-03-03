@@ -1,4 +1,4 @@
-package com.example.ia_bet
+package com.br.iabetsoficial.app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:141556199031:android:4e43418a495c6cf9b3e072",
+        "mobilesdk_app_id": "1:141556199031:android:1f61ee4b22149884b3e072",
         "android_client_info": {
-          "package_name": "com.example.ia_bet"
+          "package_name": "com.br.iabetsoficial.app"
         }
       },
       "oauth_client": [
@@ -29,6 +29,13 @@
             {
               "client_id": "141556199031-hfl02l5v50sc9t3lr28mmspmuo77ca62.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "141556199031-c2mqgcp9olm3o81m6bh9skg4rdc9nvon.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.iabetsoficial"
+              }
             }
           ]
         }

@@ -1,13 +1,14 @@
-import { GoogleAuth } from 'google-auth-library';
+const {JWT} = require('google-auth-library');
+const scope = ['https://www.googleapis.com/auth/firebase.messaging', 'https://www.googleapis.com/auth/drive']
 
-function getAccessToken() {
+function getAccessToken(){
     return new Promise(function(resolve, reject) {
       const key = require('./ia-bet-firebase-adminsdk-77wh8-66bb87b0b3.json');
-      const jwtClient = new GoogleAuth.JWT(
+      const jwtClient = new JWT(
         key.client_email,
         null,
         key.private_key,
-        SCOPES,
+        scope,
         null
       );
       jwtClient.authorize(function(err, tokens) {
@@ -19,4 +20,6 @@ function getAccessToken() {
       });
     });
   }
-getAccessToken();
+getAccessToken().then(e => {
+  console.log(e);
+});
