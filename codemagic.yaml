@@ -1,0 +1,7 @@
+workflows:
+  ia-bets:
+    name: IABets
+    scripts:
+      - flutter build ios
+    environment:
+      flutter: stable
