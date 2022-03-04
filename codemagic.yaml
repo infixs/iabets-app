@@ -13,34 +13,31 @@ workflows:
           -----END PRIVATE KEY-----
         CERTIFICATE_PRIVATE_KEY: |-
           -----BEGIN RSA PRIVATE KEY-----
-          Proc-Type: 4,ENCRYPTED
-          DEK-Info: AES-128-CBC,674F7C463E389241E7967C33A58A8A66
-
-          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
+          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
           -----END RSA PRIVATE KEY-----
         APP_STORE_CONNECT_ISSUER_ID: 2e2875a6-4622-4c8d-af2c-288e1db44239
         APP_STORE_CONNECT_KEY_IDENTIFIER: Z2UZZ867U7
