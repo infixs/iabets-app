@@ -4,7 +4,15 @@ workflows:
     max_build_duration: 120
     environment:
       vars:
-        ISSUER_ID: 2e2875a6-4622-4c8d-af2c-288e1db44239
+        APP_STORE_CONNECT_PRIVATE_KEY: |
+          -----BEGIN PRIVATE KEY-----
+          MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgU+bbxSfMGtUq/Lys
+          2MLMHMh8d8qdh0hMobT4QsHGH06gCgYIKoZIzj0DAQehRANCAARcc1tIz69Us3D6
+          ph/g3rKAnu3K2OOp9msnzRUJPSeYymCwsxVw5BtboSRp0PWCnnzhCGY1TX1EZLFk
+          bZ2pSqqB
+          -----END PRIVATE KEY-----
+        APP_STORE_CONNECT_ISSUER_ID: 2e2875a6-4622-4c8d-af2c-288e1db44239
+        APP_STORE_CONNECT_KEY_IDENTIFIER: Z2UZZ867U7
         XCODE_WORKSPACE: "Runner.xcworkspace"
         XCODE_SCHEME: "Runner"                
         BUNDLE_ID: "br.com.iabetsoficial" # <-- Put your bundle id here
@@ -62,13 +70,7 @@ workflows:
           success: true # To receive a notification when a build succeeds
           failure: false # To not receive a notification when a build fails
       app_store_connect:   # https://docs.codemagic.io/publishing-yaml/distribution              
-        api_key: |
-          -----BEGIN PRIVATE KEY-----
-          MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgU+bbxSfMGtUq/Lys
-          2MLMHMh8d8qdh0hMobT4QsHGH06gCgYIKoZIzj0DAQehRANCAARcc1tIz69Us3D6
-          ph/g3rKAnu3K2OOp9msnzRUJPSeYymCwsxVw5BtboSRp0PWCnnzhCGY1TX1EZLFk
-          bZ2pSqqB
-          -----END PRIVATE KEY-----
-        key_id: Z2UZZ867U7  # Alphanumeric value that identifies the API key, can also reference environment variable such as $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $ISSUER_ID # Alphanumeric value that identifies who created the API key, can also reference environment variable such as $APP_STORE_CONNECT_ISSUER_ID
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER  # Alphanumeric value that identifies the API key, can also reference environment variable such as $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID # Alphanumeric value that identifies who created the API key, can also reference environment variable such as $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: false     
