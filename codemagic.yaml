@@ -4,6 +4,7 @@ workflows:
     max_build_duration: 120
     environment:
       vars:
+        ISSUER_ID: 2e2875a6-4622-4c8d-af2c-288e1db44239
         XCODE_WORKSPACE: "Runner.xcworkspace"
         XCODE_SCHEME: "Runner"                
         BUNDLE_ID: "br.com.iabetsoficial" # <-- Put your bundle id here
@@ -69,5 +70,5 @@ workflows:
           bZ2pSqqB
           -----END PRIVATE KEY-----
         key_id: Z2UZZ867U7  # Alphanumeric value that identifies the API key, can also reference environment variable such as $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: 2e2875a6-4622-4c8d-af2c-288e1db44239 # Alphanumeric value that identifies who created the API key, can also reference environment variable such as $APP_STORE_CONNECT_ISSUER_ID
+        issuer_id: $ISSUER_ID # Alphanumeric value that identifies who created the API key, can also reference environment variable such as $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: false     
