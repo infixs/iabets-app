@@ -4,13 +4,12 @@ workflows:
     max_build_duration: 120
     environment:
       vars:
-        APP_STORE_CONNECT_PRIVATE_KEY: |
-          -----BEGIN PRIVATE KEY-----
+        APP_STORE_CONNECT_PRIVATE_KEY: '-----BEGIN PRIVATE KEY-----
           MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgU+bbxSfMGtUq/Lys
           2MLMHMh8d8qdh0hMobT4QsHGH06gCgYIKoZIzj0DAQehRANCAARcc1tIz69Us3D6
           ph/g3rKAnu3K2OOp9msnzRUJPSeYymCwsxVw5BtboSRp0PWCnnzhCGY1TX1EZLFk
           bZ2pSqqB
-          -----END PRIVATE KEY-----
+          -----END PRIVATE KEY-----'
         APP_STORE_CONNECT_ISSUER_ID: 2e2875a6-4622-4c8d-af2c-288e1db44239
         APP_STORE_CONNECT_KEY_IDENTIFIER: Z2UZZ867U7
         XCODE_WORKSPACE: "Runner.xcworkspace"
