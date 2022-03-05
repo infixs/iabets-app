@@ -72,6 +72,9 @@ workflows:
       - name: Install pods
         script: |
           find . -name "Podfile" -execdir pod install \;
+      - name: Show Pod File
+        script: |
+          cd . && cd ios && cat Podfile
       - name: Flutter build ipa and automatic versioning
         script: |
           flutter build ipa --release \
