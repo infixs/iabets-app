@@ -72,9 +72,6 @@ workflows:
       - name: Install pods
         script: |
           find . -name "Podfile" -execdir pod install \;
-      - name: Git pods
-        script: |
-          cd ios && pod init && git add . && git commit -m "Add Podfile to project" && git push
       - name: Flutter build ipa and automatic versioning
         script: |
           flutter build ipa --release \
