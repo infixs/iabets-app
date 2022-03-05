@@ -24,7 +24,7 @@ dependencies:
 
   #firebase
   firebase_auth: 
-  cloud_firestore: ^3.1.8	
+  cloud_firestore: 
   firebase_storage: 
 
   responsive_builder: 

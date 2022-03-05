@@ -49,7 +49,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyC69bBsRHOIkKqFYH6KIQcTgrxf4QCHNUk',
-    appId: '1:141556199031:android:4e43418a495c6cf9b3e072',
+    appId: '1:141556199031:android:1f61ee4b22149884b3e072',
     messagingSenderId: '141556199031',
     projectId: 'ia-bet',
     storageBucket: 'ia-bet.appspot.com',
@@ -57,7 +57,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyD4Nkq6uVpKhV4209hTtZKX5s_BNOdR2hg',
-    appId: '1:141556199031:ios:c4554ab44918e25db3e072',
+    appId: '1:141556199031:ios:a82ceb09ae6f752eb3e072',
     messagingSenderId: '141556199031',
     projectId: 'ia-bet',
     storageBucket: 'ia-bet.appspot.com',
