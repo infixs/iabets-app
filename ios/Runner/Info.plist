@@ -50,7 +50,5 @@
 		<false/>
 		<key>UIStatusBarHidden</key>
 		<false/>
-		<key>aps-environment</key>
-		<string>production</string>
 	</dict>
 </plist>
