@@ -2,7 +2,7 @@ name: ia_bet
 description: IA Bets, sua trader de inteligência artificial.
 
 publish_to: 'none' 
-version: 2.0.0+3
+version: 2.0.0+4
 homepage: http://placar.iabetsoficial.com.br/
 
 environment:
