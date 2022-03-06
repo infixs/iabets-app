@@ -87,7 +87,9 @@ workflows:
       # See the following link for details about email publishing - https://docs.codemagic.io/yaml-publishing/email
       email:
         recipients:
-          - marcosgomesneto@gmail.com
+          - guilherme.queiroga@hotmail.com
+          - kemyllynfernandes21@gmail.com
+          - admin@infixs.com.br
         notify:
           success: true # To receive a notification when a build succeeds
           failure: true # To not receive a notification when a build fails
@@ -102,4 +104,4 @@ workflows:
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER  # Alphanumeric value that identifies the API key, can also reference environment variable such as $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID # Alphanumeric value that identifies who created the API key, can also reference environment variable such as $APP_STORE_CONNECT_ISSUER_ID
-        submit_to_testflight: false     
+        submit_to_testflight: true     
