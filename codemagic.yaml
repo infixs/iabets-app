@@ -76,7 +76,7 @@ workflows:
         script: |
           flutter build ipa --release \
           --no-sound-null-safety \
-          --build-name=1.0.6 \
+          --build-name=1.0.7 \
           --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1)) \
           --export-options-plist=/Users/builder/export_options.plist
     artifacts:
@@ -87,8 +87,6 @@ workflows:
       # See the following link for details about email publishing - https://docs.codemagic.io/yaml-publishing/email
       email:
         recipients:
-          - guilherme.queiroga@hotmail.com
-          - kemyllynfernandes21@gmail.com
           - admin@infixs.com.br
         notify:
           success: true # To receive a notification when a build succeeds
