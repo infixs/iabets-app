@@ -2,7 +2,29 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>aps-environment</key>
-    <string>production</string>
+	<key>Entitlements</key>
+	<dict>
+		<key>beta-reports-active</key>
+		<true/>
+				
+        <key>aps-environment</key>
+		<string>production</string>
+				
+        <key>application-identifier</key>
+		<string>9Y3P4CV3FJ.br.com.iabetsoficial</string>
+				
+        <key>keychain-access-groups</key>
+		<array>
+				<string>9Y3P4CV3FJ.*</string>
+				<string>com.apple.token</string>
+		</array>
+				
+        <key>get-task-allow</key>
+		<false/>
+				
+        <key>com.apple.developer.team-identifier</key>
+		<string>9Y3P4CV3FJ</string>
+		
+	</dict>
 </dict>
 </plist>
