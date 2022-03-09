@@ -397,7 +397,7 @@ class _CanalPageState extends State<CanalPage> {
           type: 'TEXT',
           element: widget.userInfo);
       _textMessageController.clear();
-      _messaging.subscribeToTopic();
+      //_messaging.subscribeToTopic();
       Timer(Duration(milliseconds: 500), () {
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       });
