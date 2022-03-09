@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +17,7 @@ import 'dart:async' show Timer;
 
 class HomePage extends StatefulWidget {
   final UserEntity userInfo;
+  FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   HomePage({Key? key, required this.userInfo}) : super(key: key);
 
@@ -28,29 +28,59 @@ class HomePage extends StatefulWidget {
 TextEditingController _canalController = TextEditingController();
 
 class _HomePageState extends State<HomePage> {
-  Future<void> setupInteractedMessage() async {
+/*   Future<void> setupInteractedMessage() async {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
       _handleMessage(initialMessage);
     }
-
+  
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
   }
 
   void _handleMessage(RemoteMessage message) {
     if (message.data['type'] == 'chat') {
-/*       Navigator.pushNamed(context, '/chat', 
-        arguments: ChatArguments(message),
-      ); */
+
     }
-  }
+  } */
 
   @override
   void initState() {
     BlocProvider.of<MyChatCubit>(context).getMyChat(uid: '111');
     super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      print('cvmassa');
+      setState(() {
+        /*        
+            RemoteNotification notification = message.notification;
+            AndroidNotification android = message.notification?.android;
+           */
+      });
+    });
+    FirebaseMessaging.onBackgroundMessage((message) {
+      print("Notificação em background $message");
+      return Future(() {
+        print("Notificação em background $message");
+      });
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+      if (message.data.containsKey('channelId'))
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CanalPage(
+                      canalName: message.data['channelId'],
+                      senderName: widget.userInfo.name,
+                      senderUID: widget.userInfo.uid,
+                      userInfo: widget.userInfo,
+                    )));
+      /*setState(() {
+            print('A new onMessageOpenedApp event was published!');
+            Navigator.pushNamed(context, '/message',
+            arguments: MessageArguments(message, true));
+          }); */
+    });
   }
 
   @override
@@ -305,7 +335,6 @@ class _HomePageState extends State<HomePage> {
 
   Widget listaCanaisWidget(MyChatLoaded myChatData) {
     final nowTime = new DateTime.now();
-
     return myChatData.myChat.isEmpty
         ? Container()
         : ListView.builder(
@@ -434,34 +463,33 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
+  void requestNotificationPermission(context) async {
+    String token = await FirebaseMessaging.instance.getToken() as String;
+
+    BlocProvider.of<UserCubit>(context).setUserToken(token);
+
+    NotificationSettings settings = await widget._messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
+  }
 }
 
 void launchURL(url) async {
   if (!await launch(url)) throw 'Could not launch $url';
-}
-
-void requestNotificationPermission(context) async {
-  String token = await FirebaseMessaging.instance.getToken() as String;
-
-  BlocProvider.of<UserCubit>(context).setUserToken(token);
-
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-  NotificationSettings settings = await messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
-
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    print('User granted permission');
-  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-    print('User granted provisional permission');
-  } else {
-    print('User declined or has not accepted permission');
-  }
 }

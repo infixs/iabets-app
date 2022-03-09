@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +20,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../bloc/communication/communication_cubit.dart';
 
 TextEditingController _textMessageController = TextEditingController();
-ScrollController _scrollController = ScrollController();
+FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
 class CanalPage extends StatefulWidget {
   final String senderUID;
@@ -41,6 +43,9 @@ class CanalPage extends StatefulWidget {
 class _CanalPageState extends State<CanalPage> {
   final MaskTextInputFormatter celularMask = MaskTextInputFormatter(
       mask: '(##) #####-####', filter: {"#": RegExp(r'[0-9]')});
+  ScrollController _scrollController = new ScrollController();
+  var _isVisible = false;
+  var _loading = true;
 
   @override
   void initState() {
@@ -50,16 +55,55 @@ class _CanalPageState extends State<CanalPage> {
     );
     _textMessageController.addListener(() {});
     super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels <
+          _scrollController.position.maxScrollExtent - 100) {
+        if (_isVisible == false) {
+          setState(() {
+            _isVisible = true;
+          });
+        }
+      } else {
+        if (_isVisible == true) {
+          setState(() {
+            _isVisible = false;
+          });
+        }
+      }
+    });
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      Timer.periodic(const Duration(microseconds: 200), (timer) {
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+          timer.cancel();
+          _loading = false;
+        }
+      });
+    });
   }
-/*
+
   @override
   void dispose() {
+    print('dispose');
     super.dispose();
   }
-*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: new Visibility(
+        visible: _isVisible,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 60.0),
+          child: new FloatingActionButton.small(
+            elevation: 0,
+            backgroundColor: Color(0xA1333333),
+            onPressed: _scrollDown,
+            tooltip: 'Increment',
+            child: Icon(Icons.arrow_downward),
+          ),
+        ),
+      ),
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle(
@@ -125,16 +169,17 @@ class _CanalPageState extends State<CanalPage> {
               ),
             ),
             if (communicationState is CommunicationLoaded)
-              Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom:
-                      userState is CurrentUserChanged && userState.user.isAdmin
+              Visibility(
+                  visible: true,
+                  child: Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: userState is CurrentUserChanged &&
+                              userState.user.isAdmin
                           ? 64
                           : 0,
-                  child: mensagesChatWidget(communicationState)
-              ),
+                      child: mensagesChatWidget(communicationState))),
             if (communicationState is! CommunicationLoaded)
               Center(
                 child: CircularProgressIndicator(),
@@ -335,8 +380,15 @@ class _CanalPageState extends State<CanalPage> {
     );
   }
 
+  void _scrollDown([int duration = 1]) {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: Duration(seconds: duration),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
   _sendMessage() async {
-    print('oi_sendMessage2');
     if (_textMessageController.text.isNotEmpty) {
       await BlocProvider.of<CommunicationCubit>(context).sendTextMessage(
           senderId: widget.senderUID,
@@ -344,8 +396,11 @@ class _CanalPageState extends State<CanalPage> {
           canalName: widget.canalName,
           type: 'TEXT',
           element: widget.userInfo);
-      print('oi_sendMessage');
       _textMessageController.clear();
+      _messaging.subscribeToTopic();
+      Timer(Duration(milliseconds: 500), () {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
     }
   }
 

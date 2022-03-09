@@ -62,7 +62,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   Future<bool> isSignIn() async => auth.currentUser!.uid != null;
 
   @override
-  Future<void> setUserToken(String token) async{
+  Future<void> setUserToken(String token) async {
     final userCollection = fireStore.collection("users");
     final uid = auth.currentUser!.uid;
     await userCollection.doc(uid).update({'token': token});
