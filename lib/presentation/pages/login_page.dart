@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                         image: new DecorationImage(
                           fit: BoxFit.contain,
                           image: AssetImage(
-                            "assets/images/marcadagua.png",
+                            "assets/images/marcadagua-full.png",
                           ),
                         ),
                       ),

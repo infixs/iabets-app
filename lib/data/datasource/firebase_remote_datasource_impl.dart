@@ -12,14 +12,19 @@ import 'package:ia_bet/data/model/user_model.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   final FirebaseAuth auth;
   final FirebaseFirestore fireStore;
+  final FirebaseFunctions fireFunctions;
 
   String _verificationId = "";
 
-  FirebaseRemoteDataSourceImpl({required this.auth, required this.fireStore});
+  FirebaseRemoteDataSourceImpl(
+      {required this.auth,
+      required this.fireStore,
+      required this.fireFunctions});
 
   @override
   Future<void> getCreateCurrentUser(UserEntity user) async {
@@ -73,6 +78,20 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     final AuthCredential authCredential = PhoneAuthProvider.credential(
         verificationId: _verificationId, smsCode: smsPinCode);
     await auth.signInWithCredential(authCredential);
+  }
+
+  @override
+  Future<void> sendPushMessage(
+      String channelId, String title, String message) async {
+    HttpsCallable callable = fireFunctions.httpsCallable('sendMessage');
+    print("enviando notificação push...");
+    final resp = callable.call(<String, dynamic>{
+      'channelId': channelId,
+      'channelName': title,
+      'message': message
+    });
+    print(resp);
+    print('passou do restp');
   }
 
   @override
@@ -277,6 +296,22 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
               .map((doc) => MyChatModel.fromSnapShot(doc))
               .toList(),
         );
+  }
+
+  @override
+  Future<void> deleteMessages(String channelId, List<String> messages) async {
+    final messagesRef = fireStore
+        .collection("myChatChannel")
+        .doc(channelId)
+        .collection('messages');
+
+    WriteBatch messagesBatch = fireStore.batch();
+
+    messages.forEach((message) {
+      messagesBatch.delete(messagesRef.doc(message));
+    });
+
+    return await messagesBatch.commit();
   }
 
   @override

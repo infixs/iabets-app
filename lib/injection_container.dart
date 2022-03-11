@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:ia_bet/data/datasource/firebase_remote_datasource.dart';
@@ -7,6 +8,7 @@ import 'package:ia_bet/data/repositories/firebase_repository_impl.dart';
 import 'package:ia_bet/domain/repositories/firebase_repository.dart';
 import 'package:ia_bet/domain/usecases/add_to_my_chat_usecase.dart';
 import 'package:ia_bet/domain/usecases/create_one_to_one_chat_channel_usecase.dart';
+import 'package:ia_bet/domain/usecases/delete_messages_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_all_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_create_current_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_current_uid_usecase.dart';
@@ -16,6 +18,7 @@ import 'package:ia_bet/domain/usecases/get_one_to_one_single_user_chat_channel_u
 import 'package:ia_bet/domain/usecases/get_text_messages_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_url_file_usecase.dart';
 import 'package:ia_bet/domain/usecases/is_sign_in_usecase.dart';
+import 'package:ia_bet/domain/usecases/send_push_message_usecase.dart';
 import 'package:ia_bet/domain/usecases/send_text_message_usecase.dart';
 import 'package:ia_bet/domain/usecases/set_user_token_usecase.dart';
 import 'package:ia_bet/domain/usecases/sign_in_with_email_usecase.dart';
@@ -48,10 +51,12 @@ Future<void> init() async {
         sendTextMessageUseCase: sl.call(),
         getAllUserUseCase: sl.call(),
         getUrlFileUseCase: sl.call(), 
-        uploadFiletUseCase: sl.call()
+        uploadFiletUseCase: sl.call(),
+        deleteMessagesUseCase: sl.call()
       ));
   sl.registerFactory<MyChatCubit>(() => MyChatCubit(
         getMyChatUseCase: sl.call(),
+        sendPushMessageUseCase: sl.call()
       ));
 
 
@@ -93,8 +98,12 @@ Future<void> init() async {
       () => SetUserTokenUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetMyChatUseCase>(
       () => GetMyChatUseCase(repository: sl.call()));
+  sl.registerLazySingleton<SendPushMessageUseCase>(
+      () => SendPushMessageUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetTextMessagesUseCase>(
       () => GetTextMessagesUseCase(repository: sl.call()));
+  sl.registerLazySingleton<DeleteMessagesUseCase>(
+      () => DeleteMessagesUseCase(repository: sl.call()));
   sl.registerLazySingleton<SendTextMessageUseCase>(
       () => SendTextMessageUseCase(repository: sl.call()));
   sl.registerLazySingleton<AddToMyChatUseCase>(
@@ -117,11 +126,14 @@ Future<void> init() async {
       () => FirebaseRemoteDataSourceImpl(
             auth: sl.call(),
             fireStore: sl.call(),
+            fireFunctions: sl.call()
           ));
   //External
 
   final auth = FirebaseAuth.instance;
   final fireStore = FirebaseFirestore.instance;
+  final fireFunctions = FirebaseFunctions.instanceFor(region: 'southamerica-east1');
   sl.registerLazySingleton(() => auth);
   sl.registerLazySingleton(() => fireStore);
+  sl.registerLazySingleton(() => fireFunctions);
 }

@@ -35,7 +35,7 @@ class TextMessageModel extends TextMessageEntity {
       recipientUID: data['recipientUID'],
       messageType: data['messageType'],
       message: data['message'],
-      messageId: data['messageId'],
+      messageId: snapshot.id,
       time: data['time'],
     );
   }

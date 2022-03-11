@@ -363,11 +363,15 @@ class _HomePageState extends State<HomePage> {
                             color: kSecondColor,
                             fontSize: 16.0,
                             fontWeight: FontWeight.w600)),
-                    subtitle: Text(myChatData.myChat[index].recentTextMessage,
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w400)),
+                            subtitle: Text(
+                              myChatData.myChat[index].recentTextMessage,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w400
+                              )
+                            ),
                     trailing: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -481,9 +485,11 @@ class _HomePageState extends State<HomePage> {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print('User granted permission');
+      FirebaseMessaging.instance.subscribeToTopic('chat');
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
       print('User granted provisional permission');
+      FirebaseMessaging.instance.subscribeToTopic('chat');
     } else {
       print('User declined or has not accepted permission');
     }

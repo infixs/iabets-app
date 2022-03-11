@@ -22,6 +22,10 @@ abstract class FirebaseRepository {
   Stream<List<TextMessageEntity>> getMessages(String channelId);
   Stream<List<MyChatEntity>> getMyChat(String uid);
 
+  Future<void> sendPushMessage(String channelId, String title, String message);
+
+  Future<void> deleteMessages(String channelId, List<String> messages);
+
   Future<void> createOneToOneChatChannel(
       String uid, String name, List<UserEntity> allUsers);
   Future<String> getOneToOneSingleUserChannelId(String uid, String canalName);

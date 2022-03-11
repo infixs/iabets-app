@@ -12,7 +12,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
+import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
+import 'package:ia_bet/repository/data.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -46,6 +48,8 @@ class _CanalPageState extends State<CanalPage> {
   ScrollController _scrollController = new ScrollController();
   var _isVisible = false;
   var _loading = true;
+  bool _selectMode = false;
+  List<int> _selectedMessages = <int>[];
 
   @override
   void initState() {
@@ -90,111 +94,158 @@ class _CanalPageState extends State<CanalPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: new Visibility(
-        visible: _isVisible,
-        child: Padding(
-          padding: EdgeInsets.only(bottom: 60.0),
-          child: new FloatingActionButton.small(
+    return WillPopScope(
+        onWillPop: () async {
+          if (_selectMode) {
+            setState(() {
+              _selectMode = false;
+              _selectedMessages = [];
+            });
+            return false;
+          } else {
+            return true;
+          }
+        },
+        child: Scaffold(
+          floatingActionButton: new Visibility(
+            visible: _isVisible,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 60.0),
+              child: new FloatingActionButton.small(
+                elevation: 0,
+                backgroundColor: Color(0xA1333333),
+                onPressed: _scrollDown,
+                tooltip: 'Increment',
+                child: Icon(Icons.arrow_downward),
+              ),
+            ),
+          ),
+          backgroundColor: kBackgroundColor,
+          appBar: AppBar(
+            systemOverlayStyle: SystemUiOverlayStyle(
+              // Status bar color
+              statusBarColor: Colors.transparent,
+
+              // Status bar brightness (optional)
+              statusBarIconBrightness:
+                  Brightness.light, // For Android (dark icons)
+              statusBarBrightness: Brightness.light, // For iOS (dark icons)
+            ),
+            titleSpacing: 0,
             elevation: 0,
-            backgroundColor: Color(0xA1333333),
-            onPressed: _scrollDown,
-            tooltip: 'Increment',
-            child: Icon(Icons.arrow_downward),
+            centerTitle: false,
+            title: !_selectMode
+                ? Row(children: [
+                    Column(
+                      children: [
+                        Container(
+                          width: 38,
+                          height: 38,
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(48)),
+                              image: new DecorationImage(
+                                  fit: BoxFit.contain,
+                                  alignment: Alignment.center,
+                                  image: AssetImage(
+                                      "assets/images/canal-image.png"))),
+                        )
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(widget.canalName,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                              )),
+                        )
+                      ],
+                    )
+                  ])
+                : Text(
+                    _selectedMessages.length.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+            actions: [
+              _selectMode
+                  ? IconButton(
+                      onPressed: _deleteMessages,
+                      icon: Icon(Icons.delete),
+                    )
+                  : Container(),
+              _selectMode && _selectedMessages.length == 1
+                  ? IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.edit),
+                    )
+                  : Container()
+            ],
           ),
-        ),
-      ),
-      backgroundColor: kBackgroundColor,
-      appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle(
-          // Status bar color
-          statusBarColor: Colors.transparent,
+          body: BlocBuilder<CommunicationCubit, CommunicationState>(
+              builder: (_, communicationState) {
+            print('ChatPage: Estou no comunicState');
 
-          // Status bar brightness (optional)
-          statusBarIconBrightness: Brightness.light, // For Android (dark icons)
-          statusBarBrightness: Brightness.light, // For iOS (dark icons)
-        ),
-        leading: BackButton(color: kBackgroundColor),
-        elevation: 0,
-        centerTitle: false,
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(widget.canalName,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ))
-          ],
-        ),
-        actions: [
-          Container(
-            margin: EdgeInsets.all(10),
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-                image: new DecorationImage(
-                    fit: BoxFit.contain,
-                    alignment: Alignment.center,
-                    image: AssetImage("assets/images/canal-image.png"))),
-          ),
-        ],
-      ),
-      body: BlocBuilder<CommunicationCubit, CommunicationState>(
-          builder: (_, communicationState) {
-        print('ChatPage: Estou no comunicState');
+            return BlocBuilder<UserCubit, UserState>(
+                builder: (context, userState) {
+              print('ChatPage: Estou no userState');
 
-        return BlocBuilder<UserCubit, UserState>(builder: (context, userState) {
-          print('ChatPage: Estou no userState');
-
-          return Stack(clipBehavior: Clip.none, children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  image: new DecorationImage(
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                    image: AssetImage(
-                      "assets/images/chat-background.png",
+              return Stack(clipBehavior: Clip.none, children: [
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      image: new DecorationImage(
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center,
+                        image: AssetImage(
+                          "assets/images/chat-background.png",
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            if (communicationState is CommunicationLoaded)
-              Visibility(
-                  visible: true,
-                  child: Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: userState is CurrentUserChanged &&
-                              userState.user.isAdmin
-                          ? 64
-                          : 0,
-                      child: mensagesChatWidget(communicationState))),
-            if (communicationState is! CommunicationLoaded)
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            Positioned(
-                bottom: 10,
-                left: 10,
-                right: 10,
-                child: userState is CurrentUserChanged && userState.user.isAdmin
-                    ? writeMessageWidget()
-                    : Container())
-          ]);
-        });
-      }),
-    );
+                if (communicationState is CommunicationLoaded)
+                  Visibility(
+                      visible: true,
+                      child: Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: userState is CurrentUserChanged &&
+                                  userState.user.isAdmin
+                              ? 64
+                              : 0,
+                          child: mensagesChatWidget(communicationState))),
+                if (communicationState is! CommunicationLoaded)
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                Positioned(
+                    bottom: 10,
+                    left: 10,
+                    right: 10,
+                    child: userState is CurrentUserChanged &&
+                            userState.user.isAdmin
+                        ? writeMessageWidget()
+                        : Container())
+              ]);
+            });
+          }),
+        ));
   }
 
   Widget mensagesChatWidget(CommunicationLoaded messages) {
@@ -204,108 +255,121 @@ class _CanalPageState extends State<CanalPage> {
         itemCount: messages.messages.length,
         padding: EdgeInsets.only(top: 10, bottom: 0),
         itemBuilder: (context, index) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(width: 5),
-              messages.messages[index].recipientUID != widget.senderUID
-                  ? Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.only(bottomLeft: Radius.circular(125)),
-                        color: (messages.messages[index].recipientUID ==
-                                widget.senderUID
-                            ? Color(0xFFF2F2F7)
-                            : Color(0x00FFFFFF)),
-                      ),
-                    )
-                  : Container(),
-              Flexible(
-                child: Container(
-                  padding:
+          return GestureDetector(
+              onLongPress: () => _initSelectMode(index),
+              onTapDown: (d) => _selectMessage(index),
+              child: Container(
+                  padding: EdgeInsets.only(top: 5, bottom: 5),
+                  color: _selectMode && _selectedMessages.contains(index)
+                      ? Color.fromARGB(50, 0, 100, 255)
+                      : Colors.transparent,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 5),
                       messages.messages[index].recipientUID != widget.senderUID
-                          ? EdgeInsets.only(bottom: 10, right: 50)
-                          : EdgeInsets.only(bottom: 10, left: 50),
-                  child: Align(
-                    alignment: (messages.messages[index].recipientUID !=
-                            widget.senderUID
-                        ? Alignment.topLeft
-                        : Alignment.topRight),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: Color.fromARGB(255, 207, 207, 207),
-                              spreadRadius: 0,
-                              blurRadius: 1,
-                              offset: Offset(0, 1))
-                        ],
-                        borderRadius: messages.messages[index].recipientUID ==
-                                widget.senderUID
-                            ? BorderRadius.only(
-                                topRight: Radius.circular(8),
-                                bottomLeft: Radius.circular(8),
-                                topLeft: Radius.circular(8))
-                            : BorderRadius.only(
-                                topRight: Radius.circular(8),
-                                topLeft: Radius.circular(8),
-                                bottomRight: Radius.circular(8)),
-                        color: (messages.messages[index].recipientUID ==
-                                widget.senderUID
-                            ? Color.fromARGB(255, 244, 252, 225)
-                            : Colors.white),
-                      ),
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Container(
-                                child: Text(
-                              messages.messages[index].message,
-                              style: TextStyle(
-                                fontSize: 14,
+                          ? Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(125)),
                                 color: (messages.messages[index].recipientUID ==
                                         widget.senderUID
-                                    ? Colors.black
-                                    : Colors.black),
+                                    ? Color(0xFFF2F2F7)
+                                    : Color(0x00FFFFFF)),
                               ),
-                            )),
-                            Container(
-                                child: Text(
-                              DateFormat('HH:mm').format(
-                                  messages.messages[index].time.toDate()),
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w400,
+                            )
+                          : Container(),
+                      Flexible(
+                        child: Container(
+                          padding: messages.messages[index].recipientUID !=
+                                  widget.senderUID
+                              ? EdgeInsets.only(bottom: 0, right: 50)
+                              : EdgeInsets.only(bottom: 0, left: 50),
+                          child: Align(
+                            alignment: (messages.messages[index].recipientUID !=
+                                    widget.senderUID
+                                ? Alignment.topLeft
+                                : Alignment.topRight),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Color.fromARGB(255, 207, 207, 207),
+                                      spreadRadius: 0,
+                                      blurRadius: 1,
+                                      offset: Offset(0, 1))
+                                ],
+                                borderRadius:
+                                    messages.messages[index].recipientUID ==
+                                            widget.senderUID
+                                        ? BorderRadius.only(
+                                            topRight: Radius.circular(8),
+                                            bottomLeft: Radius.circular(8),
+                                            topLeft: Radius.circular(8))
+                                        : BorderRadius.only(
+                                            topRight: Radius.circular(8),
+                                            topLeft: Radius.circular(8),
+                                            bottomRight: Radius.circular(8)),
                                 color: (messages.messages[index].recipientUID ==
                                         widget.senderUID
-                                    ? Color.fromARGB(255, 136, 136, 136)
-                                    : Color.fromARGB(255, 136, 136, 136)),
+                                    ? Color.fromARGB(255, 244, 252, 225)
+                                    : Colors.white),
                               ),
-                            )),
-                          ]),
-                    ),
-                  ),
-                ),
-              ),
-              messages.messages[index].recipientUID == widget.senderUID
-                  ? Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.only(bottomRight: Radius.circular(0)),
-                        color: (messages.messages[index].recipientUID ==
-                                widget.senderUID
-                            ? Color(0x00F2F2F7)
-                            : kPrimaryColor),
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                        child: Text(
+                                      messages.messages[index].message,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: (messages.messages[index]
+                                                    .recipientUID ==
+                                                widget.senderUID
+                                            ? Colors.black
+                                            : Colors.black),
+                                      ),
+                                    )),
+                                    Container(
+                                        child: Text(
+                                      DateFormat('HH:mm').format(messages
+                                          .messages[index].time
+                                          .toDate()),
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w400,
+                                        color: (messages.messages[index]
+                                                    .recipientUID ==
+                                                widget.senderUID
+                                            ? Color.fromARGB(255, 136, 136, 136)
+                                            : Color.fromARGB(
+                                                255, 136, 136, 136)),
+                                      ),
+                                    )),
+                                  ]),
+                            ),
+                          ),
+                        ),
                       ),
-                    )
-                  : Container()
-            ],
-          );
+                      messages.messages[index].recipientUID == widget.senderUID
+                          ? Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(0)),
+                                color: (messages.messages[index].recipientUID ==
+                                        widget.senderUID
+                                    ? Color(0x00F2F2F7)
+                                    : kPrimaryColor),
+                              ),
+                            )
+                          : Container()
+                    ],
+                  )));
         },
       ),
     );
@@ -388,6 +452,39 @@ class _CanalPageState extends State<CanalPage> {
     );
   }
 
+  void _selectMessage(int index) {
+    if (_selectMode) {
+      setState(() {
+        if (!_selectedMessages.contains(index))
+          _selectedMessages.add(index);
+        else {
+          _selectedMessages.remove(index);
+          if (_selectedMessages.length == 0) _selectMode = false;
+        }
+      });
+    }
+  }
+
+  void _initSelectMode(int index) {
+    setState(() {
+      _selectMode = true;
+      _selectedMessages.add(index);
+    });
+    print('segurou');
+    print(index);
+  }
+
+  void _deleteMessages() async {
+    BlocProvider.of<CommunicationCubit>(context)
+        .deleteMessages(
+            channelId: widget.canalName, messages: _selectedMessages)
+        .then((res) => setState(() {
+              _selectMode = false;
+              _selectedMessages = [];
+            }))
+        .catchError((e) => {});
+  }
+
   _sendMessage() async {
     if (_textMessageController.text.isNotEmpty) {
       await BlocProvider.of<CommunicationCubit>(context).sendTextMessage(
@@ -396,8 +493,12 @@ class _CanalPageState extends State<CanalPage> {
           canalName: widget.canalName,
           type: 'TEXT',
           element: widget.userInfo);
-      _textMessageController.clear();
       //_messaging.subscribeToTopic();
+      BlocProvider.of<MyChatCubit>(context).sendPushMessage(
+          channelId: widget.canalName,
+          title: widget.canalName,
+          message: _textMessageController.text);
+      _textMessageController.clear();
       Timer(Duration(milliseconds: 500), () {
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       });

@@ -47,6 +47,10 @@ class FirebaseRepositoryImpl implements FirebaseRepository{
       remoteDataSource.getAllUsers();
 
   @override
+  Future<void> sendPushMessage(String channelId, String title, String message) =>
+      remoteDataSource.sendPushMessage(channelId, title, message);
+
+  @override
   Stream<UserEntity> getCurrentUser() =>
       remoteDataSource.getCurrentUser();
 
@@ -56,6 +60,11 @@ class FirebaseRepositoryImpl implements FirebaseRepository{
   @override
   Stream<List<TextMessageEntity>> getMessages(String channelId) {
     return remoteDataSource.getMessages(channelId);
+  }
+
+  @override
+  Future<void> deleteMessages(String channelId, List<String> messages) {
+    return remoteDataSource.deleteMessages(channelId, messages);
   }
 
   @override

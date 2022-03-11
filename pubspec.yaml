@@ -26,6 +26,8 @@ dependencies:
   firebase_auth: 
   cloud_firestore: 
   firebase_storage: 
+  firebase_messaging: ^11.2.8
+  cloud_functions: ^3.2.10
 
   responsive_builder: 
 
@@ -48,7 +50,6 @@ dependencies:
   #file_picker
   file_picker: ^4.4.0
   timeago: ^3.2.2
-  firebase_messaging: ^11.2.8
 
 dev_dependencies:
   flutter_test:
