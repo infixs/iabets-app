@@ -291,7 +291,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     final myChatRef =
         fireStore.collection('users').doc(uid).collection('myChat');
 
-    return myChatRef.orderBy('time', descending: true).snapshots().map(
+    return myChatRef.snapshots().map(
           (querySnap) => querySnap.docs
               .map((doc) => MyChatModel.fromSnapShot(doc))
               .toList(),
@@ -312,6 +312,20 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     });
 
     return await messagesBatch.commit();
+  }
+
+  @override
+  Future<void> editMessage(
+      String channelId, String messageId, String messageText) async {
+    final messageRef = fireStore
+        .collection("myChatChannel")
+        .doc(channelId)
+        .collection('messages')
+        .doc(messageId);
+
+    await messageRef.update({
+      "message": messageText
+    });
   }
 
   @override

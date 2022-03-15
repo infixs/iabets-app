@@ -19,8 +19,10 @@ void main() async {
   );
   await di.init();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: kBackgroundColor,
-      statusBarIconBrightness: Brightness.dark));
+      statusBarColor: kPrimaryColor,
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.light)
+  );
   runApp(MyApp());
 }
 

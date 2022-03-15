@@ -30,10 +30,8 @@ exports.sendMessage = functions.runWith(runtimeOpts).region('southamerica-east1'
                     contentAvailable: true,
                   },
                 },
-                headers: {
-                  "apns-push-type": "background",
-                  "apns-priority": "5", // Must be `5` when `contentAvailable` is set to true.
-                  "apns-topic": "io.flutter.plugins.firebase.messaging", // bundle identifier
+                headers: { '1q'
+                  "apns-priority": "10"
                 },
             },
         })

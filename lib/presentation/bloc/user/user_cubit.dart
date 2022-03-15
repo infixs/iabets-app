@@ -36,6 +36,10 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
+  bool currentUserIsAdmin() {
+    return (state as CurrentUserChanged).user.isAdmin == true;
+  }
+
   Future<void> getCurrentUser() async {
     try {
       final userStreamData = getCurrentUserUseCase.call();

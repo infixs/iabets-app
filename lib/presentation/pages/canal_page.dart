@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:ia_bet/app_const.dart';
 import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
@@ -22,6 +24,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../bloc/communication/communication_cubit.dart';
 
 TextEditingController _textMessageController = TextEditingController();
+TextEditingController _editMessageTextController = TextEditingController();
 FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
 class CanalPage extends StatefulWidget {
@@ -47,8 +50,9 @@ class _CanalPageState extends State<CanalPage> {
       mask: '(##) #####-####', filter: {"#": RegExp(r'[0-9]')});
   ScrollController _scrollController = new ScrollController();
   var _isVisible = false;
-  var _loading = true;
   bool _selectMode = false;
+  bool _keyBoardIsOpen = false;
+  int totalMessages = 0;
   List<int> _selectedMessages = <int>[];
 
   @override
@@ -75,20 +79,14 @@ class _CanalPageState extends State<CanalPage> {
         }
       }
     });
+
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      Timer.periodic(const Duration(microseconds: 200), (timer) {
-        if (_scrollController.hasClients) {
-          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-          timer.cancel();
-          _loading = false;
-        }
-      });
+      _goScrollDown();
     });
   }
 
   @override
   void dispose() {
-    print('dispose');
     super.dispose();
   }
 
@@ -97,10 +95,7 @@ class _CanalPageState extends State<CanalPage> {
     return WillPopScope(
         onWillPop: () async {
           if (_selectMode) {
-            setState(() {
-              _selectMode = false;
-              _selectedMessages = [];
-            });
+            _endSelectedMode();
             return false;
           } else {
             return true;
@@ -114,7 +109,7 @@ class _CanalPageState extends State<CanalPage> {
               child: new FloatingActionButton.small(
                 elevation: 0,
                 backgroundColor: Color(0xA1333333),
-                onPressed: _scrollDown,
+                onPressed: _goScrollDown,
                 tooltip: 'Increment',
                 child: Icon(Icons.arrow_downward),
               ),
@@ -122,15 +117,6 @@ class _CanalPageState extends State<CanalPage> {
           ),
           backgroundColor: kBackgroundColor,
           appBar: AppBar(
-            systemOverlayStyle: SystemUiOverlayStyle(
-              // Status bar color
-              statusBarColor: Colors.transparent,
-
-              // Status bar brightness (optional)
-              statusBarIconBrightness:
-                  Brightness.light, // For Android (dark icons)
-              statusBarBrightness: Brightness.light, // For iOS (dark icons)
-            ),
             titleSpacing: 0,
             elevation: 0,
             centerTitle: false,
@@ -185,15 +171,34 @@ class _CanalPageState extends State<CanalPage> {
                   : Container(),
               _selectMode && _selectedMessages.length == 1
                   ? IconButton(
-                      onPressed: () {},
+                      onPressed: _editMessage,
                       icon: Icon(Icons.edit),
                     )
                   : Container()
             ],
           ),
           body: BlocBuilder<CommunicationCubit, CommunicationState>(
-              builder: (_, communicationState) {
-            print('ChatPage: Estou no comunicState');
+              buildWhen: (context, state) {
+            return state is CommunicationLoaded;
+          }, builder: (_, communicationState) {
+            if (!_keyBoardIsOpen &&
+                MediaQuery.of(context).viewInsets.bottom > 0) {
+              _goScrollDown();
+              if (_scrollController.position.pixels >=
+                  _scrollController.position.maxScrollExtent) {
+                _keyBoardIsOpen = true;
+              }
+            }
+            if (_keyBoardIsOpen &&
+                MediaQuery.of(context).viewInsets.bottom == 0) {
+              _keyBoardIsOpen = false;
+            }
+
+            if (communicationState is CommunicationLoaded) {
+              if (totalMessages < communicationState.messages.length)
+                _goScrollDown();
+              totalMessages = communicationState.messages.length;
+            }
 
             return BlocBuilder<UserCubit, UserState>(
                 builder: (context, userState) {
@@ -228,20 +233,31 @@ class _CanalPageState extends State<CanalPage> {
                           bottom: userState is CurrentUserChanged &&
                                   userState.user.isAdmin
                               ? 64
-                              : 0,
+                              : 45,
                           child: mensagesChatWidget(communicationState))),
                 if (communicationState is! CommunicationLoaded)
                   Center(
                     child: CircularProgressIndicator(),
                   ),
-                Positioned(
-                    bottom: 10,
-                    left: 10,
-                    right: 10,
-                    child: userState is CurrentUserChanged &&
-                            userState.user.isAdmin
-                        ? writeMessageWidget()
-                        : Container())
+                userState is CurrentUserChanged && userState.user.isAdmin
+                    ? Positioned(
+                        bottom: 10,
+                        left: 10,
+                        right: 10,
+                        child: writeMessageWidget())
+                    : Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 45,
+                          alignment: Alignment.center,
+                          color: Colors.white,
+                          child: Text(
+                            "Esse canal é somente leitura",
+                            style: TextStyle(color: Colors.black45),
+                          ),
+                        ))
               ]);
             });
           }),
@@ -253,7 +269,7 @@ class _CanalPageState extends State<CanalPage> {
       child: ListView.builder(
         controller: _scrollController,
         itemCount: messages.messages.length,
-        padding: EdgeInsets.only(top: 10, bottom: 0),
+        padding: EdgeInsets.only(top: 10, bottom: 5),
         itemBuilder: (context, index) {
           return GestureDetector(
               onLongPress: () => _initSelectMode(index),
@@ -322,17 +338,9 @@ class _CanalPageState extends State<CanalPage> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Container(
-                                        child: Text(
-                                      messages.messages[index].message,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: (messages.messages[index]
-                                                    .recipientUID ==
-                                                widget.senderUID
-                                            ? Colors.black
-                                            : Colors.black),
-                                      ),
-                                    )),
+                                      child: _generateTextMessage(
+                                          messages.messages[index].message),
+                                    ),
                                     Container(
                                         child: Text(
                                       DateFormat('HH:mm').format(messages
@@ -384,7 +392,8 @@ class _CanalPageState extends State<CanalPage> {
         borderRadius: new BorderRadius.circular(25),
         child: TextField(
           controller: _textMessageController,
-          keyboardType: TextInputType.text,
+          keyboardType: TextInputType.multiline,
+          maxLines: null,
           decoration: InputDecoration(
               hintText: 'Mensagem...',
               filled: true,
@@ -392,11 +401,11 @@ class _CanalPageState extends State<CanalPage> {
               contentPadding:
                   const EdgeInsets.only(left: 15.0, bottom: 8.0, top: 8.0),
               hintStyle: TextStyle(
-                  fontSize: 16,
+                  fontSize: AppConst.chatTextSize,
                   fontWeight: FontWeight.w300,
                   color: Colors.grey),
               labelStyle: TextStyle(
-                  fontSize: 16,
+                  fontSize: AppConst.chatTextSize,
                   fontWeight: FontWeight.w300,
                   color: Colors.grey),
               focusedBorder: OutlineInputBorder(
@@ -466,22 +475,70 @@ class _CanalPageState extends State<CanalPage> {
   }
 
   void _initSelectMode(int index) {
+    if (!BlocProvider.of<UserCubit>(context).currentUserIsAdmin()) return;
     setState(() {
       _selectMode = true;
       _selectedMessages.add(index);
     });
-    print('segurou');
-    print(index);
+  }
+
+  Widget _generateTextMessage(String message) {
+    List<TextSpan> textMessage = [];
+    final searchLinks = RegExp(
+        r'(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])',
+        caseSensitive: false,
+        multiLine: true);
+    if (searchLinks.hasMatch(message)) {
+      int initialPosition = 0;
+      searchLinks.allMatches(message).forEach((element) {
+        final String linkText = message.substring(element.start, element.end);
+        if (element.start > 0) {
+          textMessage.add(TextSpan(
+              text: message.substring(initialPosition, element.start),
+              style: TextStyle(
+                  fontSize: AppConst.chatTextSize, color: Colors.black)));
+        }
+
+        textMessage.add(TextSpan(
+            text: linkText,
+            style:
+                TextStyle(fontSize: AppConst.chatTextSize, color: Colors.blue),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () async {
+                final existsHttp = RegExp(r'^https?', caseSensitive: false);
+
+                await launchURL(!existsHttp.hasMatch(linkText)
+                    ? "https://" + linkText
+                    : linkText);
+              }));
+
+        initialPosition = element.end;
+      });
+      if (initialPosition != message.length) {
+        textMessage.add(TextSpan(
+            text: message.substring(initialPosition, message.length),
+            style: TextStyle(
+                fontSize: AppConst.chatTextSize, color: Colors.black)));
+      }
+    } else {
+      textMessage.add(TextSpan(
+          text: message,
+          style:
+              TextStyle(fontSize: AppConst.chatTextSize, color: Colors.black)));
+    }
+
+    return RichText(text: TextSpan(children: textMessage));
+  }
+
+  Future<void> launchURL(url) async {
+    if (!await launch(url)) throw 'Could not launch $url';
   }
 
   void _deleteMessages() async {
     BlocProvider.of<CommunicationCubit>(context)
         .deleteMessages(
             channelId: widget.canalName, messages: _selectedMessages)
-        .then((res) => setState(() {
-              _selectMode = false;
-              _selectedMessages = [];
-            }))
+        .then((res) => _endSelectedMode())
         .catchError((e) => {});
   }
 
@@ -503,6 +560,75 @@ class _CanalPageState extends State<CanalPage> {
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       });
     }
+  }
+
+  void _goScrollDown() {
+    Timer.periodic(const Duration(milliseconds: 1), (timer) async {
+      if (_scrollController.hasClients) {
+        print("vamos ver 2");
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        timer.cancel();
+
+        await Future.delayed(Duration(milliseconds: 200), () {
+          if (_scrollController.position.maxScrollExtent !=
+              _scrollController.position.pixels) _goScrollDown();
+        });
+      }
+    });
+  }
+
+  void _editMessage() {
+    String message = BlocProvider.of<CommunicationCubit>(context)
+        .getMessage(_selectedMessages[0]);
+
+    _editMessageTextController.text = message;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // retorna um objeto do tipo Dialog
+        return AlertDialog(
+          title: new Text("Editar mensagem:"),
+          content: TextFormField(
+            controller: _editMessageTextController,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.blue,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancelar'),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.blue,
+              ),
+              onPressed: () async {
+                await BlocProvider.of<CommunicationCubit>(context).editMessage(
+                    channelId: widget.canalName,
+                    messageIndex: _selectedMessages[0],
+                    messageText: _editMessageTextController.text);
+                Navigator.pop(context);
+                _endSelectedMode();
+              },
+              child: Text('Salvar'),
+            )
+            // define os botões na base do dialogo
+          ],
+        );
+      },
+    );
+  }
+
+  void _endSelectedMode() {
+    setState(() {
+      _selectedMessages = [];
+      _selectMode = false;
+    });
   }
 
   _sendFile() async {

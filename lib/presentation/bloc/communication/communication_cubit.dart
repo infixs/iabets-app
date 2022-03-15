@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
@@ -15,6 +16,7 @@ import 'package:ia_bet/domain/usecases/get_url_file_usecase.dart';
 import 'package:ia_bet/domain/usecases/send_text_message_usecase.dart';
 import 'package:ia_bet/domain/usecases/upload_file_usecase.dart';
 import 'package:ia_bet/domain/usecases/delete_messages_usecase.dart';
+import 'package:ia_bet/domain/usecases/edit_message_usecase.dart';
 import 'package:ia_bet/repository/data.dart';
 
 part 'communication_state.dart';
@@ -29,6 +31,7 @@ class CommunicationCubit extends Cubit<CommunicationState> {
   final UploadFiletUseCase uploadFiletUseCase;
   final GetUrlFileUseCase getUrlFileUseCase;
   final DeleteMessagesUseCase deleteMessagesUseCase;
+  final EditMessageUseCase editMessageUseCase;
 
   CommunicationCubit(
       {required this.getTextMessagesUseCase,
@@ -38,7 +41,8 @@ class CommunicationCubit extends Cubit<CommunicationState> {
       required this.getAllUserUseCase,
       required this.getUrlFileUseCase,
       required this.uploadFiletUseCase,
-      required this.deleteMessagesUseCase})
+      required this.deleteMessagesUseCase,
+      required this.editMessageUseCase})
       : super(CommunicationInitial());
 
   Future<void> sendTextMessage(
@@ -103,14 +107,13 @@ class CommunicationCubit extends Cubit<CommunicationState> {
     emit(CommunicationLoading());
     try {
       final messagesStreamData = getTextMessagesUseCase.call(canalName);
+      
       messagesStreamData.listen((messages) {
         emit(CommunicationLoaded(messages: messages));
       });
 
-      List<TextMessageEntity> messages = await messagesStreamData.first;
 
-      print('messages');
-      print(messages.length);
+      List<TextMessageEntity> messages = await messagesStreamData.first;
 
       emit(CommunicationLoaded(messages: await messagesStreamData.first));
     } on SocketException catch (_) {
@@ -120,9 +123,12 @@ class CommunicationCubit extends Cubit<CommunicationState> {
     }
   }
 
+  String getMessage(int index) {
+    return (state as CommunicationLoaded).messages[index].message;
+  }
+
   Future<void> deleteMessages(
       {required String channelId, required List<int> messages}) async {
-    print("vai deletar");
     List<TextMessageEntity> currentMessages =
         (state as CommunicationLoaded).messages;
 
@@ -133,6 +139,19 @@ class CommunicationCubit extends Cubit<CommunicationState> {
     });
 
     deleteMessagesUseCase.call(channelId, deleteMessages);
+  }
+
+  Future<void> editMessage(
+      {required String channelId,
+      required int messageIndex,
+      required String messageText}) async {
+    String messageId =
+        (state as CommunicationLoaded).messages[messageIndex].messageId;
+
+    print(channelId);
+    print(messageId);
+    print(messageText);
+    editMessageUseCase.call(channelId, messageId, messageText);
   }
 
   Future<void> sendFile(

@@ -68,6 +68,11 @@ class FirebaseRepositoryImpl implements FirebaseRepository{
   }
 
   @override
+  Future<void> editMessage(String channelId, String messageId, String messageText) {
+    return remoteDataSource.editMessage(channelId, messageId, messageText);
+  }
+
+  @override
   Stream<List<MyChatEntity>> getMyChat(String uid) {
     return remoteDataSource.getMyChat(uid);
   }

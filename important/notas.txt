@@ -2,3 +2,4 @@ Senha da chave
 
 IABetsFullApp#!@
 
+flutter build appbundle --no-sound-null-safety pra gerar o aab do googleplay

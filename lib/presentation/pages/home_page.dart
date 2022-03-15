@@ -9,6 +9,7 @@ import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
 import 'package:ia_bet/presentation/pages/canal_page.dart';
+import 'package:ia_bet/presentation/pages/login_page.dart';
 import 'package:ia_bet/presentation/pages/perfil_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -51,12 +52,12 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print('cvmassa');
-      setState(() {
+      /* setState(() {
         /*        
             RemoteNotification notification = message.notification;
             AndroidNotification android = message.notification?.android;
            */
-      });
+      }); */
     });
     FirebaseMessaging.onBackgroundMessage((message) {
       print("Notificação em background $message");
@@ -65,6 +66,7 @@ class _HomePageState extends State<HomePage> {
       });
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+      print("Pushed message");
       if (message.data.containsKey('channelId'))
         Navigator.push(
             context,
@@ -95,18 +97,13 @@ class _HomePageState extends State<HomePage> {
         return Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: AppBar(
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness:
-                  Brightness.light, // For Android (dark icons)
-              statusBarBrightness: Brightness.light, // For iOS (dark icons)
-            ),
             iconTheme: IconThemeData(
               color: Colors.white,
             ),
             automaticallyImplyLeading: false,
             elevation: 0,
             centerTitle: false,
+            backgroundColor: kPrimaryColor,
             title: Text("IABets",
                 style: TextStyle(
                   color: Colors.white,
@@ -189,7 +186,6 @@ class _HomePageState extends State<HomePage> {
                           GestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: () {
-                              print('1');
                               launchURL('https://placar.iabetsoficial.com.br/');
                             },
                             child: Container(
@@ -340,8 +336,8 @@ class _HomePageState extends State<HomePage> {
         : ListView.builder(
             itemCount: myChatData.myChat.length,
             itemBuilder: (BuildContext context, int index) {
-              final DateTime chatTime =
-                  DateTime.parse(myChatData.myChat[0].time.toDate().toString());
+              final DateTime chatTime = DateTime.parse(
+                  myChatData.myChat[index].time.toDate().toString());
               final difference = nowTime.difference(chatTime);
               return Column(
                 children: [
@@ -363,15 +359,12 @@ class _HomePageState extends State<HomePage> {
                             color: kSecondColor,
                             fontSize: 16.0,
                             fontWeight: FontWeight.w600)),
-                            subtitle: Text(
-                              myChatData.myChat[index].recentTextMessage,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w400
-                              )
-                            ),
+                    subtitle: Text(myChatData.myChat[index].recentTextMessage,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w400)),
                     trailing: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -422,7 +415,8 @@ class _HomePageState extends State<HomePage> {
         break;
       case 'logout':
         await BlocProvider.of<AuthCubit>(context).loggedOut();
-        //Navigator.of(context).pop();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
         break;
     }
   }

@@ -9,6 +9,7 @@ import 'package:ia_bet/domain/repositories/firebase_repository.dart';
 import 'package:ia_bet/domain/usecases/add_to_my_chat_usecase.dart';
 import 'package:ia_bet/domain/usecases/create_one_to_one_chat_channel_usecase.dart';
 import 'package:ia_bet/domain/usecases/delete_messages_usecase.dart';
+import 'package:ia_bet/domain/usecases/edit_message_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_all_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_create_current_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_current_uid_usecase.dart';
@@ -52,7 +53,8 @@ Future<void> init() async {
         getAllUserUseCase: sl.call(),
         getUrlFileUseCase: sl.call(), 
         uploadFiletUseCase: sl.call(),
-        deleteMessagesUseCase: sl.call()
+        deleteMessagesUseCase: sl.call(),
+        editMessageUseCase: sl.call()
       ));
   sl.registerFactory<MyChatCubit>(() => MyChatCubit(
         getMyChatUseCase: sl.call(),
@@ -104,6 +106,8 @@ Future<void> init() async {
       () => GetTextMessagesUseCase(repository: sl.call()));
   sl.registerLazySingleton<DeleteMessagesUseCase>(
       () => DeleteMessagesUseCase(repository: sl.call()));
+  sl.registerLazySingleton<EditMessageUseCase>(
+      () => EditMessageUseCase(repository: sl.call()));
   sl.registerLazySingleton<SendTextMessageUseCase>(
       () => SendTextMessageUseCase(repository: sl.call()));
   sl.registerLazySingleton<AddToMyChatUseCase>(

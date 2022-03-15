@@ -25,6 +25,7 @@ abstract class FirebaseRepository {
   Future<void> sendPushMessage(String channelId, String title, String message);
 
   Future<void> deleteMessages(String channelId, List<String> messages);
+  Future<void> editMessage(String channelId, String messageId, String messageText);
 
   Future<void> createOneToOneChatChannel(
       String uid, String name, List<UserEntity> allUsers);
