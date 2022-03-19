@@ -17,7 +17,6 @@ import 'package:ia_bet/domain/usecases/send_text_message_usecase.dart';
 import 'package:ia_bet/domain/usecases/upload_file_usecase.dart';
 import 'package:ia_bet/domain/usecases/delete_messages_usecase.dart';
 import 'package:ia_bet/domain/usecases/edit_message_usecase.dart';
-import 'package:ia_bet/repository/data.dart';
 
 part 'communication_state.dart';
 

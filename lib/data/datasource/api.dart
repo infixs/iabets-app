@@ -3,7 +3,7 @@
 import 'package:dio/dio.dart';
 
 var options = BaseOptions(
-  baseUrl: 'http://placar.iabetsoficial.com.br/api/user/login',
+  baseUrl: 'https://placar.iabetsoficial.com.br/api/user/login',
   connectTimeout: 10000,
   receiveTimeout: 30000,
   headers: {

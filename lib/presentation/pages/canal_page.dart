@@ -16,7 +16,6 @@ import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
-import 'package:ia_bet/repository/data.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
