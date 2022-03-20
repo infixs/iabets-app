@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                               )),
                         ],
                       ),
-                      SizedBox(width: 15.0),
+                      /*SizedBox(width: 15.0),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -248,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                                 fontWeight: FontWeight.w400,
                               )),
                         ],
-                      ),
+                      ),*/
                     ],
                   ),
                   BlocBuilder<UserCubit, UserState>(
@@ -359,7 +359,7 @@ class _HomePageState extends State<HomePage> {
                             color: kSecondColor,
                             fontSize: 16.0,
                             fontWeight: FontWeight.w600)),
-                    subtitle: Text(myChatData.myChat[index].recentTextMessage,
+                    subtitle: Text(myChatData.myChat[index].recentTextMessage.indexOf('\n') > 0 ? myChatData.myChat[index].recentTextMessage.substring(0, myChatData.myChat[index].recentTextMessage.indexOf('\n')) : myChatData.myChat[index].recentTextMessage,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             color: Colors.grey,

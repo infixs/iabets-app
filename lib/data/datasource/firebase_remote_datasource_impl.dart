@@ -223,9 +223,25 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     final userCollectionRef = fireStore.collection("users");
     final oneToOneChatChannelRef = fireStore.collection('myChatChannel');
 
-    allUsers.forEach((element) {
+    final _chatChannelId = oneToOneChatChannelRef.doc().id;
+    var channelMap = {
+      "channelId": name,
+      "channelType": "oneToOneChat",
+      "name": name,
+      "uid": '111'
+    };
+    oneToOneChatChannelRef.doc(name).set(channelMap);
+    userCollectionRef.doc(name).set(channelMap);
+    //currentUser
+    userCollectionRef
+        .doc('111')
+        .collection("engagedChatChannel")
+        .doc(name)
+        .set(channelMap);
+
+    /*allUsers.forEach((element) {
       userCollectionRef
-          .doc(element.uid)
+          .doc('111')
           .collection('engagedChatChannel')
           .doc(name)
           .get()
@@ -259,7 +275,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       });
 
       return;
-    });
+    });*/
   }
 
   @override
