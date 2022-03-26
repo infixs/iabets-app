@@ -47,33 +47,69 @@ class CommunicationCubit extends Cubit<CommunicationState> {
   Future<void> sendTextMessage(
       {required String senderId,
       required String message,
+      required String senderName,
       required String canalName,
       required String type,
+      bool? isResponse,
+      String? responseText,
+      String? responseSenderName,
+      FileEntity? file,
       required UserEntity element}) async {
     try {
-      List<UserEntity> allUsers = [];
+      /*List<UserEntity> allUsers = [];
       final userStreamData = await getAllUserUseCase.call();
       userStreamData.listen((users) {
         allUsers = users;
       });
 
-      allUsers = await userStreamData.first;
+      allUsers = await userStreamData.first;*/
+
+      UserEntity userDefault = new UserEntity(
+          name: senderName,
+          email: 'admin@iabets.com.br',
+          phoneNumber: '+55',
+          isOnline: false,
+          uid: senderId,
+          profileUrl: '',
+          isAdmin: true);
 
       await sendTextMessageUseCase.sendTextMessage(
           TextMessageEntity(
             time: Timestamp.now(),
-            sederUID: '111',
+            sederUID: senderId,
             message: message,
             messageId: "",
             messsageType: type,
-            recipientName: '',
-            recipientUID: '',
-            senderName: '',
+            recipientName: senderName,
+            recipientUID: senderId,
+            file: file,
+            isResponse: isResponse == null ? false : isResponse,
+            responseText: responseText == null ? '' : responseText,
+            responseSenderName: responseSenderName == null ? '' : responseSenderName,
+            senderName: senderName,
           ),
           canalName,
+          userDefault);
+
+      await addToMyChatUseCase.call(
+          MyChatEntity(
+            time: Timestamp.now(),
+            senderUID: '111',
+            recentTextMessage: message,
+            profileURL: "",
+            isRead: false,
+            isArchived: false,
+            channelId: canalName,
+            name: '',
+            recipientName: '',
+            recipientPhoneNumber: '',
+            recipientUID: element.uid,
+            senderName: '',
+            senderPhoneNumber: '',
+          ),
           element);
 
-      allUsers.forEach((element) async {
+      /*allUsers.forEach((element) async {
         await addToMyChatUseCase.call(
             MyChatEntity(
               time: Timestamp.now(),
@@ -91,7 +127,7 @@ class CommunicationCubit extends Cubit<CommunicationState> {
               senderPhoneNumber: '',
             ),
             element);
-      });
+      });*/
     } on SocketException catch (e) {
       print(e);
       emit(CommunicationFailure());
@@ -106,11 +142,10 @@ class CommunicationCubit extends Cubit<CommunicationState> {
     emit(CommunicationLoading());
     try {
       final messagesStreamData = getTextMessagesUseCase.call(canalName);
-      
+
       messagesStreamData.listen((messages) {
         emit(CommunicationLoaded(messages: messages));
       });
-
 
       List<TextMessageEntity> messages = await messagesStreamData.first;
 
@@ -168,6 +203,7 @@ class CommunicationCubit extends Cubit<CommunicationState> {
           senderId: senderId,
           message: senderId,
           canalName: canalName,
+          senderName: name,
           type: type,
           element: element);
     } on SocketException catch (_) {

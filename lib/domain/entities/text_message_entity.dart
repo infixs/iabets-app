@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'dart:typed_data';
 
 class TextMessageEntity extends Equatable {
   final String senderName;
@@ -9,6 +10,10 @@ class TextMessageEntity extends Equatable {
   final String messsageType;
   final String message;
   final String messageId;
+  final bool? isResponse;
+  final String? responseText;
+  final String? responseSenderName;
+  final FileEntity? file;
   final Timestamp time;
 
   TextMessageEntity({
@@ -19,19 +24,41 @@ class TextMessageEntity extends Equatable {
     required this.messsageType,
     required this.message,
     required this.messageId,
+    this.isResponse,
+    this.responseText,
+    this.responseSenderName,
+    this.file,
     required this.time,
   });
 
   @override
   // TODO: implement props
   List<Object> get props => [
-    senderName,
-    sederUID,
-    recipientName,
-    recipientUID,
-    messsageType,
-    message,
-    messageId,
-    time,
-  ];
+        senderName,
+        sederUID,
+        recipientName,
+        recipientUID,
+        messsageType,
+        message,
+        messageId,
+        isResponse != null && isResponse == true,
+        responseText != null ? responseText.toString() : '',
+        responseSenderName != null ? responseSenderName.toString() : '',
+        file!,
+        time,
+      ];
+}
+
+class FileEntity{
+  final String name;
+  final String mime;
+  String? url;
+  final Uint8List? bytes;
+
+  FileEntity({
+    required this.name,
+    required this.mime,
+    this.url,
+    this.bytes,
+  });
 }

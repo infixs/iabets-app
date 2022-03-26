@@ -50,23 +50,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     BlocProvider.of<MyChatCubit>(context).getMyChat(uid: '111');
     super.initState();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      print('cvmassa');
-      /* setState(() {
-        /*        
-            RemoteNotification notification = message.notification;
-            AndroidNotification android = message.notification?.android;
-           */
-      }); */
-    });
-    FirebaseMessaging.onBackgroundMessage((message) {
-      print("Notificação em background $message");
-      return Future(() {
-        print("Notificação em background $message");
-      });
-    });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      print("Pushed message");
       if (message.data.containsKey('channelId'))
         Navigator.push(
             context,
@@ -128,7 +112,8 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () => Navigator.of(context).pop())*/
             ],
           ),
-          body: Stack(children: [
+          body: Stack(
+            children: [
             Positioned(
               top: MediaQuery.of(context).size.height * 0.5,
               left: 0,

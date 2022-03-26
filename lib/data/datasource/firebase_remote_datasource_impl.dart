@@ -231,7 +231,41 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       "uid": '111'
     };
     oneToOneChatChannelRef.doc(name).set(channelMap);
-    userCollectionRef.doc(name).set(channelMap);
+
+    MyChatEntity myChatEntity = MyChatEntity(
+      time: Timestamp.now(),
+      senderUID: '111',
+      recentTextMessage: "",
+      profileURL: "",
+      isRead: false,
+      isArchived: false,
+      channelId: name,
+      name: '',
+      recipientName: '',
+      recipientPhoneNumber: '',
+      recipientUID: '111',
+      senderName: '',
+      senderPhoneNumber: '',
+    );
+
+    final myNewChat = MyChatModel(
+            time: myChatEntity.time,
+            senderName: myChatEntity.senderName,
+            senderUID: myChatEntity.senderPhoneNumber,
+            recipientUID: myChatEntity.recipientUID,
+            recipientName: myChatEntity.recipientName,
+            channelId: myChatEntity.channelId,
+            isArchived: myChatEntity.isArchived,
+            isRead: myChatEntity.isRead,
+            profileURL: myChatEntity.profileURL,
+            recentTextMessage: myChatEntity.recentTextMessage,
+            recipientPhoneNumber: myChatEntity.recipientPhoneNumber,
+            senderPhoneNumber: myChatEntity.senderPhoneNumber,
+            name: myChatEntity.name)
+        .toDocument();
+
+    userCollectionRef.doc('111').collection('myChat').doc(name).set(myNewChat);
+
     //currentUser
     userCollectionRef
         .doc('111')
@@ -339,9 +373,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         .collection('messages')
         .doc(messageId);
 
-    await messageRef.update({
-      "message": messageText
-    });
+    await messageRef.update({"message": messageText});
   }
 
   @override
@@ -365,20 +397,35 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       String channelId, UserEntity allUsers) async {
     final messageRef = fireStore.collection('myChatChannel').doc(channelId);
 
-    //final messageId = messageRef.doc().id;
+    final docRef = messageRef.collection('messages').doc();
 
+    if (textMessageEntity.file != null) {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference storageRef =
+          FirebaseStorage.instance.ref('$channelId/$fileName');
+      await storageRef.putData(textMessageEntity.file!.bytes!).then((snapshot) async {
+        textMessageEntity.file?.url = await snapshot.ref.getDownloadURL();
+      });
+
+      //.putData(textMessageEntity.file!.bytes);
+    }
+    
     final newMessage = TextMessageModel(
       message: textMessageEntity.message,
-      messageId: '',
+      messageId: docRef.id,
       messageType: textMessageEntity.messsageType,
       sederUID: textMessageEntity.sederUID,
       time: textMessageEntity.time,
-      recipientName: allUsers.name,
-      recipientUID: allUsers.uid,
-      senderName: '',
+      recipientName: textMessageEntity.senderName,
+      recipientUID: textMessageEntity.sederUID,
+      isResponse: textMessageEntity.isResponse,
+      responseText: textMessageEntity.responseText,
+      responseSenderName: textMessageEntity.responseSenderName,
+      senderName: textMessageEntity.senderName,
+      file: textMessageEntity.file
     ).toDocument();
 
-    messageRef.collection('messages').add(newMessage);
+    docRef.set(newMessage);
   }
 
   @override

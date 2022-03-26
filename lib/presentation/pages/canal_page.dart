@@ -13,18 +13,21 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:ia_bet/app_const.dart';
 import 'package:ia_bet/constants/cores_constants.dart';
+import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:typed_data';
 
 import '../bloc/communication/communication_cubit.dart';
 
 TextEditingController _textMessageController = TextEditingController();
 TextEditingController _editMessageTextController = TextEditingController();
 FirebaseMessaging _messaging = FirebaseMessaging.instance;
+FocusNode myFocusNode = FocusNode();
 
 class CanalPage extends StatefulWidget {
   final String senderUID;
@@ -50,6 +53,11 @@ class _CanalPageState extends State<CanalPage> {
   ScrollController _scrollController = new ScrollController();
   var _isVisible = false;
   bool _selectMode = false;
+  bool _isReply = false;
+  bool _isFile = false;
+  late FileEntity _file;
+  String replyText = "";
+  String replySender = "";
   bool _keyBoardIsOpen = false;
   int totalMessages = 0;
   List<int> _selectedMessages = <int>[];
@@ -93,7 +101,9 @@ class _CanalPageState extends State<CanalPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-          if (_selectMode) {
+          if (_selectMode || _isReply || _isFile) {
+            _cancelReply();
+            _isFile = false;
             _endSelectedMode();
             return false;
           } else {
@@ -173,6 +183,12 @@ class _CanalPageState extends State<CanalPage> {
                       onPressed: _editMessage,
                       icon: Icon(Icons.edit),
                     )
+                  : Container(),
+              _selectMode && _selectedMessages.length == 1
+                  ? IconButton(
+                      onPressed: _replyMessage,
+                      icon: Icon(Icons.reply),
+                    )
                   : Container()
             ],
           ),
@@ -233,17 +249,23 @@ class _CanalPageState extends State<CanalPage> {
                                   userState.user.isAdmin
                               ? 64
                               : 45,
-                          child: mensagesChatWidget(communicationState))),
+                          child: mensagesChatWidget(
+                              communicationState,
+                              userState is CurrentUserChanged
+                                  ? userState.user.isAdmin
+                                  : false))),
                 if (communicationState is! CommunicationLoaded)
                   Center(
                     child: CircularProgressIndicator(),
                   ),
-                userState is CurrentUserChanged && userState.user.isAdmin
+                userState is CurrentUserChanged &&
+                        userState.user.isAdmin &&
+                        communicationState is CommunicationLoaded
                     ? Positioned(
                         bottom: 10,
                         left: 10,
                         right: 10,
-                        child: writeMessageWidget())
+                        child: writeMessageWidget(communicationState))
                     : Positioned(
                         bottom: 0,
                         left: 0,
@@ -263,7 +285,7 @@ class _CanalPageState extends State<CanalPage> {
         ));
   }
 
-  Widget mensagesChatWidget(CommunicationLoaded messages) {
+  Widget mensagesChatWidget(CommunicationLoaded messages, bool isAdmin) {
     return Container(
       child: ListView.builder(
         controller: _scrollController,
@@ -271,7 +293,10 @@ class _CanalPageState extends State<CanalPage> {
         padding: EdgeInsets.only(top: 10, bottom: 5),
         itemBuilder: (context, index) {
           return GestureDetector(
-              onLongPress: () => _initSelectMode(index),
+              onLongPress: () => _initSelectMode(
+                  index,
+                  messages.messages[index].message,
+                  messages.messages[index].senderName),
               onTapDown: (d) => _selectMessage(index),
               child: Container(
                   padding: EdgeInsets.only(top: 5, bottom: 5),
@@ -281,21 +306,7 @@ class _CanalPageState extends State<CanalPage> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(width: 5),
-                      messages.messages[index].recipientUID != widget.senderUID
-                          ? Container(
-                              width: 10,
-                              height: 10,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(125)),
-                                color: (messages.messages[index].recipientUID ==
-                                        widget.senderUID
-                                    ? Color(0xFFF2F2F7)
-                                    : Color(0x00FFFFFF)),
-                              ),
-                            )
-                          : Container(),
+                      SizedBox(width: 10),
                       Flexible(
                         child: Container(
                           padding: messages.messages[index].recipientUID !=
@@ -308,6 +319,8 @@ class _CanalPageState extends State<CanalPage> {
                                 ? Alignment.topLeft
                                 : Alignment.topRight),
                             child: Container(
+                              padding: EdgeInsets.only(
+                                  left: 10, top: 10, right: 10, bottom: 10),
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
@@ -332,15 +345,109 @@ class _CanalPageState extends State<CanalPage> {
                                     ? Color.fromARGB(255, 244, 252, 225)
                                     : Colors.white),
                               ),
-                              padding: EdgeInsets.all(10),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      child: _generateTextMessage(
-                                          messages.messages[index].message),
-                                    ),
-                                    Container(
+                              child: Stack(children: [
+                                Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if (messages.messages[index].isResponse !=
+                                              null &&
+                                          messages.messages[index].isResponse ==
+                                              true)
+                                        Container(
+                                            margin: EdgeInsets.only(bottom: 10),
+                                            padding: EdgeInsets.only(
+                                                right: 7,
+                                                left: 7,
+                                                bottom: 7,
+                                                top: 7),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5)),
+                                              color:
+                                                  Color.fromARGB(15, 0, 0, 0),
+                                            ),
+                                            child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    (isAdmin
+                                                        ? () {
+                                                            String? name = messages
+                                                                .messages[index]
+                                                                .responseSenderName;
+
+                                                            return name !=
+                                                                        null &&
+                                                                    name.length >
+                                                                        0
+                                                                ? name
+                                                                : 'IA Bets';
+                                                          }()
+                                                        : 'IA Bets'),
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.blue[900],
+                                                    ),
+                                                  ),
+                                                  Text(() {
+                                                    String? response = messages
+                                                        .messages[index]
+                                                        .responseText;
+
+                                                    return response != null &&
+                                                            response.length > 0
+                                                        ? response
+                                                        : 'Mensagem apagada';
+                                                  }())
+                                                ])),
+                                      if (messages
+                                              .messages[index].recipientUID !=
+                                          widget.senderUID)
+                                        Container(
+                                          child: Text(
+                                            isAdmin &&
+                                                    messages.messages[index]
+                                                            .senderName.length >
+                                                        0
+                                                ? messages
+                                                    .messages[index].senderName
+                                                : 'IA Bets',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.blue[900]),
+                                          ),
+                                        ),
+                                      if (messages.messages[index]
+                                                  .messsageType ==
+                                              "FILE" &&
+                                          messages.messages[index].file !=
+                                              null &&
+                                          messages.messages[index].file!.url !=
+                                              null)
+                                        Container(
+                                          margin: EdgeInsets.only(bottom: 20),
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: Image.network(messages
+                                                  .messages[index].file!.url!)),
+                                        ),
+                                      if(messages.messages[index].message.length > 0)
+                                      Container(
+                                        constraints:
+                                            BoxConstraints(minWidth: 30),
+                                        margin: EdgeInsets.only(bottom: 20),
+                                        child: _generateTextMessage(
+                                            messages.messages[index].message),
+                                      ),
+                                    ]),
+                                Positioned(
+                                    right: 0,
+                                    bottom: 0,
+                                    child: Container(
                                         child: Text(
                                       DateFormat('HH:mm').format(messages
                                           .messages[index].time
@@ -355,8 +462,8 @@ class _CanalPageState extends State<CanalPage> {
                                             : Color.fromARGB(
                                                 255, 136, 136, 136)),
                                       ),
-                                    )),
-                                  ]),
+                                    )))
+                              ]),
                             ),
                           ),
                         ),
@@ -382,72 +489,147 @@ class _CanalPageState extends State<CanalPage> {
     );
   }
 
-  Widget writeMessageWidget() {
+  Widget writeMessageWidget(CommunicationLoaded messages) {
     return Container(
       width: MediaQuery.of(context).size.width - 20,
       child: Material(
         elevation: 1.5,
         shadowColor: Color.fromARGB(100, 241, 241, 241),
         borderRadius: new BorderRadius.circular(25),
-        child: TextField(
-          controller: _textMessageController,
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          decoration: InputDecoration(
-              hintText: 'Mensagem...',
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding:
-                  const EdgeInsets.only(left: 15.0, bottom: 8.0, top: 8.0),
-              hintStyle: TextStyle(
-                  fontSize: AppConst.chatTextSize,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.grey),
-              labelStyle: TextStyle(
-                  fontSize: AppConst.chatTextSize,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.grey),
-              focusedBorder: OutlineInputBorder(
-                borderSide: new BorderSide(color: Colors.white),
-                borderRadius: new BorderRadius.circular(25),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: new BorderSide(color: Colors.white),
-                borderRadius: new BorderRadius.circular(25),
-              ),
-              prefixIcon: IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.sentiment_satisfied_alt),
-                color: textSilver,
-              ),
-              suffixIcon: Container(
-                child: Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween, // added line
-                  mainAxisSize: MainAxisSize.min, // added line
-                  children: [
-                    Container(
-                      child: IconButton(
-                        onPressed: () {
-                          _sendFile();
-                        },
-                        icon: Icon(Icons.attach_file),
-                        color: textSilver,
-                      ),
-                    ),
-                    Container(
-                      child: IconButton(
-                        onPressed: () {
-                          _sendMessage();
-                        },
-                        icon: Icon(Icons.send),
-                        color: Colors.black,
-                      ),
-                    )
-                  ],
+        color: Colors.white,
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          if (_isReply || _isFile)
+            Stack(children: [
+              Container(
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: Color.fromARGB(15, 0, 0, 0),
                 ),
-              )),
-        ),
+                child: _isReply
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                            Row(children: [
+                              Expanded(
+                                  child: Padding(
+                                      padding: EdgeInsets.only(bottom: 5),
+                                      child: Text(
+                                        (replySender.length > 0
+                                            ? replySender
+                                            : 'Responder'),
+                                        style: TextStyle(
+                                            color: Colors.blue[900],
+                                            fontWeight: FontWeight.bold),
+                                      )))
+                            ]),
+                            Text(_replayFormatText(replyText))
+                          ])
+                    : Row(children: [
+                        Container(
+                            height: 50,
+                            alignment: Alignment.topLeft,
+                            child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Container(
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black12,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: Image.memory(
+                                        _file.bytes != null
+                                            ? _file.bytes!
+                                            : Uint8List.fromList(List.empty()),
+                                      ).image,
+                                    ),
+                                  ),
+                                ))),
+                        Flexible(
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: Text(_file.name,
+                                    overflow: TextOverflow.ellipsis)))
+                      ]),
+              ),
+              Positioned(
+                  right: 0,
+                  top: 18,
+                  child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: _cancelReply,
+                      child: Container(
+                          child: Container(
+                              width: 70,
+                              alignment: Alignment.topRight,
+                              padding: EdgeInsets.only(right: 20),
+                              child: Icon(Icons.close, size: 17))))),
+            ]),
+          TextField(
+            controller: _textMessageController,
+            focusNode: myFocusNode,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            decoration: InputDecoration(
+                hintText: 'Mensagem...',
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding:
+                    const EdgeInsets.only(left: 15.0, bottom: 8.0, top: 8.0),
+                hintStyle: TextStyle(
+                    fontSize: AppConst.chatTextSize,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.grey),
+                labelStyle: TextStyle(
+                    fontSize: AppConst.chatTextSize,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.grey),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.white),
+                  borderRadius: new BorderRadius.circular(25),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.white),
+                  borderRadius: new BorderRadius.circular(25),
+                ),
+                prefixIcon: IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.sentiment_satisfied_alt),
+                  color: textSilver,
+                ),
+                suffixIcon: Container(
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween, // added line
+                    mainAxisSize: MainAxisSize.min, // added line
+                    children: [
+                      Container(
+                        child: IconButton(
+                          onPressed: () {
+                            _sendFile();
+                          },
+                          icon: Icon(Icons.attach_file),
+                          color: textSilver,
+                        ),
+                      ),
+                      Container(
+                        child: IconButton(
+                          onPressed: () {
+                            _sendMessage();
+                          },
+                          icon: Icon(Icons.send),
+                          color: Colors.black,
+                        ),
+                      )
+                    ],
+                  ),
+                )),
+          )
+        ]),
       ),
     );
   }
@@ -473,9 +655,11 @@ class _CanalPageState extends State<CanalPage> {
     }
   }
 
-  void _initSelectMode(int index) {
+  void _initSelectMode(int index, String message, String senderName) {
     if (!BlocProvider.of<UserCubit>(context).currentUserIsAdmin()) return;
     setState(() {
+      replyText = message;
+      replySender = senderName;
       _selectMode = true;
       _selectedMessages.add(index);
     });
@@ -541,13 +725,31 @@ class _CanalPageState extends State<CanalPage> {
         .catchError((e) => {});
   }
 
+  String _replayFormatText(String text) {
+    List<String> results = text.split('\n');
+
+    String finalString = '';
+
+    if (results.length > 3)
+      finalString += "${results[0]}\n${results[1]}\n${results[2]}...";
+    else
+      finalString = text.length > 90 ? text.substring(1, 90) + '...' : text;
+
+    return finalString;
+  }
+
   _sendMessage() async {
-    if (_textMessageController.text.isNotEmpty) {
+    if (_textMessageController.text.isNotEmpty || _isFile) {
       await BlocProvider.of<CommunicationCubit>(context).sendTextMessage(
           senderId: widget.senderUID,
+          senderName: widget.userInfo.name,
           message: _textMessageController.text,
           canalName: widget.canalName,
-          type: 'TEXT',
+          type: _isFile ? 'FILE' : 'TEXT',
+          file: _isFile ? _file : null,
+          isResponse: _isReply,
+          responseText: _isReply ? _replayFormatText(replyText) : '',
+          responseSenderName: _isReply ? replySender : '',
           element: widget.userInfo);
       //_messaging.subscribeToTopic();
       BlocProvider.of<MyChatCubit>(context).sendPushMessage(
@@ -555,6 +757,7 @@ class _CanalPageState extends State<CanalPage> {
           title: widget.canalName,
           message: _textMessageController.text);
       _textMessageController.clear();
+      _cancelReply();
       Timer(Duration(milliseconds: 500), () {
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       });
@@ -573,6 +776,27 @@ class _CanalPageState extends State<CanalPage> {
               _scrollController.position.pixels) _goScrollDown();
         });
       }
+    });
+  }
+
+  void _cancelReply() {
+    setState(() {
+      _isReply = false;
+      _isFile = false;
+      replySender = '';
+      replyText = '';
+    });
+  }
+
+  void _replyMessage() {
+    _endSelectedMode();
+    setState(() {
+      _isReply = true;
+    });
+
+    myFocusNode.unfocus();
+    Timer(Duration(milliseconds: 100), () {
+      myFocusNode.requestFocus();
     });
   }
 
@@ -632,23 +856,42 @@ class _CanalPageState extends State<CanalPage> {
 
   _sendFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
+      withData: true,
+      type: FileType.custom,
       allowedExtensions: ['jpg', 'pdf', 'doc'],
     );
     if (result != null) {
       final name = result.files.first.name;
-      _textMessageController.text = name;
       var file = result.files.first.bytes;
-      var extension = result.files.first.extension;
 
-      BlocProvider.of<CommunicationCubit>(context).sendFile(
+      setState(() {
+        _file = FileEntity(
+            bytes: file != null ? file : Uint8List.fromList(List.empty()),
+            name: name,
+            mime: '');
+        _isFile = true;
+      });
+
+      /*BlocProvider.of<CommunicationCubit>(context).sendFile(
           canalName: widget.canalName,
           file: file!,
           name: '$name.$extension',
           senderId: widget.senderUID,
           type: 'FILE',
-          element: widget.userInfo);
+          element: widget.userInfo);*/
     }
   }
+
+  /*_getFromGallery() async {
+    PickedFile pickedFile = await ImagePicker().getImage(
+        source: ImageSource.gallery,
+        maxWidth: 1800,
+        maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+        File imageFile = File(pickedFile.path);
+    }
+  }*/
 
   _getUrl(canal, name) {
     return BlocProvider.of<CommunicationCubit>(context)
