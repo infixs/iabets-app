@@ -24,7 +24,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 //import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:open_file/open_file.dart';
+//import 'package:open_file/open_file.dart';
 
 import '../bloc/communication/communication_cubit.dart';
 
@@ -518,7 +518,7 @@ class _CanalPageState extends State<CanalPage> {
         ignoring: _selectMode ? true : false,
         child: GestureDetector(
             onTap: () {
-              if (!_selectMode) OpenFile.open(file.file!.path, type: file.type);
+              //if (!_selectMode) OpenFile.open(file.file!.path, type: file.type);
             },
             child: file.type!.contains('image')
                 ? Container(

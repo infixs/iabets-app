@@ -231,11 +231,3 @@ class CommunicationCubit extends Cubit<CommunicationState> {
     }
   }
 }
-
-class FileCubit extends Cubit<FileState> {
-  FileCubit() : super(FileInitial());
-
-  Future<void> getLocalOrDownload() async{
-    
-  }
-}
