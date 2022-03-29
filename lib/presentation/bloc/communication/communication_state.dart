@@ -25,3 +25,23 @@ class CommunicationLoading extends CommunicationState {
   @override
   List<Object> get props => [];
 }
+
+
+abstract class FileState extends Equatable {
+  const FileState();
+}
+
+class FileInitial extends FileState {
+  @override
+  List<Object> get props => [];
+}
+
+class FileLoading extends FileState {
+  @override
+  List<Object> get props => [];
+}
+
+class FileReady extends FileState {
+  @override
+  List<Object> get props => [];
+}

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -21,6 +22,9 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:open_file/open_file.dart';
 
 import '../bloc/communication/communication_cubit.dart';
 
@@ -28,6 +32,22 @@ TextEditingController _textMessageController = TextEditingController();
 TextEditingController _editMessageTextController = TextEditingController();
 FirebaseMessaging _messaging = FirebaseMessaging.instance;
 FocusNode myFocusNode = FocusNode();
+
+class FileLoaded {
+  File? file;
+  bool loaded = false;
+  String? type;
+  String? name;
+
+  FileLoaded({File? file, bool? loaded, String? type, String? name}) {
+    this.file = file;
+    this.loaded = loaded == null ? false : true;
+    this.type = type == null ? '' : type;
+    this.name = name == null ? '' : name;
+  }
+}
+
+Map<String, FileLoaded> cachedFiles = {};
 
 class CanalPage extends StatefulWidget {
   final String senderUID;
@@ -58,6 +78,7 @@ class _CanalPageState extends State<CanalPage> {
   late FileEntity _file;
   String replyText = "";
   String replySender = "";
+  bool _isSendingFile = false;
   bool _keyBoardIsOpen = false;
   int totalMessages = 0;
   List<int> _selectedMessages = <int>[];
@@ -194,8 +215,10 @@ class _CanalPageState extends State<CanalPage> {
           ),
           body: BlocBuilder<CommunicationCubit, CommunicationState>(
               buildWhen: (context, state) {
+            print('wgeb....');
             return state is CommunicationLoaded;
           }, builder: (_, communicationState) {
+            print('estou no Comunication');
             if (!_keyBoardIsOpen &&
                 MediaQuery.of(context).viewInsets.bottom > 0) {
               _goScrollDown();
@@ -293,6 +316,7 @@ class _CanalPageState extends State<CanalPage> {
         padding: EdgeInsets.only(top: 10, bottom: 5),
         itemBuilder: (context, index) {
           return GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onLongPress: () => _initSelectMode(
                   index,
                   messages.messages[index].message,
@@ -426,23 +450,22 @@ class _CanalPageState extends State<CanalPage> {
                                           messages.messages[index].file !=
                                               null &&
                                           messages.messages[index].file!.url !=
+                                              null &&
+                                          messages.messages[index].file!.id !=
                                               null)
+                                        fileMessageWidget(
+                                            messages.messages[index],
+                                            messages.messages[index].file!.id!),
+                                      if (messages
+                                              .messages[index].message.length >
+                                          0)
                                         Container(
+                                          constraints:
+                                              BoxConstraints(minWidth: 30),
                                           margin: EdgeInsets.only(bottom: 20),
-                                          child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              child: Image.network(messages
-                                                  .messages[index].file!.url!)),
+                                          child: _generateTextMessage(
+                                              messages.messages[index].message),
                                         ),
-                                      if(messages.messages[index].message.length > 0)
-                                      Container(
-                                        constraints:
-                                            BoxConstraints(minWidth: 30),
-                                        margin: EdgeInsets.only(bottom: 20),
-                                        child: _generateTextMessage(
-                                            messages.messages[index].message),
-                                      ),
                                     ]),
                                 Positioned(
                                     right: 0,
@@ -487,6 +510,86 @@ class _CanalPageState extends State<CanalPage> {
         },
       ),
     );
+  }
+
+  Widget fileBox(FileLoaded file) {
+    return IgnorePointer(
+        ignoring: _selectMode ? true : false,
+        child: GestureDetector(
+            onTap: () {
+              if (!_selectMode) OpenFile.open(file.file!.path, type: file.type);
+            },
+            child: file.type!.contains('image')
+                ? Container(
+                    width: file.type!.contains('gif') ? 160 : double.maxFinite,
+                    margin: EdgeInsets.only(
+                      bottom: 20,
+                    ),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: Image.file(file.file!)))
+                : Container(
+                    margin: EdgeInsets.only(
+                      bottom: 20,
+                    ),
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Color.fromARGB(15, 0, 0, 0),
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            file.type!.contains('video') ? Icons.video_file : 
+                            file.type!.contains('pdf') ? Icons.insert_drive_file :
+                            Icons.insert_drive_file,
+                            size: 50,
+                          ),
+                          Flexible(
+
+                              child: Padding(
+                                  padding: EdgeInsets.only(left: 10, right: 10),
+                                  child: Text(
+                                    file.name == null || file.name!.length == 0 || !file.type!.contains('video') ? ('Arquivo do tipo ' +
+                                        file.type!.toString().toUpperCase()) : file.name!,
+                                        //overflow: TextOverflow.ellipsis
+                                  )))
+                        ]))));
+  }
+
+  Widget fileMessageWidget(TextMessageEntity message, String id) {
+    return cachedFiles.keys.contains(id) && cachedFiles[id]!.loaded
+        ? fileBox(cachedFiles[id]!)
+        : FutureBuilder(
+            future: getLocalFileOrDownload(message.file!),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                File file = snapshot.data as File;
+                cachedFiles[id] = FileLoaded(
+                    file: file, loaded: true, type: message.file!.mime, name: message.file!.name);
+                return fileBox(cachedFiles[id]!);
+              } else {
+                return Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.black12,
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SpinKitCircle(
+                            color: Color.fromARGB(255, 19, 2, 46), size: 40),
+                        Flexible(
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: Text('Carregando arquivo...',
+                                    overflow: TextOverflow.ellipsis)))
+                      ],
+                    ));
+              }
+            });
   }
 
   Widget writeMessageWidget(CommunicationLoaded messages) {
@@ -567,13 +670,26 @@ class _CanalPageState extends State<CanalPage> {
                               width: 70,
                               alignment: Alignment.topRight,
                               padding: EdgeInsets.only(right: 20),
-                              child: Icon(Icons.close, size: 17))))),
+                              child: Icon(Icons.close,
+                                  size: 17,
+                                  color: _isSendingFile
+                                      ? Colors.black12
+                                      : Colors.black))))),
+              if (_isSendingFile)
+                Positioned.fill(
+                    top: 0,
+                    child: Align(
+                        alignment: Alignment.centerRight,
+                        child: SpinKitCircle(size: 50, color: Colors.black)))
             ]),
           TextField(
+            enabled: _isSendingFile ? false : true,
             controller: _textMessageController,
             focusNode: myFocusNode,
             keyboardType: TextInputType.multiline,
             maxLines: null,
+            style: TextStyle(
+                color: _isSendingFile ? Colors.black12 : Colors.black),
             decoration: InputDecoration(
                 hintText: 'Mensagem...',
                 filled: true,
@@ -599,7 +715,7 @@ class _CanalPageState extends State<CanalPage> {
                 prefixIcon: IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.sentiment_satisfied_alt),
-                  color: textSilver,
+                  color: _isSendingFile ? Colors.black12 : Colors.black,
                 ),
                 suffixIcon: Container(
                   child: Row(
@@ -613,7 +729,7 @@ class _CanalPageState extends State<CanalPage> {
                             _sendFile();
                           },
                           icon: Icon(Icons.attach_file),
-                          color: textSilver,
+                          color: _isSendingFile ? Colors.black12 : Colors.black,
                         ),
                       ),
                       Container(
@@ -622,7 +738,7 @@ class _CanalPageState extends State<CanalPage> {
                             _sendMessage();
                           },
                           icon: Icon(Icons.send),
-                          color: Colors.black,
+                          color: _isSendingFile ? Colors.black12 : Colors.black,
                         ),
                       )
                     ],
@@ -740,6 +856,10 @@ class _CanalPageState extends State<CanalPage> {
 
   _sendMessage() async {
     if (_textMessageController.text.isNotEmpty || _isFile) {
+      setState(() {
+        _isSendingFile = true;
+      });
+
       await BlocProvider.of<CommunicationCubit>(context).sendTextMessage(
           senderId: widget.senderUID,
           senderName: widget.userInfo.name,
@@ -757,6 +877,9 @@ class _CanalPageState extends State<CanalPage> {
           title: widget.canalName,
           message: _textMessageController.text);
       _textMessageController.clear();
+      setState(() {
+        _isSendingFile = false;
+      });
       _cancelReply();
       Timer(Duration(milliseconds: 500), () {
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
@@ -858,7 +981,18 @@ class _CanalPageState extends State<CanalPage> {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       withData: true,
       type: FileType.custom,
-      allowedExtensions: ['jpg', 'pdf', 'doc'],
+      allowedExtensions: [
+        'jpg',
+        'pdf',
+        'doc',
+        'avi',
+        'mp4',
+        'mov',
+        'xls',
+        'xlsx',
+        'docx',
+        'gif'
+      ],
     );
     if (result != null) {
       final name = result.files.first.name;
@@ -897,6 +1031,40 @@ class _CanalPageState extends State<CanalPage> {
     return BlocProvider.of<CommunicationCubit>(context)
         .getUrl(canalName: canal, name: name);
   }
+}
+
+Future<String> getFilePath({required String fileName}) async {
+  Directory appDocumentsDirectory =
+      await getApplicationDocumentsDirectory(); // 1
+  String appDocumentsPath = appDocumentsDirectory.path; // 2
+  String filePath = '$appDocumentsPath/$fileName'; // 3
+  return filePath;
+}
+
+Future<File> downloadFile(String url, File file) async {
+  HttpClient httpClient = new HttpClient();
+
+  try {
+    var request = await httpClient.getUrl(Uri.parse(url));
+    var response = await request.close();
+    if (response.statusCode == 200) {
+      var bytes = await consolidateHttpClientResponseBytes(response);
+      file = await file.writeAsBytes(bytes);
+    }
+  } catch (ex) {}
+
+  return file;
+}
+
+Future<File> getLocalFileOrDownload(FileEntity fileEntity) async {
+  File file = File(await getFilePath(fileName: fileEntity.id!)); // 1
+  bool fileExists = await file.exists();
+
+  //await Future.delayed(Duration(seconds: 5), () {});
+
+  if (!fileExists) file = await downloadFile(fileEntity.url!, file);
+
+  return file;
 }
 
 void _launchURL(url) async {

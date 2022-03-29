@@ -13,7 +13,7 @@ class MyChatCubit extends Cubit<MyChatState> {
   final SendPushMessageUseCase sendPushMessageUseCase;
 
   MyChatCubit({
-    required this.getMyChatUseCase, 
+    required this.getMyChatUseCase,
     required this.sendPushMessageUseCase,
   }) : super(MyChatInitial());
 
@@ -25,14 +25,16 @@ class MyChatCubit extends Cubit<MyChatState> {
       });
       List<MyChatEntity> list = await myChatStreamData.first;
       print(list.length);
-    } on SocketException catch (_) {} catch (_) {}
+    } on SocketException catch (_) {
+    } catch (_) {}
   }
 
-  Future<void> sendPushMessage({required String channelId, required String title, required String message}) async {
+  Future<void> sendPushMessage(
+      {required String channelId,
+      required String title,
+      required String message}) async {
     try {
       sendPushMessageUseCase.call(channelId, title, message);
-    } catch (_) {
-      
-    }
+    } catch (_) {}
   }
 }

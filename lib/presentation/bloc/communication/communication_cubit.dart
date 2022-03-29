@@ -85,7 +85,8 @@ class CommunicationCubit extends Cubit<CommunicationState> {
             file: file,
             isResponse: isResponse == null ? false : isResponse,
             responseText: responseText == null ? '' : responseText,
-            responseSenderName: responseSenderName == null ? '' : responseSenderName,
+            responseSenderName:
+                responseSenderName == null ? '' : responseSenderName,
             senderName: senderName,
           ),
           canalName,
@@ -228,5 +229,13 @@ class CommunicationCubit extends Cubit<CommunicationState> {
       emit(CommunicationFailure());
       return '';
     }
+  }
+}
+
+class FileCubit extends Cubit<FileState> {
+  FileCubit() : super(FileInitial());
+
+  Future<void> getLocalOrDownload() async{
+    
   }
 }

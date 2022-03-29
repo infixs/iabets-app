@@ -49,16 +49,22 @@ class TextMessageEntity extends Equatable {
       ];
 }
 
-class FileEntity{
+class FileEntity {
   final String name;
-  final String mime;
+  String mime;
   String? url;
+  String? id;
+  bool? failed;
+  String? localPath;
   final Uint8List? bytes;
 
   FileEntity({
     required this.name,
     required this.mime,
     this.url,
+    this.id,
+    this.failed,
+    this.localPath,
     this.bytes,
   });
 }

@@ -403,27 +403,31 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
       Reference storageRef =
           FirebaseStorage.instance.ref('$channelId/$fileName');
-      await storageRef.putData(textMessageEntity.file!.bytes!).then((snapshot) async {
+      await storageRef
+          .putData(textMessageEntity.file!.bytes!)
+          .then((snapshot) async {
+        textMessageEntity.file?.id = snapshot.ref.name;
+        textMessageEntity.file?.mime = snapshot.metadata?.contentType ?? 'none';
         textMessageEntity.file?.url = await snapshot.ref.getDownloadURL();
       });
 
       //.putData(textMessageEntity.file!.bytes);
     }
-    
+
     final newMessage = TextMessageModel(
-      message: textMessageEntity.message,
-      messageId: docRef.id,
-      messageType: textMessageEntity.messsageType,
-      sederUID: textMessageEntity.sederUID,
-      time: textMessageEntity.time,
-      recipientName: textMessageEntity.senderName,
-      recipientUID: textMessageEntity.sederUID,
-      isResponse: textMessageEntity.isResponse,
-      responseText: textMessageEntity.responseText,
-      responseSenderName: textMessageEntity.responseSenderName,
-      senderName: textMessageEntity.senderName,
-      file: textMessageEntity.file
-    ).toDocument();
+            message: textMessageEntity.message,
+            messageId: docRef.id,
+            messageType: textMessageEntity.messsageType,
+            sederUID: textMessageEntity.sederUID,
+            time: textMessageEntity.time,
+            recipientName: textMessageEntity.senderName,
+            recipientUID: textMessageEntity.sederUID,
+            isResponse: textMessageEntity.isResponse,
+            responseText: textMessageEntity.responseText,
+            responseSenderName: textMessageEntity.responseSenderName,
+            senderName: textMessageEntity.senderName,
+            file: textMessageEntity.file)
+        .toDocument();
 
     docRef.set(newMessage);
   }
