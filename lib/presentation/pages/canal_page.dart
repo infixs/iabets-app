@@ -348,7 +348,7 @@ class _CanalPageState extends State<CanalPage> {
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Color.fromARGB(255, 207, 207, 207),
+                                      color: messages.messages[index].file?.name != null && messages.messages[index].file!.name.contains(RegExp(r".gif$")) ? Colors.transparent : Color.fromARGB(255, 207, 207, 207),
                                       spreadRadius: 0,
                                       blurRadius: 1,
                                       offset: Offset(0, 1))
@@ -366,7 +366,7 @@ class _CanalPageState extends State<CanalPage> {
                                             bottomRight: Radius.circular(8)),
                                 color: (messages.messages[index].recipientUID ==
                                         widget.senderUID
-                                    ? Color.fromARGB(255, 244, 252, 225)
+                                    ? messages.messages[index].file?.name != null && messages.messages[index].file!.name.contains(RegExp(r".gif$")) ? Colors.transparent : Color.fromARGB(255, 244, 252, 225)
                                     : Colors.white),
                               ),
                               child: Stack(children: [
@@ -542,19 +542,23 @@ class _CanalPageState extends State<CanalPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            file.type!.contains('video') ? Icons.video_file : 
-                            file.type!.contains('pdf') ? Icons.insert_drive_file :
-                            Icons.insert_drive_file,
+                            file.type!.contains('video')
+                                ? Icons.video_file
+                                : file.type!.contains('pdf')
+                                    ? Icons.insert_drive_file
+                                    : Icons.insert_drive_file,
                             size: 50,
                           ),
                           Flexible(
-
                               child: Padding(
                                   padding: EdgeInsets.only(left: 10, right: 10),
                                   child: Text(
-                                    file.name == null || file.name!.length == 0 || !file.type!.contains('video') ? ('Arquivo do tipo ' +
-                                        file.type!.toString().toUpperCase()) : file.name!,
-                                        //overflow: TextOverflow.ellipsis
+                                    file.name == null ||
+                                            file.name!.length == 0
+                                        ? ('Arquivo do tipo ' +
+                                            file.type!.toString().toUpperCase())
+                                        : file.name!,
+                                    //overflow: TextOverflow.ellipsis
                                   )))
                         ]))));
   }
@@ -568,7 +572,10 @@ class _CanalPageState extends State<CanalPage> {
               if (snapshot.connectionState == ConnectionState.done) {
                 File file = snapshot.data as File;
                 cachedFiles[id] = FileLoaded(
-                    file: file, loaded: true, type: message.file!.mime, name: message.file!.name);
+                    file: file,
+                    loaded: true,
+                    type: message.file!.mime,
+                    name: message.file!.name);
                 return fileBox(cachedFiles[id]!);
               } else {
                 return Container(
@@ -1058,7 +1065,10 @@ Future<File> downloadFile(String url, File file) async {
 }
 
 Future<File> getLocalFileOrDownload(FileEntity fileEntity) async {
-  File file = File(await getFilePath(fileName: fileEntity.id!)); // 1
+  RegExp exp = new RegExp(r"\.\w+$");
+  String? extension = exp.stringMatch(fileEntity.name);
+
+  File file = File(await getFilePath(fileName: fileEntity.id!.toString() + extension.toString() )); // 1
   bool fileExists = await file.exists();
 
   //await Future.delayed(Duration(seconds: 5), () {});
