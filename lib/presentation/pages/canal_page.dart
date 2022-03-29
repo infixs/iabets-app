@@ -520,7 +520,7 @@ class _CanalPageState extends State<CanalPage> {
             onTap: () {
               if (!_selectMode) OpenFile.open(file.file!.path, type: file.type);
             },
-            child: file.type!.contains('image')
+            child: file.type!.contains('image') && file.file != null
                 ? Container(
                     width: file.type!.contains('gif') ? 160 : double.maxFinite,
                     margin: EdgeInsets.only(
