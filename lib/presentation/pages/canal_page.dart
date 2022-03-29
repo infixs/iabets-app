@@ -23,7 +23,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+//import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:open_file/open_file.dart';
 
 import '../bloc/communication/communication_cubit.dart';
@@ -580,8 +580,8 @@ class _CanalPageState extends State<CanalPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SpinKitCircle(
-                            color: Color.fromARGB(255, 19, 2, 46), size: 40),
+                        /*SpinKitCircle(
+                            color: Color.fromARGB(255, 19, 2, 46), size: 40),*/
                         Flexible(
                             child: Padding(
                                 padding: EdgeInsets.only(left: 10, right: 10),
@@ -681,7 +681,7 @@ class _CanalPageState extends State<CanalPage> {
                     top: 0,
                     child: Align(
                         alignment: Alignment.centerRight,
-                        child: SpinKitCircle(size: 50, color: Colors.black)))
+                        child: /*SpinKitCircle(size: 50, color: Colors.black)*/ Text('i')))
             ]),
           TextField(
             enabled: _isSendingFile ? false : true,
