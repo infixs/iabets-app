@@ -22,9 +22,9 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:typed_data';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:open_file/open_file.dart';
+//import 'package:path_provider/path_provider.dart';
+//import 'package:flutter_spinkit/flutter_spinkit.dart';
+//import 'package:open_file/open_file.dart';
 
 import '../bloc/communication/communication_cubit.dart';
 
@@ -518,7 +518,7 @@ class _CanalPageState extends State<CanalPage> {
         ignoring: _selectMode ? true : false,
         child: GestureDetector(
             onTap: () {
-              if (!_selectMode) OpenFile.open(file.file!.path, type: file.type);
+              //if (!_selectMode) OpenFile.open(file.file!.path, type: file.type);
             },
             child: file.type!.contains('image')
                 ? Container(
@@ -580,8 +580,8 @@ class _CanalPageState extends State<CanalPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SpinKitCircle(
-                            color: Color.fromARGB(255, 19, 2, 46), size: 40),
+                        /* SpinKitCircle(
+                            color: Color.fromARGB(255, 19, 2, 46), size: 40), */
                         Flexible(
                             child: Padding(
                                 padding: EdgeInsets.only(left: 10, right: 10),
@@ -676,12 +676,12 @@ class _CanalPageState extends State<CanalPage> {
                                   color: _isSendingFile
                                       ? Colors.black12
                                       : Colors.black))))),
-              if (_isSendingFile)
+              /* if (_isSendingFile)
                 Positioned.fill(
                     top: 0,
                     child: Align(
                         alignment: Alignment.centerRight,
-                        child: SpinKitCircle(size: 50, color: Colors.black)))
+                        child: SpinKitCircle(size: 50, color: Colors.black))) */
             ]),
           TextField(
             enabled: _isSendingFile ? false : true,
@@ -1034,13 +1034,13 @@ class _CanalPageState extends State<CanalPage> {
   }
 }
 
-Future<String> getFilePath({required String fileName}) async {
+/* Future<String> getFilePath({required String fileName}) async {
   Directory appDocumentsDirectory =
       await getApplicationDocumentsDirectory(); // 1
   String appDocumentsPath = appDocumentsDirectory.path; // 2
   String filePath = '$appDocumentsPath/$fileName'; // 3
   return filePath;
-}
+} */
 
 Future<File> downloadFile(String url, File file) async {
   HttpClient httpClient = new HttpClient();
@@ -1058,14 +1058,14 @@ Future<File> downloadFile(String url, File file) async {
 }
 
 Future<File> getLocalFileOrDownload(FileEntity fileEntity) async {
-  File file = File(await getFilePath(fileName: fileEntity.id!)); // 1
+/*   File file = File(await getFilePath(fileName: fileEntity.id!)); // 1
   bool fileExists = await file.exists();
 
   //await Future.delayed(Duration(seconds: 5), () {});
 
   if (!fileExists) file = await downloadFile(fileEntity.url!, file);
-
-  return file;
+ */
+  return File('');
 }
 
 void _launchURL(url) async {
