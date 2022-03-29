@@ -431,6 +431,7 @@ class _CanalPageState extends State<CanalPage> {
                                               .messages[index].recipientUID !=
                                           widget.senderUID)
                                         Container(
+                                          margin: EdgeInsets.only(bottom: 5),
                                           child: Text(
                                             isAdmin &&
                                                     messages.messages[index]
