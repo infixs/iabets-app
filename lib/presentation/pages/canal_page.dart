@@ -33,22 +33,6 @@ TextEditingController _editMessageTextController = TextEditingController();
 FirebaseMessaging _messaging = FirebaseMessaging.instance;
 FocusNode myFocusNode = FocusNode();
 
-class FileLoaded {
-  File? file;
-  bool loaded = false;
-  String? type;
-  String? name;
-
-  FileLoaded({File? file, bool? loaded, String? type, String? name}) {
-    this.file = file;
-    this.loaded = loaded == null ? false : true;
-    this.type = type == null ? '' : type;
-    this.name = name == null ? '' : name;
-  }
-}
-
-Map<String, FileLoaded> cachedFiles = {};
-
 class CanalPage extends StatefulWidget {
   final String senderUID;
   final String senderName;
@@ -454,9 +438,7 @@ class _CanalPageState extends State<CanalPage> {
                                               null &&
                                           messages.messages[index].file!.id !=
                                               null)
-                                        fileMessageWidget(
-                                            messages.messages[index],
-                                            messages.messages[index].file!.id!),
+                                        Text('ioa'),
                                       if (messages
                                               .messages[index].message.length >
                                           0)
@@ -513,7 +495,7 @@ class _CanalPageState extends State<CanalPage> {
     );
   }
 
-  Widget fileBox(FileLoaded file) {
+  /*Widget fileBox(FileLoaded file) {
     return IgnorePointer(
         ignoring: _selectMode ? true : false,
         child: GestureDetector(
@@ -591,7 +573,7 @@ class _CanalPageState extends State<CanalPage> {
                     ));
               }
             });
-  }
+  }*/
 
   Widget writeMessageWidget(CommunicationLoaded messages) {
     return Container(
