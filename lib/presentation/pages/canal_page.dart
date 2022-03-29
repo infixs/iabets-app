@@ -424,7 +424,7 @@ class _CanalPageState extends State<CanalPage> {
                                                     return response != null &&
                                                             response.length > 0
                                                         ? response
-                                                        : 'Mensagem apagada';
+                                                        : 'Anexo';
                                                   }())
                                                 ])),
                                       if (messages
