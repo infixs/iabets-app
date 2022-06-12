@@ -1,480 +1,77 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ia_bet/constants/cores_constants.dart';
-import 'package:ia_bet/constants/text_input_decoration.dart';
-import 'package:ia_bet/domain/entities/user_entity.dart';
-import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
-import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
-import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
-import 'package:ia_bet/presentation/pages/canal_page.dart';
-import 'package:ia_bet/presentation/pages/login_page.dart';
-import 'package:ia_bet/presentation/pages/perfil_page.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:timeago/timeago.dart' as timeago;
-import 'dart:async' show Timer;
+import 'package:flutter_svg/svg.dart';
+import 'package:ia_bet/presentation/pages/canais_page.dart';
+
+import '../../domain/entities/user_entity.dart';
+import '../bloc/user/user_cubit.dart';
+import 'blaze_page.dart';
 
 class HomePage extends StatefulWidget {
-  final UserEntity userInfo;
-  FirebaseMessaging _messaging = FirebaseMessaging.instance;
-
-  HomePage({Key? key, required this.userInfo}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
-TextEditingController _canalController = TextEditingController();
-
 class _HomePageState extends State<HomePage> {
-/*   Future<void> setupInteractedMessage() async {
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
+  Future<List<Map<String, dynamic>>> makeButtons() async => [
+        {'title': 'blaze', 'route': BlazePage()},
+        {'title': 'canais', 'route': CanaisPage(userInfo: await getUser())},
+      ];
 
-    if (initialMessage != null) {
-      _handleMessage(initialMessage);
-    }
-  
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-  }
-
-  void _handleMessage(RemoteMessage message) {
-    if (message.data['type'] == 'chat') {
-
-    }
-  } */
-
-  @override
-  void initState() {
-    BlocProvider.of<MyChatCubit>(context).getMyChat(uid: '111');
-    super.initState();
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      if (message.data.containsKey('channelId'))
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CanalPage(
-                      canalName: message.data['channelId'],
-                      senderName: widget.userInfo.name,
-                      senderUID: widget.userInfo.uid,
-                      userInfo: widget.userInfo,
-                    )));
-      /*setState(() {
-            print('A new onMessageOpenedApp event was published!');
-            Navigator.pushNamed(context, '/message',
-            arguments: MessageArguments(message, true));
-          }); */
-    });
-  }
+  Future<UserEntity> getUser() async =>
+      await BlocProvider.of<UserCubit>(context).getCurrentUserWithReturn();
 
   @override
   Widget build(BuildContext context) {
-    requestNotificationPermission(context);
-    print('Home Page: Estou no build...');
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: BlocBuilder<MyChatCubit, MyChatState>(
-          builder: (context, myChatState) {
-        print('Home Page: Bloc MyChatCubit...');
-        return Scaffold(
-          backgroundColor: kBackgroundColor,
-          appBar: AppBar(
-            iconTheme: IconThemeData(
-              color: Colors.white,
-            ),
-            automaticallyImplyLeading: false,
-            elevation: 0,
-            centerTitle: false,
-            backgroundColor: kPrimaryColor,
-            title: Text("IABets",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                )),
-            actions: [
-              PopupMenuButton<String>(
-                onSelected: handleMenuClick,
-                itemBuilder: (BuildContext bcontext) {
-                  return [
-                    PopupMenuItem<String>(
-                      value: 'config',
-                      child: Text('Configurações'),
-                    ),
-                    PopupMenuItem<String>(value: 'logout', child: Text('Sair'))
-                  ];
-                },
-              ),
-              /*IconButton(
-                    icon: Icon(Icons.logout, color: Colors.red),
-                    onPressed: () => Navigator.of(context).pop())*/
-            ],
-          ),
-          body: Stack(
-            children: [
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.5,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: ShaderMask(
-                shaderCallback: (rect) {
-                  return LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [Colors.black, Colors.transparent],
-                  ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
-                },
-                blendMode: BlendMode.dstIn,
-                child: Image.asset(
-                  'assets/images/background.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: SingleChildScrollView(
-                child: Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height,
-                  color: Colors.transparent,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (myChatState is MyChatLoaded)
-                        Expanded(child: listaCanaisWidget(myChatState)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 20,
-              right: 20,
-              bottom: 20,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: () {
-                              launchURL('https://placar.iabetsoficial.com.br/');
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                                color: kPrimaryColor,
-                              ),
-                              child: SvgPicture.asset(
-                                "assets/icons/placar.svg",
-                                height: 25,
-                                width: 55,
-                                fit: BoxFit.contain,
-                                alignment: Alignment.center,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text("Placar",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                              )),
-                        ],
-                      ),
-                      /*SizedBox(width: 15.0),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            child: Container(
-                              padding: EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                                color: kPrimaryColor,
-                              ),
-                              child: SvgPicture.asset(
-                                "assets/icons/calculadora.svg",
-                                height: 25,
-                                width: 55,
-                                fit: BoxFit.contain,
-                                alignment: Alignment.center,
-                              ),
-                            ),
-                            onTap: () {
-                              print(2);
-                              launchURL(
-                                  'https://iabetsoficial.com.br/calculadora');
-                            },
-                          ),
-                          SizedBox(height: 5),
-                          Text("Calculadora",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                              )),
-                        ],
-                      ),*/
-                    ],
-                  ),
-                  BlocBuilder<UserCubit, UserState>(
-                      builder: (context, userState) {
-                    print('Home Page: Estou no bloc builder do UserState');
-                    if (userState is CurrentUserChanged &&
-                        userState.user.isAdmin) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              child: Container(
-                                padding: EdgeInsets.all(15),
-                                decoration: BoxDecoration(
-                                  color: kPrimaryColor,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: Icon(Icons.add, color: kSecondColor),
-                                ),
-                              ),
-                              onTap: () {
-                                _showDialog();
-                              }),
-                          SizedBox(height: 5),
-                        ],
-                      );
-                    } else {
-                      return Column();
-                    }
-                  }),
-                ],
-              ),
-            ),
-          ]),
-        );
-      }),
-    );
-  }
+    final Size size = MediaQuery.of(context).size;
 
-  Widget searchWidget() {
-    return TextField(
-      keyboardType: TextInputType.text,
-      decoration: InputDecoration(
-        hintText: 'Procure por mensagens e usuários',
-        filled: true,
-        fillColor: Colors.grey[300],
-        contentPadding:
-            const EdgeInsets.only(left: 15.0, bottom: 8.0, top: 8.0),
-        hintStyle: TextStyle(
-            fontSize: 16, fontWeight: FontWeight.w300, color: Colors.grey),
-        labelStyle: TextStyle(
-            fontSize: 16, fontWeight: FontWeight.w300, color: Colors.grey),
-        focusedBorder: OutlineInputBorder(
-          borderSide: new BorderSide(color: Colors.grey.shade300),
-          borderRadius: new BorderRadius.circular(8),
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            SvgPicture.asset(
+              'assets/images/logo.svg',
+              width: 100,
+            ),
+            Text('Bets')
+          ],
         ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: new BorderSide(color: Colors.grey.shade300),
-          borderRadius: new BorderRadius.circular(8),
-        ),
-        suffixIcon: Material(
-          color: kPrimaryColor,
-          shadowColor: kPrimaryColor,
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(8.0),
-            bottomRight: Radius.circular(8.0),
-          ),
-          child: Icon(
-            Icons.search_rounded,
-            color: kSecondColor,
-          ),
-        ),
+      ),
+      body: FutureBuilder(
+        future: makeButtons(),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (BuildContext context, int index) => Padding(
+                padding: EdgeInsets.only(
+                    left: size.width * 0.2,
+                    right: size.width * 0.2,
+                    top: size.height * 0.05),
+                child: ElevatedButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            snapshot.data![index]['route']),
+                  ),
+                  child: Center(
+                    child: Text(snapshot.data![index]['title']),
+                  ),
+                ),
+              ),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }
-
-  //Listar Canais
-
-  Widget listaCanaisWidget(MyChatLoaded myChatData) {
-    final nowTime = new DateTime.now();
-    return myChatData.myChat.isEmpty
-        ? Container()
-        : ListView.builder(
-            itemCount: myChatData.myChat.length,
-            itemBuilder: (BuildContext context, int index) {
-              final DateTime chatTime = DateTime.parse(
-                  myChatData.myChat[index].time.toDate().toString());
-              final difference = nowTime.difference(chatTime);
-              return Column(
-                children: [
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                    leading: Container(
-                      height: 48,
-                      width: 48,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(48)),
-                          image: new DecorationImage(
-                              fit: BoxFit.contain,
-                              alignment: Alignment.center,
-                              image:
-                                  AssetImage("assets/images/canal-image.png"))),
-                    ),
-                    title: Text(myChatData.myChat[index].channelId,
-                        style: TextStyle(
-                            color: kSecondColor,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600)),
-                    subtitle: Text(myChatData.myChat[index].recentTextMessage.indexOf('\n') > 0 ? myChatData.myChat[index].recentTextMessage.substring(0, myChatData.myChat[index].recentTextMessage.indexOf('\n')) : myChatData.myChat[index].recentTextMessage,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w400)),
-                    trailing: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Padding(
-                              padding: EdgeInsets.only(top: 6),
-                              child: Text(
-                                  chatTime.day != nowTime.day
-                                      ? timeago.format(
-                                          nowTime.subtract(difference),
-                                          locale: 'pt_BR')
-                                      : "${chatTime.hour.toString().padLeft(2, '0')}:${chatTime.minute.toString().padLeft(2, '0')}",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w400))),
-                          Padding(
-                              padding: EdgeInsets.only(top: 5, right: 2),
-                              child: SvgPicture.asset(
-                                "assets/icons/pin.svg",
-                                height: 15,
-                                width: 15,
-                                fit: BoxFit.contain,
-                              )),
-                        ]),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CanalPage(
-                                    canalName:
-                                        myChatData.myChat[index].channelId,
-                                    senderName: widget.userInfo.name,
-                                    senderUID: widget.userInfo.uid,
-                                    userInfo: widget.userInfo,
-                                  )));
-                    },
-                  ),
-                ],
-              );
-            });
-  }
-
-  void handleMenuClick(String value) async {
-    switch (value) {
-      case 'config':
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PerfilPage()));
-        break;
-      case 'logout':
-        await BlocProvider.of<AuthCubit>(context).loggedOut();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
-        break;
-    }
-  }
-
-  void _showDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // retorna um objeto do tipo Dialog
-        return AlertDialog(
-          title: new Text("Novo Canal:"),
-          content: TextFormField(
-            controller: _canalController,
-            keyboardType: TextInputType.text,
-            decoration: textInputDecoration.copyWith(
-              hintText: 'Digite o nome do novo canal',
-            ),
-          ),
-          actions: <Widget>[
-            // define os botões na base do dialogo
-            new FlatButton(
-              child: new Text("Salvar"),
-              onPressed: () async {
-                BlocProvider.of<UserCubit>(context).createChatChannel(
-                    uid: widget.userInfo.uid, name: _canalController.text);
-
-                // Navigator.of(context).pop();
-                //Abrir ChatScreen
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CanalPage(
-                              canalName: _canalController.text,
-                              senderName: widget.userInfo.name,
-                              senderUID: widget.userInfo.uid,
-                              userInfo: widget.userInfo,
-                            )));
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void requestNotificationPermission(context) async {
-    String token = await FirebaseMessaging.instance.getToken() as String;
-
-    BlocProvider.of<UserCubit>(context).setUserToken(token);
-
-    NotificationSettings settings = await widget._messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-      FirebaseMessaging.instance.subscribeToTopic('chat');
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
-      FirebaseMessaging.instance.subscribeToTopic('chat');
-    } else {
-      print('User declined or has not accepted permission');
-    }
-  }
-}
-
-void launchURL(url) async {
-  if (!await launch(url)) throw 'Could not launch $url';
 }

@@ -1,17 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:ia_bet/app_const.dart';
 import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
@@ -30,7 +23,7 @@ import '../bloc/communication/communication_cubit.dart';
 
 TextEditingController _textMessageController = TextEditingController();
 TextEditingController _editMessageTextController = TextEditingController();
-FirebaseMessaging _messaging = FirebaseMessaging.instance;
+
 FocusNode myFocusNode = FocusNode();
 
 class FileLoaded {
@@ -108,7 +101,7 @@ class _CanalPageState extends State<CanalPage> {
       }
     });
 
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _goScrollDown();
     });
   }
@@ -348,7 +341,14 @@ class _CanalPageState extends State<CanalPage> {
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                      color: messages.messages[index].file?.name != null && messages.messages[index].file!.name.contains(RegExp(r".gif$")) ? Colors.transparent : Color.fromARGB(255, 207, 207, 207),
+                                      color: messages.messages[index].file
+                                                      ?.name !=
+                                                  null &&
+                                              messages
+                                                  .messages[index].file!.name
+                                                  .contains(RegExp(r".gif$"))
+                                          ? Colors.transparent
+                                          : Color.fromARGB(255, 207, 207, 207),
                                       spreadRadius: 0,
                                       blurRadius: 1,
                                       offset: Offset(0, 1))
@@ -366,7 +366,12 @@ class _CanalPageState extends State<CanalPage> {
                                             bottomRight: Radius.circular(8)),
                                 color: (messages.messages[index].recipientUID ==
                                         widget.senderUID
-                                    ? messages.messages[index].file?.name != null && messages.messages[index].file!.name.contains(RegExp(r".gif$")) ? Colors.transparent : Color.fromARGB(255, 244, 252, 225)
+                                    ? messages.messages[index].file?.name !=
+                                                null &&
+                                            messages.messages[index].file!.name
+                                                .contains(RegExp(r".gif$"))
+                                        ? Colors.transparent
+                                        : Color.fromARGB(255, 244, 252, 225)
                                     : Colors.white),
                               ),
                               child: Stack(children: [
@@ -553,8 +558,7 @@ class _CanalPageState extends State<CanalPage> {
                               child: Padding(
                                   padding: EdgeInsets.only(left: 10, right: 10),
                                   child: Text(
-                                    file.name == null ||
-                                            file.name!.length == 0
+                                    file.name == null || file.name!.length == 0
                                         ? ('Arquivo do tipo ' +
                                             file.type!.toString().toUpperCase())
                                         : file.name!,
@@ -1068,7 +1072,8 @@ Future<File> getLocalFileOrDownload(FileEntity fileEntity) async {
   RegExp exp = new RegExp(r"\.\w+$");
   String? extension = exp.stringMatch(fileEntity.name);
 
-  File file = File(await getFilePath(fileName: fileEntity.id!.toString() + extension.toString() )); // 1
+  File file = File(await getFilePath(
+      fileName: fileEntity.id!.toString() + extension.toString())); // 1
   bool fileExists = await file.exists();
 
   //await Future.delayed(Duration(seconds: 5), () {});

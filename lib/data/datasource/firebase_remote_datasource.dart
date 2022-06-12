@@ -1,7 +1,6 @@
 // Classe abstrata da api do firebase
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
@@ -24,7 +23,8 @@ abstract class FirebaseRemoteDataSource {
 
   Future<void> sendPushMessage(String channelId, String title, String message);
   Future<void> deleteMessages(String channelId, List<String> messages);
-  Future<void> editMessage(String channelId, String messageId, String messageText);
+  Future<void> editMessage(
+      String channelId, String messageId, String messageText);
 
   Future<void> createOneToOneChatChannel(
       String uid, String name, List<UserEntity> allusers);

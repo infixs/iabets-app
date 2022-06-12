@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:ia_bet/data/datasource/api.dart';
 import 'package:ia_bet/data/datasource/firebase_remote_datasource.dart';
 import 'package:ia_bet/data/model/my_chat_model.dart';
 import 'package:ia_bet/data/model/text_message_model.dart';
@@ -142,7 +141,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       print("time out :$verificationId");
     };
     final PhoneCodeSent phoneCodeSent =
-        (String verificationId, [int? forceResendingToken]) {} as PhoneCodeSent;
+        (String verificationId, [int? forceResendingToken]) {};
     auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: phoneVerificationCompleted,

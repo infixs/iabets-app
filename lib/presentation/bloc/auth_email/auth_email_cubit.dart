@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
@@ -72,7 +71,7 @@ class EmailAuthCubit extends Cubit<EmailAuthState> {
           isOnline: true,
           profileUrl: profileUrl,
           isAdmin: isAdmin);
-      
+
       print('testando...');
       print(user.isAdmin);
       await getCreateCurrentUserUseCase.call(user);

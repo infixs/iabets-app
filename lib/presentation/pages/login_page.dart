@@ -8,8 +8,9 @@ import 'package:ia_bet/data/model/user_model.dart';
 import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 import 'package:ia_bet/presentation/bloc/auth_email/auth_email_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
-import 'package:ia_bet/presentation/pages/home_page.dart';
+import 'package:ia_bet/presentation/pages/canais_page.dart';
 import 'package:ia_bet/injection_container.dart' as di;
+import 'package:ia_bet/presentation/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -62,11 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                 print('Login page: depois do getCurrentUserWithReturn..');
 
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => HomePage(
-                              userInfo: user,
-                            )));
+                    context, MaterialPageRoute(builder: (_) => HomePage()));
               }
 
               if (emailAuthState is PhoneAuthFailure) {

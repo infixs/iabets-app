@@ -8,8 +8,10 @@ import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
-import 'package:ia_bet/presentation/pages/home_page.dart';
+import 'package:ia_bet/presentation/pages/canais_page.dart';
 import 'package:ia_bet/presentation/pages/login_page.dart';
+
+import 'presentation/pages/home_page.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({Key? key}) : super(key: key);
@@ -76,10 +78,8 @@ class _SplashPageState extends State<SplashPage> {
                 if (authState is Authenticated) {
                   UserEntity user = await BlocProvider.of<UserCubit>(context)
                       .getCurrentUserWithReturn();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomePage(userInfo: user)));
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
                 }
                 if (authState is UnAuthenticated) {
                   Navigator.pushReplacement(context,
