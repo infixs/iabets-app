@@ -16,8 +16,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Future<List<Map<String, dynamic>>> makeButtons() async => [
-        {'title': 'blaze', 'route': BlazePage()},
         {'title': 'canais', 'route': CanaisPage(userInfo: await getUser())},
+        {'title': 'blaze', 'route': BlazePage()},
       ];
 
   Future<UserEntity> getUser() async =>
