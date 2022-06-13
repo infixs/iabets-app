@@ -14,15 +14,12 @@ import 'injection_container.dart' as di;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: kPrimaryColor,
       statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.light)
-  );
+      statusBarIconBrightness: Brightness.light));
   runApp(MyApp());
 }
 
@@ -48,6 +45,7 @@ class MyApp extends StatelessWidget {
         title: 'IA BET',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          brightness: Brightness.dark,
           primarySwatch: const MaterialColor(0xFF263C43, {
             50: kPrimaryColor,
             100: kPrimaryColor,

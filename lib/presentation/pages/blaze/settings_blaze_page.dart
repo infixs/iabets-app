@@ -55,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   labelText: 'Stop Gain',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(
-                      Radius.circular(20),
+                      Radius.circular(2),
                     ),
                   ),
                 ),
@@ -68,7 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     labelText: 'Stop loss',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(
-                        Radius.circular(20),
+                        Radius.circular(2),
                       ),
                     ),
                   ),
@@ -132,7 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           labelText: 'Valor',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
-                              Radius.circular(20),
+                              Radius.circular(2),
                             ),
                           ),
                         ),
@@ -147,7 +147,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           labelText: 'Branco',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
-                              Radius.circular(20),
+                              Radius.circular(2),
                             ),
                           ),
                         ),
