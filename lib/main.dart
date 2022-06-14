@@ -45,7 +45,6 @@ class MyApp extends StatelessWidget {
         title: 'IA BET',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          brightness: Brightness.dark,
           primarySwatch: const MaterialColor(0xFF263C43, {
             50: kPrimaryColor,
             100: kPrimaryColor,

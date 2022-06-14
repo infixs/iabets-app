@@ -8,10 +8,7 @@ import 'settings_controller.dart';
 class BlazePage extends StatefulWidget {
   final double totalMoney;
 
-  const BlazePage({
-    Key? key,
-    required this.totalMoney,
-  }) : super(key: key);
+  const BlazePage({Key? key, required this.totalMoney}) : super(key: key);
 
   @override
   State<BlazePage> createState() => _BlazePageState();
@@ -277,20 +274,71 @@ class _BlazePageState extends State<BlazePage> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('APOSTA',
-                                    style: TextStyle(color: Colors.white)),
-                                Text(
-                                  'R\$ ${settingsController.firstBet['price']}',
-                                  style: TextStyle(
-                                    color: Colors.white,
+                                Padding(
+                                  padding: EdgeInsets.only(top: 15, left: 30),
+                                  child: Text('APOSTA',
+                                      style: TextStyle(color: Colors.white)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 50, right: 20),
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.only(top: 15),
+                                        child: Text(
+                                          'VALOR',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 45),
+                                        padding: EdgeInsets.all(3),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Color(0xff1bb57f),
+                                        ),
+                                        child: Text(
+                                          'R\$ ${settingsController.firstBet['price']}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  'R\$ ${settingsController.firstBet['white']}',
-                                  style: const TextStyle(color: Colors.white),
-                                )
+                                Stack(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.only(top: 15),
+                                      child: Text(
+                                        'BRANCO',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(left: 55),
+                                      padding: EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Color(0xff1bb57f),
+                                      ),
+                                      child: Text(
+                                        'R\$ ${settingsController.firstBet['white']}',
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
