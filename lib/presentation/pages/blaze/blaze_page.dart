@@ -271,76 +271,134 @@ class _BlazePageState extends State<BlazePage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(top: 15, left: 30),
-                                  child: Text('APOSTA',
-                                      style: TextStyle(color: Colors.white)),
+                          Row(
+                            children: [
+                              const Spacer(),
+                              Flexible(
+                                flex: 2,
+                                child: Container(
+                                  width: size.width * 0.2,
+                                  child: Text(
+                                    'COR',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 50, right: 20),
-                                  child: Stack(
+                              ),
+                              const Spacer(),
+                              Flexible(
+                                flex: 2,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 8),
+                                  child: Container(
+                                    width: size.width * 0.2,
+                                    child: Text(
+                                      'VALOR',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                              Flexible(
+                                flex: 2,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 8),
+                                  child: Container(
+                                    width: size.width * 0.2,
+                                    child: Text(
+                                      'BRANCO',
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Spacer(),
+                              Flexible(
+                                flex: 2,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'ENTRADA',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: Container(
+                                        height: 1,
+                                        width: size.width * 0.2,
+                                        color: const Color(0xff0f1923),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const Spacer(),
+                              Flexible(
+                                flex: 2,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 8),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        padding: EdgeInsets.only(top: 15),
-                                        child: Text(
-                                          'VALOR',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ),
+                                      Text(
+                                        'R\$ ${settingsController.firstBet['price']}',
+                                        style: TextStyle(
+                                          color: Colors.white,
                                         ),
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 45),
-                                        padding: EdgeInsets.all(3),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Color(0xff1bb57f),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 4),
+                                        child: Container(
+                                          height: 1,
+                                          width: size.width * 0.2,
+                                          color: const Color(0xff0f1923),
                                         ),
-                                        child: Text(
-                                          'R\$ ${settingsController.firstBet['price']}',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                              Flexible(
+                                flex: 2,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 8),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${settingsController.firstBet['white']}',
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 4),
+                                        child: Container(
+                                          height: 1,
+                                          width: size.width * 0.2,
+                                          color: const Color(0xff0f1923),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                Stack(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(top: 15),
-                                      child: Text(
-                                        'BRANCO',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(left: 55),
-                                      padding: EdgeInsets.all(3),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Color(0xff1bb57f),
-                                      ),
-                                      child: Text(
-                                        'R\$ ${settingsController.firstBet['white']}',
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                              ),
+                              const Spacer()
+                            ],
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,

@@ -14,20 +14,22 @@ class CustomAppBarSettings extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: preferredSize.height,
-      alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [
-            Color(0xffdb2134),
-            Color(0xfff22c4d),
-          ],
+    return SafeArea(
+      child: Container(
+        height: preferredSize.height,
+        alignment: Alignment.center,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Color(0xffdb2134),
+              Color(0xfff22c4d),
+            ],
+          ),
         ),
+        child: child,
       ),
-      child: child,
     );
   }
 }
