@@ -279,7 +279,7 @@ class _BlazePageState extends State<BlazePage> {
                                 child: Container(
                                   width: size.width * 0.2,
                                   child: Text(
-                                    'COR',
+                                    'APOSTAS',
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),

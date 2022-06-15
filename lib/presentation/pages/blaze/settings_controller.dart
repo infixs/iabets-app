@@ -21,8 +21,10 @@ class SettingsController {
     {'price': 100, 'white': 10},
     {'price': 200, 'white': 20},
     {'price': 400, 'white': 40},
+    {'price': 600, 'white': 70},
+    {'price': 900, 'white': 10},
   ];
-  Map<String, dynamic> firstBet = {'price': 400, 'white': 40};
+  Map<String, dynamic> firstBet = {'price': 50, 'white': 5};
 
   final TextEditingController stopGainController = TextEditingController();
   final TextEditingController stoplossController = TextEditingController();

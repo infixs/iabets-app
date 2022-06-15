@@ -137,7 +137,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 const Padding(
                   padding: EdgeInsets.only(top: 10),
                   child: Text(
-                    'Primeira aposta',
+                    'Aposta de entrada',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -160,7 +160,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               borderSide:
                                   BorderSide(color: Colors.white, width: 1.0),
                             ),
-                            labelText: 'Valor',
+                            labelText: 'Vermelho ou preto',
                             labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
@@ -186,7 +186,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               borderSide:
                                   BorderSide(color: Colors.white, width: 1.0),
                             ),
-                            labelText: 'Branco',
+                            labelText: 'Proteção Branco',
                             labelStyle: TextStyle(color: Colors.white),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
