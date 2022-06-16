@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBarBlazePage extends StatelessWidget
+    implements PreferredSizeWidget {
   final Widget child;
   final double height;
 
-  const CustomAppBar(
+  const CustomAppBarBlazePage(
       {required this.child, this.height = kToolbarHeight, Key? key})
       : super(key: key);
 

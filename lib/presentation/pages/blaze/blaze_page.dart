@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ia_bet/presentation/pages/blaze/components/custom_app_bar_blaze_page/custom_app_bar_blaze_page.dart';
 
 import 'components/button-activity.dart';
-import 'components/custom_app_bar/custom_app_bar.dart';
-import 'settings_blaze_page.dart';
-import 'settings_controller.dart';
+import 'blaze_settings_page.dart';
+import 'controller_settings.dart';
 
 class BlazePage extends StatefulWidget {
   final double totalMoney;
@@ -33,14 +33,14 @@ class _BlazePageState extends State<BlazePage> {
 
     return Scaffold(
       backgroundColor: const Color(0xff0f1923),
-      appBar: CustomAppBar(
+      appBar: CustomAppBarBlazePage(
         height: 150,
         child: GestureDetector(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) => const SettingsPage(),
+                builder: (BuildContext context) => const BlazeSettingsPage(),
               ),
             );
           },
@@ -125,14 +125,12 @@ class _BlazePageState extends State<BlazePage> {
                               },
                               child: Text(
                                 '${value ? 'Ativar' : 'Desativar'}',
-                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                             TextButton(
                               onPressed: () => Navigator.pop(context),
                               child: Text(
                                 'Cancelar',
-                                style: TextStyle(color: Colors.white),
                               ),
                             )
                           ],
@@ -151,7 +149,7 @@ class _BlazePageState extends State<BlazePage> {
                     inactivityChild: Text(
                       'OFF',
                       style: TextStyle(
-                        color: Colors.red,
+                        color: Color(0xfff12c4d),
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),

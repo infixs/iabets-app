@@ -26,6 +26,14 @@ class SettingsController {
     {'price': 1200, 'white': 40},
     {'price': 1500, 'white': 70},
     {'price': 1800, 'white': 10},
+    {'price': 100, 'white': 10},
+    {'price': 200, 'white': 20},
+    {'price': 400, 'white': 40},
+    {'price': 600, 'white': 70},
+    {'price': 900, 'white': 10},
+    {'price': 1200, 'white': 40},
+    {'price': 1500, 'white': 70},
+    {'price': 1800, 'white': 10},
   ];
   Map<String, dynamic> firstBet = {'price': 50, 'white': 5};
 

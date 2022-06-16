@@ -16,10 +16,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: kPrimaryColor,
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.light));
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+        statusBarColor: kPrimaryColor,
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light),
+  );
   runApp(MyApp());
 }
 
