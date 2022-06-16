@@ -214,41 +214,35 @@ class _BlazePageState extends State<BlazePage> {
                         itemBuilder: (BuildContext context, int index) =>
                             Padding(
                           padding: const EdgeInsets.only(
-                              left: 8, right: 8, bottom: 15),
+                              left: 20, right: 20, bottom: 15),
                           child: Column(
                             children: [
-                              SizedBox(
-                                width: size.width * 0.8,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      settingsController.strategies[index]
-                                              ['name']
-                                          .toString()
-                                          .toUpperCase(),
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 12),
-                                    ),
-                                    settingsController.strategies[index]
-                                            ['value']
-                                        ? const Icon(
-                                            Icons.done,
-                                            color: Color(0xff1bb57f),
-                                          )
-                                        : const Icon(
-                                            Icons.close,
-                                            color: Color(0xfff12c4d),
-                                          )
-                                  ],
-                                ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    settingsController.strategies[index]['name']
+                                        .toString()
+                                        .toUpperCase(),
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 12),
+                                  ),
+                                  settingsController.strategies[index]['value']
+                                      ? const Icon(
+                                          Icons.done,
+                                          color: Color(0xff1bb57f),
+                                        )
+                                      : const Icon(
+                                          Icons.close,
+                                          color: Color(0xfff12c4d),
+                                        )
+                                ],
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 4.0),
                                 child: Container(
                                   height: 1,
-                                  width: size.width * 0.8,
                                   color: const Color(0xff0f1923),
                                 ),
                               )
@@ -268,245 +262,238 @@ class _BlazePageState extends State<BlazePage> {
                   child: Card(
                     color: const Color(0xff0a1117),
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding:
+                          const EdgeInsets.only(left: 20, right: 20, top: 15),
                       child: Column(
                         children: [
-                          Row(
-                            children: [
-                              const Spacer(),
-                              Flexible(
-                                flex: 2,
-                                child: Container(
+                          Flexible(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
                                   width: size.width * 0.2,
-                                  child: Text(
-                                    'APOSTAS',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              const Spacer(),
-                              Flexible(
-                                flex: 2,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 8, bottom: 8),
-                                  child: Container(
-                                    width: size.width * 0.2,
-                                    child: Text(
-                                      'VALOR',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const Spacer(),
-                              Flexible(
-                                flex: 2,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 8, bottom: 8),
-                                  child: Container(
-                                    width: size.width * 0.2,
-                                    child: Text(
-                                      'BRANCO',
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const Spacer(),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Spacer(),
-                              Flexible(
-                                flex: 2,
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      'ENTRADA',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      child: Container(
-                                        height: 1,
-                                        width: size.width * 0.2,
-                                        color: const Color(0xff0f1923),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              const Spacer(),
-                              Flexible(
-                                flex: 2,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 8, bottom: 8),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'R\$ ${settingsController.firstBet['price']}',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
+                                        'APOSTA',
+                                        style: TextStyle(color: Colors.white),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 4),
-                                        child: Container(
-                                          height: 1,
-                                          width: size.width * 0.2,
-                                          color: const Color(0xff0f1923),
-                                        ),
-                                      )
                                     ],
                                   ),
                                 ),
-                              ),
-                              const Spacer(),
-                              Flexible(
-                                flex: 2,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 8, bottom: 8),
+                                SizedBox(
+                                  width: size.width * 0.2,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${settingsController.firstBet['white']}',
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 4),
-                                        child: Container(
-                                          height: 1,
-                                          width: size.width * 0.2,
-                                          color: const Color(0xff0f1923),
-                                        ),
+                                        'VALOR',
+                                        style: TextStyle(color: Colors.white),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                              const Spacer()
-                            ],
+                                SizedBox(
+                                  width: size.width * 0.2,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'BRANCO',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Spacer(),
-                              Flexible(
-                                flex: 2,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: settingsController.gales.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) =>
-                                          Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8, bottom: 8),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '${index + 1}° Gale',
-                                          style: const TextStyle(
-                                              color: Colors.white),
+                          Flexible(
+                            flex: 10,
+                            child: SingleChildScrollView(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 18, bottom: 6),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Entrada',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 4),
+                                              child: Container(
+                                                height: 1,
+                                                width: size.width * 0.2,
+                                                color: const Color(0xff0f1923),
+                                              ),
+                                            )
+                                          ],
                                         ),
+                                      ),
+                                      for (int i = 0;
+                                          i != settingsController.gales.length;
+                                          i++)
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 4),
-                                          child: Container(
-                                            height: 1,
-                                            width: size.width * 0.8,
-                                            color: const Color(0xff0f1923),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${i + 1}° Gale',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 4),
+                                                child: Container(
+                                                  height: 1,
+                                                  width: size.width * 0.2,
+                                                  color:
+                                                      const Color(0xff0f1923),
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         )
-                                      ],
-                                    ),
+                                    ],
                                   ),
-                                ),
-                              ),
-                              const Spacer(),
-                              Flexible(
-                                flex: 2,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: settingsController.gales.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) =>
-                                          Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8, bottom: 8),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'R\$ ${settingsController.gales[index]['price']}',
-                                          style: const TextStyle(
-                                              color: Colors.white),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 18, bottom: 6),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${settingsController.firstBet['price']}',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 4),
+                                              child: Container(
+                                                height: 1,
+                                                width: size.width * 0.2,
+                                                color: const Color(0xff0f1923),
+                                              ),
+                                            )
+                                          ],
                                         ),
+                                      ),
+                                      for (Map<String, dynamic> gale
+                                          in settingsController.gales)
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 4),
-                                          child: Container(
-                                            height: 1,
-                                            width: size.width * 0.8,
-                                            color: const Color(0xff0f1923),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${gale['price']}',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 4),
+                                                child: Container(
+                                                  height: 1,
+                                                  width: size.width * 0.2,
+                                                  color:
+                                                      const Color(0xff0f1923),
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         )
-                                      ],
-                                    ),
+                                    ],
                                   ),
-                                ),
-                              ),
-                              const Spacer(),
-                              Flexible(
-                                flex: 2,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: settingsController.gales.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) =>
-                                          Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8, bottom: 8),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '${settingsController.gales[index]['white']}',
-                                          style: const TextStyle(
-                                              color: Colors.white),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 18, bottom: 6),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${settingsController.firstBet['white']}',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 4),
+                                              child: Container(
+                                                height: 1,
+                                                width: size.width * 0.2,
+                                                color: const Color(0xff0f1923),
+                                              ),
+                                            )
+                                          ],
                                         ),
+                                      ),
+                                      for (Map<String, dynamic> gale
+                                          in settingsController.gales)
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 4),
-                                          child: Container(
-                                            height: 1,
-                                            width: size.width * 0.8,
-                                            color: const Color(0xff0f1923),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 6.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${gale['white']}',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 4),
+                                                child: Container(
+                                                  height: 1,
+                                                  width: size.width * 0.2,
+                                                  color:
+                                                      const Color(0xff0f1923),
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         )
-                                      ],
-                                    ),
+                                    ],
                                   ),
-                                ),
+                                ],
                               ),
-                              const Spacer(),
-                            ],
+                            ),
                           ),
                         ],
                       ),
