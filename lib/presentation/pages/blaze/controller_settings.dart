@@ -15,7 +15,7 @@ class SettingsController {
     {
       'name': 'Alternativa teste',
       'value': true,
-    }
+    },
   ];
   List<Map<String, dynamic>> gales = [
     {'price': 100, 'white': 10},
