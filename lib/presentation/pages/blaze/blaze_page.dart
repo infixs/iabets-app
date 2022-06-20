@@ -258,34 +258,6 @@ class _BlazePageState extends State<BlazePage> {
                                     'APOSTA',
                                     style: TextStyle(color: Colors.white),
                                   ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'VALOR',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'BRANCO',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         top: 18, bottom: 6),
@@ -333,12 +305,16 @@ class _BlazePageState extends State<BlazePage> {
                                           )
                                         ],
                                       ),
-                                    )
+                                    ),
                                 ],
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Text(
+                                    'VALOR',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         top: 18, bottom: 6),
@@ -367,8 +343,6 @@ class _BlazePageState extends State<BlazePage> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 6.0),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             '${gale['price']}',
@@ -391,6 +365,10 @@ class _BlazePageState extends State<BlazePage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Text(
+                                    'BRANCO',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         top: 18, bottom: 6),
@@ -437,7 +415,7 @@ class _BlazePageState extends State<BlazePage> {
                                           )
                                         ],
                                       ),
-                                    )
+                                    ),
                                 ],
                               ),
                             ],
@@ -447,7 +425,199 @@ class _BlazePageState extends State<BlazePage> {
                     ),
                   ),
                 ),
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 70),
+                child: SizedBox(
+                  child: Card(
+                    color: const Color(0xff0a1117),
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 20, right: 20, top: 15),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'APOSTA',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 18, bottom: 6),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Entrada',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 4),
+                                          child: Container(
+                                            height: 1,
+                                            color: const Color(0xff0f1923),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  for (int i = 0;
+                                      i != settingsController.elevations.length;
+                                      i++)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 6.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${i + 1}° Loss',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 4),
+                                            child: Container(
+                                              height: 1,
+                                              color: const Color(0xff0f1923),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'MULTIPLICADOR',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 18, bottom: 6),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '1X',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 4),
+                                          child: Container(
+                                            height: 1,
+                                            color: const Color(0xff0f1923),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  for (int i = 0;
+                                      i != settingsController.elevations.length;
+                                      i++)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 6.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${settingsController.elevations[i]}X',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 4),
+                                            child: Container(
+                                              height: 1,
+                                              color: const Color(0xff0f1923),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'VALOR',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 18, bottom: 6),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${settingsController.firstBet['price']}',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 4),
+                                          child: Container(
+                                            height: 1,
+                                            color: const Color(0xff0f1923),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  for (int i = 0;
+                                      i != settingsController.elevations.length;
+                                      i++)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 6.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${settingsController.gales[i]['price']}',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 4),
+                                            child: Container(
+                                              height: 1,
+                                              color: const Color(0xff0f1923),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
