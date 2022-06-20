@@ -17,6 +17,9 @@ class SettingsController {
       'value': true,
     },
   ];
+
+  List<int> elevations = [2, 4, 8];
+
   List<Map<String, dynamic>> gales = [
     {'price': 100, 'white': 10},
     {'price': 200, 'white': 20},

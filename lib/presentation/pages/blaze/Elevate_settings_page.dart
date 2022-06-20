@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-
 import 'package:ia_bet/presentation/pages/blaze/controller_settings.dart';
 
 import 'components/custom_app_bar_blaze_page/custom_app_bar_gales_page.dart';
-import 'components/gale_widget.dart';
 
-class GalesSettingsPage extends StatefulWidget {
-  const GalesSettingsPage({Key? key}) : super(key: key);
+class ElevateSettingsPage extends StatefulWidget {
+  const ElevateSettingsPage({Key? key}) : super(key: key);
 
   @override
-  State<GalesSettingsPage> createState() => _GalesSettingsPageState();
+  State<ElevateSettingsPage> createState() => _ElevateSettingsPageState();
 }
 
-class _GalesSettingsPageState extends State<GalesSettingsPage> {
+class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final SettingsController settingsController = SettingsController();
 
@@ -50,7 +48,7 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                       ),
                     ),
                     Text(
-                      'GALES',
+                      'Mutiplicadores',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -77,21 +75,55 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
               height: size.height * 0.7,
               child: ReorderableListView.builder(
                 padding: const EdgeInsets.only(left: 20, right: 20),
-                itemCount: settingsController.gales.length,
+                itemCount: settingsController.elevations.length,
                 onReorder: (oldPosition, newPosition) => setState(() {
                   if (oldPosition < newPosition) {
                     newPosition -= 1;
                   }
-                  final Map<String, dynamic> item =
-                      settingsController.gales.removeAt(oldPosition);
-                  settingsController.gales.insert(newPosition, item);
+                  final int item =
+                      settingsController.elevations.removeAt(oldPosition);
+                  settingsController.elevations.insert(newPosition, item);
                 }),
                 itemBuilder: (BuildContext context, int index) => SizedBox(
-                  height: 70,
                   key: Key('$index'),
-                  child: GaleWidget(
-                    settingsController: settingsController,
-                    index: index,
+                  height: 70,
+                  child: Card(
+                    color: const Color(0xff0a1117),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Mutiplicador',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            Text(
+                              '${settingsController.elevations[index]}x',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                        CircleAvatar(
+                          backgroundColor: const Color(0xfff12c4d),
+                          child: IconButton(
+                            splashRadius: 25,
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -109,9 +141,8 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                   children: [
                     SizedBox(
                       height: 70,
-                      width: size.width * 0.38,
+                      width: size.width * 0.75,
                       child: TextFormField(
-                        style: TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
                           fillColor: Colors.white,
                           focusedBorder: OutlineInputBorder(
@@ -122,32 +153,7 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                             borderSide:
                                 BorderSide(color: Colors.white, width: 1.0),
                           ),
-                          labelText: 'Vermelho ou preto',
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(2),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 70,
-                      width: size.width * 0.38,
-                      child: TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(
-                          fillColor: Colors.white,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color(0xff1bb57f), width: 1.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 1.0),
-                          ),
-                          labelText: 'Proteção Branco',
+                          labelText: 'Valor Mutiplicador',
                           labelStyle: TextStyle(color: Colors.white),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(

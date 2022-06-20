@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'Elevate_settings_page.dart';
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
 import 'controller_settings.dart';
 import 'gales_settings_page.dart';
@@ -14,9 +15,14 @@ class BlazeSettingsPage extends StatefulWidget {
 class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
   final SettingsController settingsController = SettingsController();
 
+  final ValueNotifier<bool> stopGainIsOn = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> stopLossIsOn = ValueNotifier<bool>(true);
+
   @override
   void dispose() {
     settingsController.dispose();
+    stopGainIsOn.dispose();
+    stopLossIsOn.dispose();
     super.dispose();
   }
 
@@ -98,55 +104,89 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                       const Spacer(),
                       Flexible(
                         flex: 15,
-                        child: TextFormField(
-                          controller: settingsController.stopGainController,
-                          decoration: const InputDecoration(
-                            fillColor: Colors.white,
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color(0xff1bb57f), width: 1.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 1.0),
-                            ),
-                            labelText: 'Stop gain',
-                            labelStyle: TextStyle(color: Colors.white),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(2),
+                        child: Stack(
+                          children: [
+                            TextFormField(
+                              style: TextStyle(color: Colors.white),
+                              controller: settingsController.stopGainController,
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xff1bb57f), width: 1.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.white, width: 1.0),
+                                ),
+                                labelText: 'Stop gain',
+                                labelStyle: TextStyle(color: Colors.white),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(2),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: ValueListenableBuilder(
+                                valueListenable: stopGainIsOn,
+                                builder: (BuildContext context, value,
+                                        Widget? child) =>
+                                    Checkbox(
+                                        value: stopGainIsOn.value,
+                                        onChanged: (bool? value) =>
+                                            stopGainIsOn.value = value!),
+                              ),
+                            )
+                          ],
                         ),
                       ),
                       const Spacer(
                         flex: 2,
                       ),
                       Flexible(
-                        flex: 15,
-                        child: TextFormField(
-                          controller: settingsController.stoplossController,
-                          decoration: const InputDecoration(
-                            fillColor: Colors.white,
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color(0xff1bb57f), width: 1.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 1.0),
-                            ),
-                            labelText: 'Stop loss',
-                            labelStyle: TextStyle(color: Colors.white),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(2),
+                          flex: 15,
+                          child: Stack(
+                            children: [
+                              TextFormField(
+                                style: TextStyle(color: Colors.white),
+                                controller:
+                                    settingsController.stoplossController,
+                                decoration: const InputDecoration(
+                                  fillColor: Colors.white,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color(0xff1bb57f), width: 1.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.white, width: 1.0),
+                                  ),
+                                  labelText: 'Stop loss',
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(2),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: ValueListenableBuilder(
+                                  valueListenable: stopLossIsOn,
+                                  builder: (BuildContext context, value,
+                                          Widget? child) =>
+                                      Checkbox(
+                                          value: stopLossIsOn.value,
+                                          onChanged: (bool? value) =>
+                                              stopLossIsOn.value = value!),
+                                ),
+                              )
+                            ],
+                          )),
                       const Spacer(),
                     ],
                   ),
@@ -167,6 +207,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                       Flexible(
                         flex: 15,
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           controller:
                               settingsController.firstBetPriceController,
                           decoration: const InputDecoration(
@@ -195,6 +236,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                       Flexible(
                         flex: 15,
                         child: TextFormField(
+                          style: TextStyle(color: Colors.white),
                           controller:
                               settingsController.firstBetWhiteController,
                           decoration: const InputDecoration(
@@ -278,7 +320,13 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  ElevateSettingsPage(),
+                            ),
+                          ),
                           child: Container(
                             height: 50,
                             decoration: BoxDecoration(
