@@ -6,14 +6,17 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/usecases/get_double_config_usecase.dart';
+import 'package:ia_bet/domain/usecases/save_double_config_usecase.dart';
 
 part 'double_config_state.dart';
 
 class DoubleConfigCubit extends Cubit<DoubleConfigState> {
   final GetDoubleConfigUseCase getDoubleConfigUseCase;
+  final SaveDoubleConfigUseCase saveDoubleConfigUseCase;
 
   DoubleConfigCubit({
     required this.getDoubleConfigUseCase,
+    required this.saveDoubleConfigUseCase,
   }) : super(DoubleConfigInitial());
 
   Future<void> getDoubleConfig() async {
@@ -26,9 +29,9 @@ class DoubleConfigCubit extends Cubit<DoubleConfigState> {
     } catch (_) {}
   }
 
-  Future<void> saveDoubleConfig() async {
+  Future<void> saveDoubleConfig(DoubleConfigEntity doubleConfig) async {
     try {
-      getDoubleConfigUseCase.call();
+      saveDoubleConfigUseCase.call(doubleConfig);
     } on SocketException catch (_) {
     } catch (_) {}
   }

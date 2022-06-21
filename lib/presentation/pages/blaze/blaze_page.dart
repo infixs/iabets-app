@@ -653,10 +653,12 @@ class _BlazePageState extends State<BlazePage> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: const Color(0xff1bb57f),
           onPressed: () {
+            if (doubleConfigState is! DoubleConfigLoaded) return;
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) => const BlazeSettingsPage(),
+                builder: (BuildContext context) => BlazeSettingsPage(
+                    doubleConfig: doubleConfigState.doubleConfig),
               ),
             );
           },

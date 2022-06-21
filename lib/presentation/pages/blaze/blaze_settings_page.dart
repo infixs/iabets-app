@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
 
 import 'Elevate_settings_page.dart';
@@ -8,7 +9,10 @@ import 'controller_settings.dart';
 import 'gales_settings_page.dart';
 
 class BlazeSettingsPage extends StatefulWidget {
-  const BlazeSettingsPage({Key? key}) : super(key: key);
+  final DoubleConfigEntity doubleConfig;
+
+  const BlazeSettingsPage({Key? key, required this.doubleConfig})
+      : super(key: key);
 
   @override
   State<BlazeSettingsPage> createState() => _BlazeSettingsPageState();
@@ -367,7 +371,8 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xff1bb57f),
         onPressed: () {
-          //BlocProvider.of<DoubleConfigCubit>(context).saveDoubleConfig();
+          BlocProvider.of<DoubleConfigCubit>(context)
+              .saveDoubleConfig(widget.doubleConfig);
         },
         child: Icon(Icons.save),
       ),
