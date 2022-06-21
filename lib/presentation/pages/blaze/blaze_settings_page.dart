@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
 
 import 'Elevate_settings_page.dart';
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
@@ -364,7 +366,9 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xff1bb57f),
-        onPressed: () {},
+        onPressed: () {
+          //BlocProvider.of<DoubleConfigCubit>(context).saveDoubleConfig();
+        },
         child: Icon(Icons.save),
       ),
     );

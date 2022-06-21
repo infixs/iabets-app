@@ -5,9 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ia_bet/data/datasource/firebase_remote_datasource.dart';
+import 'package:ia_bet/data/model/double_config_model.dart';
 import 'package:ia_bet/data/model/my_chat_model.dart';
 import 'package:ia_bet/data/model/text_message_model.dart';
 import 'package:ia_bet/data/model/user_model.dart';
+import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
@@ -56,6 +58,9 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   @override
   Stream<UserEntity> getCurrentUser() {
     final userCollection = fireStore.collection("users");
+    if (auth.currentUser == null) {
+      throw Exception('User not logged');
+    }
     final uid = auth.currentUser!.uid;
     return userCollection.doc(uid).snapshots().map((snapshot) {
       return UserModel.fromSnapshot(snapshot);
@@ -83,14 +88,11 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   Future<void> sendPushMessage(
       String channelId, String title, String message) async {
     HttpsCallable callable = fireFunctions.httpsCallable('sendMessage');
-    print("enviando notificação push...");
     final resp = callable.call(<String, dynamic>{
       'channelId': channelId,
       'channelName': title,
       'message': message
     });
-    print(resp);
-    print('passou do restp');
   }
 
   @override
@@ -444,5 +446,32 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         .ref()
         .child('$canalName}/$name')
         .getDownloadURL();
+  }
+
+  @override
+  Stream<DoubleConfigEntity> getDoubleConfig() {
+    final doubleConfigDoc = fireStore
+        .collection("users")
+        .doc(auth.currentUser!.uid)
+        .collection('blaze')
+        .doc('doubleConfig');
+
+    return doubleConfigDoc.snapshots().map((snapshot) {
+      return snapshot.exists
+          ? DoubleConfigModel.fromSnapshot(snapshot)
+          : DoubleConfigModel.createDefault();
+    });
+  }
+
+  @override
+  Future<void> saveDoubleConfig(DoubleConfigEntity doubleConfig) async {
+    final doubleConfigDoc = fireStore
+        .collection("users")
+        .doc(auth.currentUser!.uid)
+        .collection('blaze')
+        .doc('doubleConfig');
+
+    final doubleConfigModel = doubleConfig as DoubleConfigModel;
+    doubleConfigDoc.update(doubleConfigModel.toDocument());
   }
 }

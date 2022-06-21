@@ -2,6 +2,7 @@
 
 import 'dart:typed_data';
 
+import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
@@ -25,7 +26,8 @@ abstract class FirebaseRepository {
   Future<void> sendPushMessage(String channelId, String title, String message);
 
   Future<void> deleteMessages(String channelId, List<String> messages);
-  Future<void> editMessage(String channelId, String messageId, String messageText);
+  Future<void> editMessage(
+      String channelId, String messageId, String messageText);
 
   Future<void> createOneToOneChatChannel(
       String uid, String name, List<UserEntity> allUsers);
@@ -35,4 +37,7 @@ abstract class FirebaseRepository {
       String channelId, UserEntity allUsers);
   Future<void> uploadFileMessage(String canalName, String name, Uint8List file);
   Future<String> getDownloadFileMessage(String canalName, String name);
+
+  Stream<DoubleConfigEntity> getDoubleConfig();
+  Future<void> saveDoubleConfig(DoubleConfigEntity doubleConfig);
 }
