@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
@@ -20,7 +21,6 @@ class BlazeSettingsPage extends StatefulWidget {
 
 class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
   final SettingsController settingsController = SettingsController();
-
   final ValueNotifier<bool> stopGainIsOn = ValueNotifier<bool>(true);
   final ValueNotifier<bool> stopLossIsOn = ValueNotifier<bool>(true);
 
@@ -57,6 +57,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
       ),
       body: SingleChildScrollView(
         child: Form(
+          key: settingsController.formkey,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -113,6 +114,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                         child: Stack(
                           children: [
                             TextFormField(
+                              keyboardType: TextInputType.number,
                               style: TextStyle(color: Colors.white),
                               controller: settingsController.stopGainController,
                               decoration: InputDecoration(
@@ -157,6 +159,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                           child: Stack(
                             children: [
                               TextFormField(
+                                keyboardType: TextInputType.number,
                                 style: TextStyle(color: Colors.white),
                                 controller:
                                     settingsController.stoplossController,
@@ -213,6 +216,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                       Flexible(
                         flex: 15,
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           style: TextStyle(color: Colors.white),
                           controller:
                               settingsController.firstBetPriceController,
@@ -242,6 +246,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                       Flexible(
                         flex: 15,
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           style: TextStyle(color: Colors.white),
                           controller:
                               settingsController.firstBetWhiteController,
@@ -371,8 +376,14 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xff1bb57f),
         onPressed: () {
-          BlocProvider.of<DoubleConfigCubit>(context)
+          debugPrint(settingsController.stopGainController.text);
+          debugPrint(settingsController.stoplossController.text);
+          debugPrint(settingsController.firstBetPriceController.text);
+          debugPrint(settingsController.firstBetWhiteController.text);
+
+          /*BlocProvider.of<DoubleConfigCubit>(context)
               .saveDoubleConfig(widget.doubleConfig);
+        */
         },
         child: Icon(Icons.save),
       ),

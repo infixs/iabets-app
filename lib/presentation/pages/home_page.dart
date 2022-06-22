@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:ia_bet/presentation/pages/canais_page.dart';
+import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
+import 'package:ia_bet/presentation/pages/blaze/components/custom_app_bar_blaze_page/custom_app_bar_blaze_page.dart';
 
 import '../../domain/entities/user_entity.dart';
 import '../bloc/user/user_cubit.dart';
+
 import 'blaze/blaze_page.dart';
+import 'canais_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -17,12 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Future<List<Map<String, dynamic>>> makeButtons() async => [
         {'title': 'canais', 'route': CanaisPage(userInfo: await getUser())},
-        {
-          'title': 'blaze',
-          'route': BlazePage(
-            totalMoney: 2400,
-          )
-        },
+        {'title': 'blaze', 'route': BlazePage()},
       ];
 
   Future<UserEntity> getUser() async =>

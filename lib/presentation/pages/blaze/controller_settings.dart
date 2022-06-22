@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SettingsController {
+  final formkey = GlobalKey<FormState>();
+
   final ValueNotifier<double> stopGain = ValueNotifier<double>(0);
   final ValueNotifier<double> stopLoss = ValueNotifier<double>(0);
   List<Map<String, dynamic>> strategies = [
