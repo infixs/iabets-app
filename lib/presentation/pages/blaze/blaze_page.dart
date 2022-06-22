@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
-
 import 'package:ia_bet/presentation/pages/blaze/components/custom_app_bar_blaze_page/custom_app_bar_blaze_page.dart';
 
 import 'blaze_settings_page.dart';
@@ -34,6 +33,7 @@ class _BlazePageState extends State<BlazePage> {
   @override
   void initState() {
     BlocProvider.of<DoubleConfigCubit>(context).getDoubleConfig();
+
     super.initState();
   }
 
@@ -56,16 +56,15 @@ class _BlazePageState extends State<BlazePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        'R\$ ${widget.totalMoney.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          'R\$ ${widget.totalMoney.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
                     Text(
                       (doubleConfigState is DoubleConfigLoaded)
                           ? doubleConfigState.doubleConfig.amountStopGain
@@ -208,48 +207,55 @@ class _BlazePageState extends State<BlazePage> {
                             ],
                           ),
                         ),
-                        for (int index = 0;
-                            index != settingsController.strategies.length;
-                            index++)
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, bottom: 15),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      settingsController.strategies[index]
-                                              ['name']
-                                          .toString()
-                                          .toUpperCase(),
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 12),
-                                    ),
-                                    settingsController.strategies[index]
-                                            ['value']
-                                        ? const Icon(
-                                            Icons.done,
-                                            color: Color(0xff1bb57f),
-                                          )
-                                        : const Icon(
-                                            Icons.close,
-                                            color: Color(0xfff12c4d),
-                                          )
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4.0),
-                                  child: Container(
-                                    height: 1,
-                                    color: const Color(0xff0f1923),
+                        if (doubleConfigState is DoubleConfigLoaded)
+                          for (int index = 0;
+                              index !=
+                                  doubleConfigState
+                                      .doubleConfig.strategies.length;
+                              index++)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, bottom: 15),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        doubleConfigState
+                                            .doubleConfig.strategies[index].id
+                                            .toString()
+                                            .toUpperCase(),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 12),
+                                      ),
+                                      doubleConfigState.doubleConfig
+                                              .strategies[index].active
+                                          ? const Icon(
+                                              Icons.done,
+                                              color: Color(0xff1bb57f),
+                                            )
+                                          : const Icon(
+                                              Icons.close,
+                                              color: Color(0xfff12c4d),
+                                            )
+                                    ],
                                   ),
-                                )
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4.0),
+                                    child: Container(
+                                      height: 1,
+                                      color: const Color(0xff0f1923),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
+                        if (doubleConfigState is! DoubleConfigLoaded)
+                          Center(
+                            child: CircularProgressIndicator(),
+                          )
                       ],
                     ),
                   ),

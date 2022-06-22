@@ -1,27 +1,19 @@
 import 'dart:io';
 
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:bloc/bloc.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:equatable/equatable.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
-import 'package:ia_bet/domain/usecases/get_double_config_usecase.dart';
-import 'package:ia_bet/domain/usecases/save_double_config_usecase.dart';
+import 'package:ia_bet/domain/repositories/firebase_repository.dart';
 
 part 'double_config_state.dart';
 
 class DoubleConfigCubit extends Cubit<DoubleConfigState> {
-  final GetDoubleConfigUseCase getDoubleConfigUseCase;
-  final SaveDoubleConfigUseCase saveDoubleConfigUseCase;
-
-  DoubleConfigCubit({
-    required this.getDoubleConfigUseCase,
-    required this.saveDoubleConfigUseCase,
-  }) : super(DoubleConfigInitial());
+  final FirebaseRepository firebaseRepository;
+  DoubleConfigCubit(this.firebaseRepository) : super(DoubleConfigInitial());
 
   Future<void> getDoubleConfig() async {
     try {
-      final doubleConfigStreamData = getDoubleConfigUseCase.call();
+      final doubleConfigStreamData = firebaseRepository.getDoubleConfig();
       doubleConfigStreamData.listen((doubleConfigData) {
         emit(DoubleConfigLoaded(doubleConfig: doubleConfigData));
       });
@@ -31,7 +23,7 @@ class DoubleConfigCubit extends Cubit<DoubleConfigState> {
 
   Future<void> saveDoubleConfig(DoubleConfigEntity doubleConfig) async {
     try {
-      saveDoubleConfigUseCase.call(doubleConfig);
+      firebaseRepository.saveDoubleConfig(doubleConfig);
     } on SocketException catch (_) {
     } catch (_) {}
   }

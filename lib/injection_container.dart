@@ -70,8 +70,7 @@ Future<void> init() async {
       getCurrentUidUseCase: sl.call(),
       getCreateCurrentUserUseCase: sl.call()));
 
-  sl.registerFactory<DoubleConfigCubit>(
-      () => DoubleConfigCubit(getDoubleConfigUseCase: sl.call()));
+  sl.registerFactory<DoubleConfigCubit>(() => DoubleConfigCubit(sl.call()));
 
   //useCase
   sl.registerLazySingleton<GetCreateCurrentUserUseCase>(
