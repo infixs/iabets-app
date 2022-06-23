@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ia_bet/domain/entities/double_config.dart';
 
 class SettingsController {
   final formkey = GlobalKey<FormState>();
@@ -42,7 +43,8 @@ class SettingsController {
   ];
   Map<String, dynamic> firstBet = {'price': 50, 'white': 5};
 
-  final TextEditingController stopGainController = TextEditingController();
+  final TextEditingController stopGainController =
+      TextEditingController(text: '1');
   final TextEditingController stoplossController = TextEditingController();
   final TextEditingController firstBetPriceController = TextEditingController();
   final TextEditingController firstBetWhiteController = TextEditingController();

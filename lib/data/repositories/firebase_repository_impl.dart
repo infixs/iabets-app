@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:ia_bet/data/datasource/firebase_remote_datasource.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
+import 'package:ia_bet/domain/entities/strategy_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/domain/repositories/firebase_repository.dart';
@@ -115,5 +116,10 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   @override
   Future<void> saveDoubleConfig(DoubleConfigEntity doubleConfig) {
     return remoteDataSource.saveDoubleConfig(doubleConfig);
+  }
+
+  @override
+  Future<List<StrategyEntity>> getStrategies() {
+    return remoteDataSource.getStrategies();
   }
 }

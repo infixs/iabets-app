@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ia_bet/data/datasource/firebase_remote_datasource.dart';
 import 'package:ia_bet/data/model/double_config_model.dart';
 import 'package:ia_bet/data/model/my_chat_model.dart';
+import 'package:ia_bet/data/model/strategy_model.dart';
 import 'package:ia_bet/data/model/text_message_model.dart';
 import 'package:ia_bet/data/model/user_model.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
@@ -14,6 +15,8 @@ import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+
+import '../../domain/entities/strategy_entity.dart';
 
 class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   final FirebaseAuth auth;
@@ -473,5 +476,17 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     final doubleConfigModel = doubleConfig as DoubleConfigModel;
     doubleConfigDoc.update(doubleConfigModel.toDocument());
+  }
+
+  Future<List<StrategyEntity>> getStrategies() async {
+    final strategiesCollection = fireStore.collection("blazeDoubleStrategies");
+    return Future(() async {
+      final strategies =
+          await strategiesCollection.where('enabled', isEqualTo: true).get();
+      return strategies.docs
+          .map((docQuerySnapshot) =>
+              StrategyModel.fromSnapshot(docQuerySnapshot))
+          .toList();
+    });
   }
 }

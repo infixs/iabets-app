@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
+import 'package:ia_bet/domain/entities/strategy_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 
@@ -38,4 +39,5 @@ abstract class FirebaseRemoteDataSource {
 
   Stream<DoubleConfigEntity> getDoubleConfig();
   Future<void> saveDoubleConfig(DoubleConfigEntity doubleConfig);
+  Future<List<StrategyEntity>> getStrategies();
 }
