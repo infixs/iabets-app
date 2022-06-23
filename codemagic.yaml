@@ -11,10 +11,10 @@ workflows:
       vars:
         APP_STORE_CONNECT_PRIVATE_KEY: |-
           -----BEGIN PRIVATE KEY-----
-          MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgU+bbxSfMGtUq/Lys
-          2MLMHMh8d8qdh0hMobT4QsHGH06gCgYIKoZIzj0DAQehRANCAARcc1tIz69Us3D6
-          ph/g3rKAnu3K2OOp9msnzRUJPSeYymCwsxVw5BtboSRp0PWCnnzhCGY1TX1EZLFk
-          bZ2pSqqB
+          MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgOkIgROxbIC2jnbBy
+          w/8AprLOI4Qd6WEUoy6BLPbJOOGgCgYIKoZIzj0DAQehRANCAAR3CBxR3cX5PLVv
+          W0q6hO1Ik9TQek60e5Tw25VKITSEDpb/54GS7EdvcHsb5m3IcOk4W1xg7pZEdXEm
+          AWbkjScH
           -----END PRIVATE KEY-----
         CERTIFICATE_PRIVATE_KEY: |-
           -----BEGIN RSA PRIVATE KEY-----
@@ -45,7 +45,7 @@ workflows:
           uXpfDXkmrHDmMDRtRJsVOGqkjOuKZ+oifmpjIAfmtEHhrZJPBAwh
           -----END RSA PRIVATE KEY-----
         APP_STORE_CONNECT_ISSUER_ID: 2e2875a6-4622-4c8d-af2c-288e1db44239
-        APP_STORE_CONNECT_KEY_IDENTIFIER: Z2UZZ867U7
+        APP_STORE_CONNECT_KEY_IDENTIFIER: R4FX6JHJBX
         XCODE_WORKSPACE: "Runner.xcworkspace"
         XCODE_SCHEME: "Runner"                
         BUNDLE_ID: "br.com.iabetsoficial" # <-- Put your bundle id here
