@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
-import 'package:ia_bet/domain/entities/strategy_entity.dart';
 import 'package:ia_bet/domain/repositories/firebase_repository.dart';
+
+import '../../../data/model/double_config_model.dart';
+import '../../../domain/entities/strategy_entity.dart';
 
 part 'double_config_state.dart';
 
@@ -22,7 +24,7 @@ class DoubleConfigCubit extends Cubit<DoubleConfigState> {
     } catch (_) {}
   }
 
-  Future<void> saveDoubleConfig(DoubleConfigEntity doubleConfig) async {
+  Future<void> saveDoubleConfig(DoubleConfigModel doubleConfig) async {
     try {
       firebaseRepository.saveDoubleConfig(doubleConfig);
     } on SocketException catch (_) {

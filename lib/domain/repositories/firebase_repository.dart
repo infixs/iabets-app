@@ -8,6 +8,8 @@ import 'package:ia_bet/domain/entities/strategy_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 
+import '../../data/model/double_config_model.dart';
+
 abstract class FirebaseRepository {
   Future<void> verifyPhoneNumber(String phoneNumber);
   Future<void> signInWithPhoneNumber(String smsPinCode);
@@ -40,6 +42,6 @@ abstract class FirebaseRepository {
   Future<String> getDownloadFileMessage(String canalName, String name);
 
   Stream<DoubleConfigEntity> getDoubleConfig();
-  Future<void> saveDoubleConfig(DoubleConfigEntity doubleConfig);
+  Future<void> saveDoubleConfig(DoubleConfigModel doubleConfig);
   Future<List<StrategyEntity>> getStrategies();
 }

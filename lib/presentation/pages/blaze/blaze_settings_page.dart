@@ -5,6 +5,8 @@ import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/entities/strategy_entity.dart';
 import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
 
+import '../../../data/model/double_config_model.dart';
+
 import 'Elevate_settings_page.dart';
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
 import 'controller_settings.dart';
@@ -40,15 +42,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
             as DoubleConfigLoaded)
         .doubleConfig;
 
-    final strategies =
-        BlocProvider.of<DoubleConfigCubit>(context).getStrategies();
-
-    strategies.then((value) {
-      value.forEach((element) {
-        print(element.name);
-      });
-    });
-
+    settingsController.init(doubleConfig);
     super.initState();
   }
 
@@ -99,9 +93,22 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                                   return Center(
                                     child: CircularProgressIndicator(),
                                   );
-
                                 return Column(
                                     children: snapshot.data!.map((element) {
+                                  final Strategy strategy = doubleConfigState
+                                      .doubleConfig.strategies
+                                      .firstWhere(
+                                    (el) => el.id == element.id,
+                                    orElse: () {
+                                      final strategy = Strategy(
+                                          id: element.id,
+                                          active: false,
+                                          name: element.name);
+                                      doubleConfigState.doubleConfig.strategies
+                                          .add(strategy);
+                                      return strategy;
+                                    },
+                                  );
                                   return Column(
                                     children: [
                                       Row(
@@ -114,9 +121,12 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                                                 color: Colors.white),
                                           ),
                                           Switch(
-                                            value: false,
+                                            value: strategy.active,
                                             onChanged: (value) {
-                                              setState(() {});
+                                              setState(() {
+                                                strategy.active =
+                                                    !strategy.active;
+                                              });
                                             },
                                             inactiveThumbColor:
                                                 const Color(0xfff12c4d),
@@ -146,11 +156,17 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                                 child: Stack(
                                   children: [
                                     TextFormField(
+                                      validator: (String? input) {
+                                        if (input != null && input.isNotEmpty) {
+                                          return null;
+                                        } else {
+                                          return 'digite algum valor';
+                                        }
+                                      },
                                       keyboardType: TextInputType.number,
                                       style: TextStyle(color: Colors.white),
-                                      controller: TextEditingController(
-                                          text: doubleConfig.amountStopGain
-                                              .toString()),
+                                      controller:
+                                          settingsController.stopGainController,
                                       decoration: InputDecoration(
                                         fillColor: Colors.white,
                                         focusedBorder: OutlineInputBorder(
@@ -192,53 +208,58 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                                 flex: 2,
                               ),
                               Flexible(
-                                  flex: 15,
-                                  child: Stack(
-                                    children: [
-                                      TextFormField(
-                                        keyboardType: TextInputType.number,
-                                        style: TextStyle(color: Colors.white),
-                                        controller: TextEditingController(
-                                            text: doubleConfigState
-                                                .doubleConfig.amountStopLoss
-                                                .toString()),
-                                        decoration: const InputDecoration(
-                                          fillColor: Colors.white,
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Color(0xff1bb57f),
-                                                width: 1.0),
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.white,
-                                                width: 1.0),
-                                          ),
-                                          labelText: 'Stop loss',
-                                          labelStyle:
-                                              TextStyle(color: Colors.white),
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(2),
-                                            ),
+                                flex: 15,
+                                child: Stack(
+                                  children: [
+                                    TextFormField(
+                                      validator: (String? input) {
+                                        if (input != null && input.isNotEmpty) {
+                                          return null;
+                                        } else {
+                                          return 'digite algum valor';
+                                        }
+                                      },
+                                      keyboardType: TextInputType.number,
+                                      style: TextStyle(color: Colors.white),
+                                      controller:
+                                          settingsController.stoplossController,
+                                      decoration: const InputDecoration(
+                                        fillColor: Colors.white,
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xff1bb57f),
+                                              width: 1.0),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.white, width: 1.0),
+                                        ),
+                                        labelText: 'Stop loss',
+                                        labelStyle:
+                                            TextStyle(color: Colors.white),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(2),
                                           ),
                                         ),
                                       ),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: ValueListenableBuilder(
-                                          valueListenable: stopLossIsOn,
-                                          builder: (BuildContext context, value,
-                                                  Widget? child) =>
-                                              Checkbox(
-                                                  value: stopLossIsOn.value,
-                                                  onChanged: (bool? value) =>
-                                                      stopLossIsOn.value =
-                                                          value!),
-                                        ),
-                                      )
-                                    ],
-                                  )),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: ValueListenableBuilder(
+                                        valueListenable: stopLossIsOn,
+                                        builder: (BuildContext context, value,
+                                                Widget? child) =>
+                                            Checkbox(
+                                                value: stopLossIsOn.value,
+                                                onChanged: (bool? value) =>
+                                                    stopLossIsOn.value =
+                                                        value!),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
                               const Spacer(),
                             ],
                           ),
@@ -259,12 +280,17 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                               Flexible(
                                 flex: 15,
                                 child: TextFormField(
+                                  validator: (String? input) {
+                                    if (input != null && input.isNotEmpty) {
+                                      return null;
+                                    } else {
+                                      return 'digite algum valor';
+                                    }
+                                  },
                                   keyboardType: TextInputType.number,
                                   style: TextStyle(color: Colors.white),
-                                  controller: TextEditingController(
-                                      text: doubleConfigState
-                                          .doubleConfig.entryAmount
-                                          .toString()),
+                                  controller: settingsController
+                                      .firstBetPriceController,
                                   decoration: const InputDecoration(
                                     fillColor: Colors.white,
                                     focusedBorder: OutlineInputBorder(
@@ -291,12 +317,17 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                               Flexible(
                                 flex: 15,
                                 child: TextFormField(
+                                  validator: (String? input) {
+                                    if (input != null && input.isNotEmpty) {
+                                      return null;
+                                    } else {
+                                      return 'digite algum valor';
+                                    }
+                                  },
                                   keyboardType: TextInputType.number,
                                   style: TextStyle(color: Colors.white),
-                                  controller: TextEditingController(
-                                      text: doubleConfigState
-                                          .doubleConfig.entryWhiteAmount
-                                          .toString()),
+                                  controller: settingsController
+                                      .firstBetWhiteController,
                                   decoration: const InputDecoration(
                                     fillColor: Colors.white,
                                     focusedBorder: OutlineInputBorder(
@@ -423,19 +454,44 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
               floatingActionButton: FloatingActionButton(
                 backgroundColor: const Color(0xff1bb57f),
                 onPressed: () {
-                  debugPrint(settingsController.stopGainController.text);
-                  debugPrint(settingsController.stoplossController.text);
-                  debugPrint(settingsController.firstBetPriceController.text);
-                  debugPrint(settingsController.firstBetWhiteController.text);
+                  final isValid =
+                      settingsController.formkey.currentState!.validate();
 
-                  /*BlocProvider.of<DoubleConfigCubit>(context)
-              .saveDoubleConfig(widget.doubleConfig);
-        */
+                  if (isValid) {
+                    final DoubleConfigModel doubleConfig = DoubleConfigModel(
+                        amountStopGain: double.parse(
+                            settingsController.stopGainController.text),
+                        amountStopLoss: double.parse(
+                            settingsController.stoplossController.text),
+                        elevations: doubleConfigState.doubleConfig.elevations,
+                        enabled: doubleConfigState.doubleConfig.enabled,
+                        entryAmount: double.parse(
+                            settingsController.firstBetPriceController.text),
+                        entryWhiteAmount: double.parse(
+                            settingsController.firstBetWhiteController.text),
+                        gales: doubleConfigState.doubleConfig.gales,
+                        isActiveElevation:
+                            doubleConfigState.doubleConfig.isActiveElevation,
+                        isActiveStopGain:
+                            doubleConfigState.doubleConfig.isActiveStopGain,
+                        isActiveStopLoss:
+                            doubleConfigState.doubleConfig.isActiveStopLoss,
+                        maxElevation:
+                            doubleConfigState.doubleConfig.maxElevation,
+                        maxGales: doubleConfigState.doubleConfig.maxGales,
+                        strategies: doubleConfigState.doubleConfig.strategies,
+                        wallet: doubleConfigState.doubleConfig.wallet);
+
+                    BlocProvider.of<DoubleConfigCubit>(context)
+                        .saveDoubleConfig(doubleConfig);
+                  }
                 },
                 child: Icon(Icons.save),
               ),
             )
-          : Spacer();
+          : Center(
+              child: CircularProgressIndicator(),
+            );
     });
   }
 }

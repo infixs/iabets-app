@@ -8,6 +8,8 @@ import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/domain/repositories/firebase_repository.dart';
 
+import '../model/double_config_model.dart';
+
 class FirebaseRepositoryImpl implements FirebaseRepository {
   final FirebaseRemoteDataSource remoteDataSource;
 
@@ -114,7 +116,7 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   }
 
   @override
-  Future<void> saveDoubleConfig(DoubleConfigEntity doubleConfig) {
+  Future<void> saveDoubleConfig(DoubleConfigModel doubleConfig) {
     return remoteDataSource.saveDoubleConfig(doubleConfig);
   }
 

@@ -5,6 +5,7 @@ import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
 import 'package:ia_bet/presentation/pages/blaze/components/custom_app_bar_blaze_page/custom_app_bar_blaze_page.dart';
 
 import '../../../domain/entities/double_config.dart';
+import '../../../domain/entities/strategy_entity.dart';
 
 import 'blaze_settings_page.dart';
 import 'components/button-activity.dart';
@@ -209,50 +210,81 @@ class _BlazePageState extends State<BlazePage> {
                           ),
                         ),
                         if (doubleConfigState is DoubleConfigLoaded)
-                          for (int index = 0;
-                              index !=
-                                  doubleConfigState
-                                      .doubleConfig.strategies.length;
-                              index++)
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, bottom: 15),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                          FutureBuilder<List<StrategyEntity>>(
+                            future: BlocProvider.of<DoubleConfigCubit>(context)
+                                .getStrategies(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<List<StrategyEntity>> snapshot) {
+                              if (!snapshot.hasData)
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              else {
+                                return Column(
+                                    children: snapshot.data!.map((element) {
+                                  final Strategy strategy = doubleConfigState
+                                      .doubleConfig.strategies
+                                      .firstWhere(
+                                    (el) => el.id == element.id,
+                                    orElse: () {
+                                      final strategy = Strategy(
+                                          id: element.id,
+                                          active: false,
+                                          name: element.name);
+
+                                      return strategy;
+                                    },
+                                  );
+                                  return Column(
                                     children: [
-                                      Text(
-                                        doubleConfigState
-                                            .doubleConfig.strategies[index].id
-                                            .toString()
-                                            .toUpperCase(),
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 12),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 20, bottom: 15),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  strategy.name
+                                                      .toString()
+                                                      .toUpperCase(),
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12),
+                                                ),
+                                                strategy.active
+                                                    ? const Icon(
+                                                        Icons.done,
+                                                        color:
+                                                            Color(0xff1bb57f),
+                                                      )
+                                                    : const Icon(
+                                                        Icons.close,
+                                                        color:
+                                                            Color(0xfff12c4d),
+                                                      )
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 4.0),
+                                              child: Container(
+                                                height: 1,
+                                                color: const Color(0xff0f1923),
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                      doubleConfigState.doubleConfig
-                                              .strategies[index].active
-                                          ? const Icon(
-                                              Icons.done,
-                                              color: Color(0xff1bb57f),
-                                            )
-                                          : const Icon(
-                                              Icons.close,
-                                              color: Color(0xfff12c4d),
-                                            )
                                     ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4.0),
-                                    child: Container(
-                                      height: 1,
-                                      color: const Color(0xff0f1923),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
+                                  );
+                                }).toList());
+                              }
+                            },
+                          ),
                         if (doubleConfigState is! DoubleConfigLoaded)
                           Center(
                             child: CircularProgressIndicator(),
@@ -370,7 +402,7 @@ class _BlazePageState extends State<BlazePage> {
                                       ),
                                     ),
                                     if (doubleConfigState is DoubleConfigLoaded)
-                                      for (Gales gale in doubleConfigState
+                                      for (Gale gale in doubleConfigState
                                           .doubleConfig.gales)
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -430,7 +462,7 @@ class _BlazePageState extends State<BlazePage> {
                                       ),
                                     ),
                                     if (doubleConfigState is DoubleConfigLoaded)
-                                      for (Gales gale in doubleConfigState
+                                      for (Gale gale in doubleConfigState
                                           .doubleConfig.gales)
                                         Padding(
                                           padding: const EdgeInsets.symmetric(

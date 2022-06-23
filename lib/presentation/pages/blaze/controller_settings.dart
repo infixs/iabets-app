@@ -1,25 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:ia_bet/domain/entities/double_config.dart';
+
+import '../../bloc/blaze/double_config_cubit.dart';
 
 class SettingsController {
   final formkey = GlobalKey<FormState>();
-
-  final ValueNotifier<double> stopGain = ValueNotifier<double>(0);
-  final ValueNotifier<double> stopLoss = ValueNotifier<double>(0);
-  List<Map<String, dynamic>> strategies = [
-    {
-      'name': 'Sequencia de 8',
-      'value': true,
-    },
-    {
-      'name': 'Somente brancos',
-      'value': false,
-    },
-    {
-      'name': 'Alternativa teste',
-      'value': true,
-    },
-  ];
 
   List<int> elevations = [2, 4, 8];
 
@@ -41,27 +27,23 @@ class SettingsController {
     {'price': 1500, 'white': 70},
     {'price': 1800, 'white': 10},
   ];
-  Map<String, dynamic> firstBet = {'price': 50, 'white': 5};
 
-  final TextEditingController stopGainController =
-      TextEditingController(text: '1');
+  final TextEditingController stopGainController = TextEditingController();
   final TextEditingController stoplossController = TextEditingController();
   final TextEditingController firstBetPriceController = TextEditingController();
   final TextEditingController firstBetWhiteController = TextEditingController();
 
+  void init(DoubleConfigEntity doubleConfig) {
+    stopGainController.text = doubleConfig.amountStopGain.toString();
+    stoplossController.text = doubleConfig.amountStopLoss.toString();
+    firstBetPriceController.text = doubleConfig.entryAmount.toString();
+    firstBetWhiteController.text = doubleConfig.entryWhiteAmount.toString();
+  }
+
   void dispose() {
-    stopGain.dispose();
-    stopLoss.dispose();
     stopGainController.dispose();
     stoplossController.dispose();
     firstBetPriceController.dispose();
     firstBetWhiteController.dispose();
-  }
-
-  void saveConfig() {
-    stopGain.value = double.parse(stopGainController.text);
-    stopLoss.value = double.parse(stoplossController.text);
-    firstBet['price'] = double.parse(firstBetPriceController.text);
-    firstBet['white'] = double.parse(firstBetWhiteController.text);
   }
 }

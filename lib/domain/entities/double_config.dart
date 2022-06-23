@@ -15,8 +15,8 @@ class DoubleConfigEntity {
   final double entryAmount;
   final double entryWhiteAmount;
 
-  final List<Strategies> strategies;
-  final List<Gales> gales;
+  final List<Strategy> strategies;
+  final List<Gale> gales;
   final List<int> elevations;
 
   const DoubleConfigEntity({
@@ -37,30 +37,42 @@ class DoubleConfigEntity {
   });
 }
 
-class Strategies {
+class Strategy {
   final String id;
-  final bool active;
+  final String name;
+  bool active;
 
-  Strategies.fromJson(Map<String, dynamic> json)
+  Strategy.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        active = json['active'];
+        active = json['active'],
+        name = json['name'];
 
-  const Strategies({
+  Map<String, dynamic> toJson() => {'id': id, 'name': name, 'active': active};
+
+  Strategy({
+    required this.name,
     required this.id,
     required this.active,
   });
 }
 
-class Gales {
+class Gale {
   // GALE
   final double amount; // DEFINED BY USER;
   final double amountProtection; // DEFINED BY USER;
 
-  Gales.fromJson(Map<String, dynamic> json)
-      : amount = (json['amount'] as int).toDouble(),
-        amountProtection = (json['amountProtection'] as int).toDouble();
+  Gale.fromJson(Map<String, dynamic> json)
+      : amount = (json['amount'] is int)
+            ? (json['amount'] as int).toDouble()
+            : json['amount'],
+        amountProtection = (json['amountProtection'] is int)
+            ? (json['amountProtection'] as int).toDouble()
+            : json['amountProtection'];
 
-  const Gales({
+  Map<String, dynamic> toJson() =>
+      {'amount': amount, 'amountProtection': amountProtection};
+
+  const Gale({
     required this.amount,
     required this.amountProtection,
   });

@@ -11,10 +11,10 @@ class DoubleConfigModel extends DoubleConfigEntity {
     required double amountStopLoss,
     required int maxGales,
     required int maxElevation,
-    required List<Gales> gales,
+    required List<Gale> gales,
     required List<int> elevations,
     required bool isActiveElevation,
-    required List<Strategies> strategies,
+    required List<Strategy> strategies,
     required double entryAmount,
     required double entryWhiteAmount,
   }) : super(
@@ -35,21 +35,25 @@ class DoubleConfigModel extends DoubleConfigEntity {
         );
 
   factory DoubleConfigModel.fromSnapshot(DocumentSnapshot snapshot) {
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
 
     return DoubleConfigModel(
       enabled: data['enabled'],
       isActiveStopGain: data['isActiveStopGain'],
       isActiveStopLoss: data['isActiveStopLoss'],
-      amountStopGain: (data['amountStopGain'] as int).toDouble(),
-      amountStopLoss: (data['amountStopLoss'] as int).toDouble(),
+      amountStopGain: (data['amountStopGain'] is int)
+          ? (data['amountStopGain'] as int).toDouble()
+          : data['amountStopGain'],
+      amountStopLoss: (data['amountStopLoss'] is int)
+          ? (data['amountStopLoss'] as int).toDouble()
+          : data['amountStopLoss'],
       maxGales: data['maxGales'],
       maxElevation: data['maxElevation'],
-      gales: (data['gales'] as List).map((e) => Gales.fromJson(e)).toList(),
+      gales: (data['gales'] as List).map((e) => Gale.fromJson(e)).toList(),
       elevations: List<int>.from(data['elevations']),
       isActiveElevation: data['isActiveElevation'],
       strategies: (data['strategies'] as List)
-          .map((e) => Strategies.fromJson(e))
+          .map((e) => Strategy.fromJson(e))
           .toList(),
       wallet: (data['wallet'] is int)
           ? (data['wallet'] as int).toDouble()
@@ -83,6 +87,16 @@ class DoubleConfigModel extends DoubleConfigEntity {
   }
 
   Map<String, dynamic> toDocument() {
+    final List<Map<String, dynamic>> galesList = [];
+    gales.forEach((element) {
+      galesList.add(element.toJson());
+    });
+
+    final List<Map<String, dynamic>> strategiesList = [];
+    strategies.forEach((element) {
+      strategiesList.add(element.toJson());
+    });
+
     return {
       'enabled': enabled,
       'isActiveStopGain': isActiveStopGain,
@@ -91,10 +105,10 @@ class DoubleConfigModel extends DoubleConfigEntity {
       'amountStopLoss': amountStopLoss,
       'maxGales': maxGales,
       'maxElevation': maxElevation,
-      'gales': gales,
+      'gales': galesList,
       'elevations': elevations,
       'isActiveElevation': isActiveElevation,
-      'strategies': strategies,
+      'strategies': strategiesList,
     };
   }
 }

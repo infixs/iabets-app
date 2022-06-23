@@ -2,6 +2,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ia_bet/data/datasource/firebase_remote_datasource.dart';
@@ -14,7 +15,6 @@ import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 
 import '../../domain/entities/strategy_entity.dart';
 
@@ -467,15 +467,14 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   }
 
   @override
-  Future<void> saveDoubleConfig(DoubleConfigEntity doubleConfig) async {
+  Future<void> saveDoubleConfig(DoubleConfigModel doubleConfig) async {
     final doubleConfigDoc = fireStore
         .collection("users")
         .doc(auth.currentUser!.uid)
         .collection('blaze')
         .doc('doubleConfig');
 
-    final doubleConfigModel = doubleConfig as DoubleConfigModel;
-    doubleConfigDoc.update(doubleConfigModel.toDocument());
+    doubleConfigDoc.update(doubleConfig.toDocument());
   }
 
   Future<List<StrategyEntity>> getStrategies() async {
