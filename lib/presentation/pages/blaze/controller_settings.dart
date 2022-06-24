@@ -32,7 +32,10 @@ class SettingsController {
   final TextEditingController stoplossController = TextEditingController();
   final TextEditingController firstBetPriceController = TextEditingController();
   final TextEditingController firstBetWhiteController = TextEditingController();
-
+  final TextEditingController newFirstBetPriceController =
+      TextEditingController();
+  final TextEditingController newFirstBetWhiteController =
+      TextEditingController();
   void init(DoubleConfigEntity doubleConfig) {
     stopGainController.text = doubleConfig.amountStopGain.toString();
     stoplossController.text = doubleConfig.amountStopLoss.toString();
@@ -45,5 +48,7 @@ class SettingsController {
     stoplossController.dispose();
     firstBetPriceController.dispose();
     firstBetWhiteController.dispose();
+    newFirstBetPriceController.dispose();
+    newFirstBetWhiteController.dispose();
   }
 }

@@ -26,7 +26,6 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
   final SettingsController settingsController = SettingsController();
   final ValueNotifier<bool> stopGainIsOn = ValueNotifier<bool>(true);
   final ValueNotifier<bool> stopLossIsOn = ValueNotifier<bool>(true);
-  late final DoubleConfigEntity doubleConfig;
 
   @override
   void dispose() {
@@ -38,11 +37,6 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
 
   @override
   void initState() {
-    doubleConfig = (BlocProvider.of<DoubleConfigCubit>(context).state
-            as DoubleConfigLoaded)
-        .doubleConfig;
-
-    settingsController.init(doubleConfig);
     super.initState();
   }
 
@@ -456,32 +450,30 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                 onPressed: () {
                   final isValid =
                       settingsController.formkey.currentState!.validate();
-
                   if (isValid) {
                     final DoubleConfigModel doubleConfig = DoubleConfigModel(
-                        amountStopGain: double.parse(
-                            settingsController.stopGainController.text),
-                        amountStopLoss: double.parse(
-                            settingsController.stoplossController.text),
-                        elevations: doubleConfigState.doubleConfig.elevations,
-                        enabled: doubleConfigState.doubleConfig.enabled,
-                        entryAmount: double.parse(
-                            settingsController.firstBetPriceController.text),
-                        entryWhiteAmount: double.parse(
-                            settingsController.firstBetWhiteController.text),
-                        gales: doubleConfigState.doubleConfig.gales,
-                        isActiveElevation:
-                            doubleConfigState.doubleConfig.isActiveElevation,
-                        isActiveStopGain:
-                            doubleConfigState.doubleConfig.isActiveStopGain,
-                        isActiveStopLoss:
-                            doubleConfigState.doubleConfig.isActiveStopLoss,
-                        maxElevation:
-                            doubleConfigState.doubleConfig.maxElevation,
-                        maxGales: doubleConfigState.doubleConfig.maxGales,
-                        strategies: doubleConfigState.doubleConfig.strategies,
-                        wallet: doubleConfigState.doubleConfig.wallet);
-
+                      amountStopGain: double.parse(
+                          settingsController.stopGainController.text),
+                      amountStopLoss: double.parse(
+                          settingsController.stoplossController.text),
+                      elevations: doubleConfigState.doubleConfig.elevations,
+                      enabled: doubleConfigState.doubleConfig.enabled,
+                      entryAmount: double.parse(
+                          settingsController.firstBetPriceController.text),
+                      entryWhiteAmount: double.parse(
+                          settingsController.firstBetWhiteController.text),
+                      gales: doubleConfigState.doubleConfig.gales,
+                      isActiveElevation:
+                          doubleConfigState.doubleConfig.isActiveElevation,
+                      isActiveStopGain:
+                          doubleConfigState.doubleConfig.isActiveStopGain,
+                      isActiveStopLoss:
+                          doubleConfigState.doubleConfig.isActiveStopLoss,
+                      maxElevation: doubleConfigState.doubleConfig.maxElevation,
+                      maxGales: doubleConfigState.doubleConfig.maxGales,
+                      strategies: doubleConfigState.doubleConfig.strategies,
+                      wallet: doubleConfigState.doubleConfig.wallet,
+                    );
                     BlocProvider.of<DoubleConfigCubit>(context)
                         .saveDoubleConfig(doubleConfig);
                   }
