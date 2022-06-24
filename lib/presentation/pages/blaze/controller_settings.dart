@@ -7,6 +7,16 @@ import '../../bloc/blaze/double_config_cubit.dart';
 class SettingsController {
   final formkey = GlobalKey<FormState>();
 
+  final TextEditingController stopGainController = TextEditingController();
+  final TextEditingController stoplossController = TextEditingController();
+  final TextEditingController firstBetPriceController = TextEditingController();
+  final TextEditingController firstBetWhiteController = TextEditingController();
+  final TextEditingController newFirstBetPriceController =
+      TextEditingController();
+  final TextEditingController newFirstBetWhiteController =
+      TextEditingController();
+  final TextEditingController multiplierController = TextEditingController();
+
   List<int> elevations = [2, 4, 8];
 
   List<Map<String, dynamic>> gales = [
@@ -28,14 +38,6 @@ class SettingsController {
     {'price': 1800, 'white': 10},
   ];
 
-  final TextEditingController stopGainController = TextEditingController();
-  final TextEditingController stoplossController = TextEditingController();
-  final TextEditingController firstBetPriceController = TextEditingController();
-  final TextEditingController firstBetWhiteController = TextEditingController();
-  final TextEditingController newFirstBetPriceController =
-      TextEditingController();
-  final TextEditingController newFirstBetWhiteController =
-      TextEditingController();
   void init(DoubleConfigEntity doubleConfig) {
     stopGainController.text = doubleConfig.amountStopGain.toString();
     stoplossController.text = doubleConfig.amountStopLoss.toString();
@@ -50,5 +52,6 @@ class SettingsController {
     firstBetWhiteController.dispose();
     newFirstBetPriceController.dispose();
     newFirstBetWhiteController.dispose();
+    multiplierController.dispose();
   }
 }
