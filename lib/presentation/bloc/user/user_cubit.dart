@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
@@ -67,7 +68,7 @@ class UserCubit extends Cubit<UserState> {
 
   Future<void> createChatChannel({required String uid, required name}) async {
     List<UserEntity> allUsers = [];
-    final userStreamData = await getAllUserUseCase.call();
+    final userStreamData = getAllUserUseCase.call();
     userStreamData.listen((users) {
       allUsers = users;
       allusersGlobal = users;
@@ -86,7 +87,7 @@ class UserCubit extends Cubit<UserState> {
 
   Future<List<UserEntity>> getAllUsersWithReturn() async {
     List<UserEntity> allUsers = [];
-    final userStreamData = await getAllUserUseCase.call();
+    final userStreamData = getAllUserUseCase.call();
     userStreamData.listen((users) {
       allUsers = users;
       allusersGlobal = users;

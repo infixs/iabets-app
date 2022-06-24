@@ -6,7 +6,6 @@ import 'package:ia_bet/presentation/pages/blaze/controller_settings.dart';
 import '../../../data/model/double_config_model.dart';
 import '../../bloc/blaze/double_config_cubit.dart';
 
-import 'components/custom_app_bar_blaze_page/custom_app_bar_gales_page.dart';
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
 
 class ElevateSettingsPage extends StatefulWidget {

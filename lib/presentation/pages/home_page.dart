@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
-import 'package:ia_bet/presentation/pages/blaze/components/custom_app_bar_blaze_page/custom_app_bar_blaze_page.dart';
 
 import '../../domain/entities/user_entity.dart';
 import '../bloc/user/user_cubit.dart';
