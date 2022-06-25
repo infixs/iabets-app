@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
 import 'package:ia_bet/presentation/pages/blaze/components/custom_app_bar_blaze_page/custom_app_bar_blaze_page.dart';
 
+import '../../../data/model/double_config_model.dart';
 import '../../../domain/entities/double_config.dart';
 import '../../../domain/entities/strategy_entity.dart';
 
@@ -18,16 +19,6 @@ class BlazePage extends StatefulWidget {
 }
 
 class _BlazePageState extends State<BlazePage> {
-  final ValueNotifier<bool> isOnBalze = ValueNotifier<bool>(false);
-
-  void switchChange(bool value) => isOnBalze.value = value;
-
-  @override
-  void dispose() {
-    isOnBalze.dispose();
-    super.dispose();
-  }
-
   @override
   void initState() {
     BlocProvider.of<DoubleConfigCubit>(context).getDoubleConfig();
@@ -106,63 +97,95 @@ class _BlazePageState extends State<BlazePage> {
                     ),
                   ],
                 ),
-                ValueListenableBuilder(
-                  valueListenable: isOnBalze,
-                  builder: (BuildContext context, value, Widget? child) =>
-                      ButtonActivity(
-                    activeColors: const [
-                      Color.fromARGB(255, 58, 58, 58),
-                      Color.fromARGB(255, 43, 40, 40),
-                    ],
-                    inactiveColors: const [
-                      Color.fromARGB(255, 43, 40, 40),
-                      Color.fromARGB(255, 58, 58, 58),
-                    ],
-                    onPressed: (value) {
-                      showDialog<void>(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          content: Text(
-                              'Deseja ${value ? 'ativar' : 'desativar'} as apostas automaticas.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                switchChange(value);
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                '${value ? 'Ativar' : 'Desativar'}',
-                              ),
+                (doubleConfigState is DoubleConfigLoaded)
+                    ? ButtonActivity(
+                        activeColors: const [
+                          Color.fromARGB(255, 58, 58, 58),
+                          Color.fromARGB(255, 43, 40, 40),
+                        ],
+                        inactiveColors: const [
+                          Color.fromARGB(255, 43, 40, 40),
+                          Color.fromARGB(255, 58, 58, 58),
+                        ],
+                        onPressed: (value) {
+                          showDialog<void>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              content: Text(
+                                  'Deseja ${value ? 'ativar' : 'desativar'} as apostas automaticas.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    final DoubleConfigModel doubleConfig =
+                                        DoubleConfigModel(
+                                      amountStopGain: doubleConfigState
+                                          .doubleConfig.amountStopGain,
+                                      amountStopLoss: doubleConfigState
+                                          .doubleConfig.amountStopLoss,
+                                      elevations: doubleConfigState
+                                          .doubleConfig.elevations,
+                                      enabled: !doubleConfigState
+                                          .doubleConfig.enabled,
+                                      entryAmount: doubleConfigState
+                                          .doubleConfig.entryAmount,
+                                      entryWhiteAmount: doubleConfigState
+                                          .doubleConfig.entryWhiteAmount,
+                                      gales:
+                                          doubleConfigState.doubleConfig.gales,
+                                      isActiveElevation: doubleConfigState
+                                          .doubleConfig.isActiveElevation,
+                                      isActiveStopGain: doubleConfigState
+                                          .doubleConfig.isActiveStopGain,
+                                      isActiveStopLoss: doubleConfigState
+                                          .doubleConfig.isActiveStopLoss,
+                                      maxElevation: doubleConfigState
+                                          .doubleConfig.maxElevation,
+                                      maxGales: doubleConfigState
+                                          .doubleConfig.maxGales,
+                                      strategies: doubleConfigState
+                                          .doubleConfig.strategies,
+                                      wallet:
+                                          doubleConfigState.doubleConfig.wallet,
+                                    );
+                                    BlocProvider.of<DoubleConfigCubit>(context)
+                                        .saveDoubleConfig(doubleConfig);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    '${value ? 'Ativar' : 'Desativar'}',
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text(
+                                    'Cancelar',
+                                  ),
+                                )
+                              ],
                             ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text(
-                                'Cancelar',
-                              ),
-                            )
-                          ],
+                          );
+                        },
+                        activityChild: Text(
+                          'ON',
+                          style: TextStyle(
+                            color: Color(0xff1bb57f),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      );
-                    },
-                    activityChild: Text(
-                      'ON',
-                      style: TextStyle(
-                        color: Color(0xff1bb57f),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        enabled: doubleConfigState.doubleConfig.enabled,
+                        inactivityChild: Text(
+                          'OFF',
+                          style: TextStyle(
+                            color: Color(0xfff12c4d),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    : Center(
+                        child: CircularProgressIndicator(),
                       ),
-                    ),
-                    enabled: isOnBalze.value,
-                    inactivityChild: Text(
-                      'OFF',
-                      style: TextStyle(
-                        color: Color(0xfff12c4d),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                )
               ],
             ),
           ),

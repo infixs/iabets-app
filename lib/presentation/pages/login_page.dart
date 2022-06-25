@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/constants/text_input_decoration.dart';
-import 'package:ia_bet/data/model/user_model.dart';
+import 'package:ia_bet/injection_container.dart' as di;
 import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 import 'package:ia_bet/presentation/bloc/auth_email/auth_email_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
-import 'package:ia_bet/presentation/pages/canais_page.dart';
-import 'package:ia_bet/injection_container.dart' as di;
 import 'package:ia_bet/presentation/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {

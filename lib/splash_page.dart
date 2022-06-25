@@ -1,17 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
-import 'package:ia_bet/presentation/pages/canais_page.dart';
-import 'package:ia_bet/presentation/pages/login_page.dart';
+import 'package:ia_bet/presentation/pages/home_page.dart';
 
 import 'presentation/pages/home_page.dart';
+import 'presentation/pages/login_page.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({Key? key}) : super(key: key);
