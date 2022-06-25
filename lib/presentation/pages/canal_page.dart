@@ -101,9 +101,9 @@ class _CanalPageState extends State<CanalPage> {
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    /*WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _goScrollDown();
-    });
+    });*/
   }
 
   @override
