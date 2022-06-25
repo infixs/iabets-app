@@ -1,22 +1,22 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:ia_bet/app_const.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/domain/usecases/add_to_my_chat_usecase.dart';
+import 'package:ia_bet/domain/usecases/delete_messages_usecase.dart';
+import 'package:ia_bet/domain/usecases/edit_message_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_all_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_one_to_one_single_user_chat_channel_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_text_messages_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_url_file_usecase.dart';
 import 'package:ia_bet/domain/usecases/send_text_message_usecase.dart';
 import 'package:ia_bet/domain/usecases/upload_file_usecase.dart';
-import 'package:ia_bet/domain/usecases/delete_messages_usecase.dart';
-import 'package:ia_bet/domain/usecases/edit_message_usecase.dart';
 
 part 'communication_state.dart';
 
@@ -147,8 +147,6 @@ class CommunicationCubit extends Cubit<CommunicationState> {
       messagesStreamData.listen((messages) {
         emit(CommunicationLoaded(messages: messages));
       });
-
-      List<TextMessageEntity> messages = await messagesStreamData.first;
 
       emit(CommunicationLoaded(messages: await messagesStreamData.first));
     } on SocketException catch (_) {

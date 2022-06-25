@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
+import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
 import 'package:ia_bet/presentation/bloc/communication/communication_cubit.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
@@ -39,6 +40,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<MyChatCubit>(
           create: (_) => di.sl<MyChatCubit>(),
+        ),
+        BlocProvider<DoubleConfigCubit>(
+          create: (_) => di.sl<DoubleConfigCubit>(),
         )
       ],
       child: MaterialApp(

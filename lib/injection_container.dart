@@ -14,6 +14,7 @@ import 'package:ia_bet/domain/usecases/get_all_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_create_current_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_current_uid_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_current_usercase.dart';
+import 'package:ia_bet/domain/usecases/get_double_config_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_my_chat_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_one_to_one_single_user_chat_channel_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_text_messages_usecase.dart';
@@ -28,6 +29,7 @@ import 'package:ia_bet/domain/usecases/sign_out_usecase.dart';
 import 'package:ia_bet/domain/usecases/upload_file_usecase.dart';
 import 'package:ia_bet/domain/usecases/verify_phone_number_usecase.dart';
 import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
+import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
 import 'package:ia_bet/presentation/bloc/communication/communication_cubit.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
@@ -44,37 +46,31 @@ Future<void> init() async {
         getCurrentUidUseCase: sl.call(),
       ));
 
-
   sl.registerFactory<CommunicationCubit>(() => CommunicationCubit(
-        addToMyChatUseCase: sl.call(),
-        getOneToOneSingleUserChatChannelUseCase: sl.call(),
-        getTextMessagesUseCase: sl.call(),
-        sendTextMessageUseCase: sl.call(),
-        getAllUserUseCase: sl.call(),
-        getUrlFileUseCase: sl.call(), 
-        uploadFiletUseCase: sl.call(),
-        deleteMessagesUseCase: sl.call(),
-        editMessageUseCase: sl.call()
-      ));
+      addToMyChatUseCase: sl.call(),
+      getOneToOneSingleUserChatChannelUseCase: sl.call(),
+      getTextMessagesUseCase: sl.call(),
+      sendTextMessageUseCase: sl.call(),
+      getAllUserUseCase: sl.call(),
+      getUrlFileUseCase: sl.call(),
+      uploadFiletUseCase: sl.call(),
+      deleteMessagesUseCase: sl.call(),
+      editMessageUseCase: sl.call()));
   sl.registerFactory<MyChatCubit>(() => MyChatCubit(
-        getMyChatUseCase: sl.call(),
-        sendPushMessageUseCase: sl.call()
-      ));
-
-
+      getMyChatUseCase: sl.call(), sendPushMessageUseCase: sl.call()));
 
   sl.registerFactory<UserCubit>(() => UserCubit(
-        createOneToOneChatChannelUseCase: sl.call(),
-        getAllUserUseCase: sl.call(),
-        setUserTokenUseCase: sl.call(),
-        getCurrentUserUseCase: sl.call()
-      ));
+      createOneToOneChatChannelUseCase: sl.call(),
+      getAllUserUseCase: sl.call(),
+      setUserTokenUseCase: sl.call(),
+      getCurrentUserUseCase: sl.call()));
 
   sl.registerFactory<EmailAuthCubit>(() => EmailAuthCubit(
-    signInWithEmailUseCase: sl.call(),
-    getCurrentUidUseCase: sl.call(),
-    getCreateCurrentUserUseCase: sl.call()
-    ));
+      signInWithEmailUseCase: sl.call(),
+      getCurrentUidUseCase: sl.call(),
+      getCreateCurrentUserUseCase: sl.call()));
+
+  sl.registerFactory<DoubleConfigCubit>(() => DoubleConfigCubit(sl.call()));
 
   //useCase
   sl.registerLazySingleton<GetCreateCurrentUserUseCase>(
@@ -121,22 +117,23 @@ Future<void> init() async {
   sl.registerLazySingleton<UploadFiletUseCase>(
       () => UploadFiletUseCase(repository: sl.call()));
 
+  sl.registerLazySingleton<GetDoubleConfigUseCase>(
+      () => GetDoubleConfigUseCase(repository: sl.call()));
+
   //repository
   sl.registerLazySingleton<FirebaseRepository>(
       () => FirebaseRepositoryImpl(remoteDataSource: sl.call()));
 
   //remote data
-  sl.registerLazySingleton<FirebaseRemoteDataSource>(
-      () => FirebaseRemoteDataSourceImpl(
-            auth: sl.call(),
-            fireStore: sl.call(),
-            fireFunctions: sl.call()
-          ));
+  sl.registerLazySingleton<FirebaseRemoteDataSource>(() =>
+      FirebaseRemoteDataSourceImpl(
+          auth: sl.call(), fireStore: sl.call(), fireFunctions: sl.call()));
   //External
 
   final auth = FirebaseAuth.instance;
   final fireStore = FirebaseFirestore.instance;
-  final fireFunctions = FirebaseFunctions.instanceFor(region: 'southamerica-east1');
+  final fireFunctions =
+      FirebaseFunctions.instanceFor(region: 'southamerica-east1');
   sl.registerLazySingleton(() => auth);
   sl.registerLazySingleton(() => fireStore);
   sl.registerLazySingleton(() => fireFunctions);

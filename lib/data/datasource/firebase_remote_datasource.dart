@@ -1,9 +1,13 @@
 // Classe abstrata da api do firebase
 import 'dart:typed_data';
 
+import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
+import 'package:ia_bet/domain/entities/strategy_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
+
+import '../model/double_config_model.dart';
 
 abstract class FirebaseRemoteDataSource {
   Future<void> verifyPhoneNumber(String phoneNumber);
@@ -34,4 +38,8 @@ abstract class FirebaseRemoteDataSource {
       String channelId, UserEntity allUsers);
   Future<void> uploadFileMessage(String canalName, String name, Uint8List file);
   Future<String> getDownloadFileMessage(String canalName, String name);
+
+  Stream<DoubleConfigEntity> getDoubleConfig();
+  Future<void> saveDoubleConfig(DoubleConfigModel doubleConfig);
+  Future<List<StrategyEntity>> getStrategies();
 }

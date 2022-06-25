@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ia_bet/constants/cores_constants.dart';
@@ -11,14 +12,12 @@ import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
 import 'package:ia_bet/presentation/pages/canal_page.dart';
 import 'package:ia_bet/presentation/pages/login_page.dart';
 import 'package:ia_bet/presentation/pages/perfil_page.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'dart:async' show Timer;
+import 'package:url_launcher/url_launcher.dart';
 
 class CanaisPage extends StatefulWidget {
   final UserEntity userInfo;
-  FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   CanaisPage({Key? key, required this.userInfo}) : super(key: key);
 
