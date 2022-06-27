@@ -109,6 +109,8 @@ class DoubleConfigModel extends DoubleConfigEntity {
       'elevations': elevations,
       'isActiveElevation': isActiveElevation,
       'strategies': strategiesList,
+      'entryAmount': entryAmount,
+      'entryWhiteAmount': entryWhiteAmount,
     };
   }
 }

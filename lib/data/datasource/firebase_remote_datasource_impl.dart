@@ -474,7 +474,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         .collection('blaze')
         .doc('doubleConfig');
 
-    doubleConfigDoc.update(doubleConfig.toDocument());
+    doubleConfigDoc.set(doubleConfig.toDocument());
   }
 
   Future<List<StrategyEntity>> getStrategies() async {

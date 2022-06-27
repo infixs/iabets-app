@@ -10,7 +10,7 @@ class DoubleConfigEntity {
 
   final double amountStopGain;
   final double amountStopLoss;
-  final double wallet;
+  final double? wallet;
 
   final double entryAmount;
   final double entryWhiteAmount;

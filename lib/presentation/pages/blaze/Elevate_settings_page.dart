@@ -111,7 +111,8 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                     doubleConfigState.doubleConfig.maxGales,
                                 strategies:
                                     doubleConfigState.doubleConfig.strategies,
-                                wallet: doubleConfigState.doubleConfig.wallet,
+                                wallet:
+                                    doubleConfigState.doubleConfig.wallet ?? 0,
                               );
 
                               BlocProvider.of<DoubleConfigCubit>(context)
@@ -187,7 +188,8 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                             strategies: doubleConfigState
                                                 .doubleConfig.strategies,
                                             wallet: doubleConfigState
-                                                .doubleConfig.wallet,
+                                                    .doubleConfig.wallet ??
+                                                0,
                                           );
 
                                           BlocProvider.of<DoubleConfigCubit>(
@@ -274,6 +276,8 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                             int.parse(settingsController
                                                 .multiplierController.text),
                                           );
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
 
                                           final DoubleConfigModel doubleConfig =
                                               DoubleConfigModel(
@@ -304,7 +308,8 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                             strategies: doubleConfigState
                                                 .doubleConfig.strategies,
                                             wallet: doubleConfigState
-                                                .doubleConfig.wallet,
+                                                    .doubleConfig.wallet ??
+                                                0,
                                           );
 
                                           BlocProvider.of<DoubleConfigCubit>(

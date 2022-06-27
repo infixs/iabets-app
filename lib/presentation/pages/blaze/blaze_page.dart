@@ -31,6 +31,12 @@ class _BlazePageState extends State<BlazePage> {
 
     return BlocBuilder<DoubleConfigCubit, DoubleConfigState>(
         builder: (context, doubleConfigState) {
+      if (doubleConfigState is DoubleConfigLoaded) {
+        print(doubleConfigState.doubleConfig.wallet);
+        print(doubleConfigState.doubleConfig.amountStopGain);
+        print(doubleConfigState.doubleConfig.amountStopLoss);
+      }
+
       return Scaffold(
         backgroundColor: const Color(0xff0f1923),
         appBar: CustomAppBarBlazePage(
@@ -47,7 +53,7 @@ class _BlazePageState extends State<BlazePage> {
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Text(
                         (doubleConfigState is DoubleConfigLoaded)
-                            ? 'R\$ ${doubleConfigState.doubleConfig.wallet.toStringAsFixed(2)}'
+                            ? 'R\$ ${(doubleConfigState.doubleConfig.wallet ?? 0).toStringAsFixed(2)}'
                             : '--',
                         style: const TextStyle(
                           color: Colors.white,
@@ -144,8 +150,9 @@ class _BlazePageState extends State<BlazePage> {
                                           .doubleConfig.maxGales,
                                       strategies: doubleConfigState
                                           .doubleConfig.strategies,
-                                      wallet:
-                                          doubleConfigState.doubleConfig.wallet,
+                                      wallet: doubleConfigState
+                                              .doubleConfig.wallet ??
+                                          0,
                                     );
                                     BlocProvider.of<DoubleConfigCubit>(context)
                                         .saveDoubleConfig(doubleConfig);

@@ -112,7 +112,8 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                     doubleConfigState.doubleConfig.maxGales,
                                 strategies:
                                     doubleConfigState.doubleConfig.strategies,
-                                wallet: doubleConfigState.doubleConfig.wallet,
+                                wallet:
+                                    doubleConfigState.doubleConfig.wallet ?? 0,
                               );
 
                               BlocProvider.of<DoubleConfigCubit>(context)
@@ -242,6 +243,9 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                                       .text),
                                             ),
                                           );
+
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
                                           final DoubleConfigModel doubleConfig =
                                               DoubleConfigModel(
                                             amountStopGain: doubleConfigState
@@ -271,7 +275,8 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                             strategies: doubleConfigState
                                                 .doubleConfig.strategies,
                                             wallet: doubleConfigState
-                                                .doubleConfig.wallet,
+                                                    .doubleConfig.wallet ??
+                                                0,
                                           );
 
                                           BlocProvider.of<DoubleConfigCubit>(
