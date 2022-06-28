@@ -19,6 +19,88 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final SettingsController settingsController = SettingsController();
 
+  void editElevations({required List<int> elevations, required int index}) =>
+      showDialog<void>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          backgroundColor: const Color(0xff0f1923),
+          content: Form(
+            key: settingsController.formkeyEdit,
+            child: SizedBox(
+              height: 250,
+              child: Column(
+                children: [
+                  Text(
+                    'Editar Elevação',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50, bottom: 30),
+                    child: TextFormField(
+                      controller: settingsController.editMultiplierController,
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(color: Colors.white),
+                      validator: (String? input) {
+                        if (input != null && input.isNotEmpty) {
+                          return null;
+                        } else {
+                          return 'digite algum valor';
+                        }
+                      },
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xff1bb57f), width: 1.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.0),
+                        ),
+                        labelText: 'Elevação',
+                        labelStyle: TextStyle(color: Colors.white),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(2),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: const Color(0xff1bb57f),
+                    ),
+                    onPressed: () {
+                      final isValid = settingsController
+                          .formkeyEdit.currentState!
+                          .validate();
+
+                      if (isValid) {
+                        elevations.removeAt(index);
+                        elevations.insert(
+                            index,
+                            int.parse(settingsController
+                                .editMultiplierController.text));
+                        settingsController.editMultiplierController.clear();
+
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Center(
+                      child: Text(
+                        'Salvar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -119,90 +201,103 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                   .saveDoubleConfig(doubleConfig);
                             }),
                             itemBuilder: (BuildContext context, int index) =>
-                                SizedBox(
+                                GestureDetector(
+                              onTap: () => editElevations(
+                                elevations:
+                                    doubleConfigState.doubleConfig.elevations,
+                                index: index,
+                              ),
                               key: Key('$index'),
-                              height: 70,
-                              child: Card(
-                                color: const Color(0xff0a1117),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Mutiplicador',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        Text(
-                                          '${doubleConfigState.doubleConfig.elevations[index]}x',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ],
-                                    ),
-                                    CircleAvatar(
-                                      backgroundColor: const Color(0xfff12c4d),
-                                      child: IconButton(
-                                        splashRadius: 25,
-                                        onPressed: () {
-                                          doubleConfigState
-                                              .doubleConfig.elevations
-                                              .remove(doubleConfigState
-                                                  .doubleConfig
-                                                  .elevations[index]);
-
-                                          final DoubleConfigModel doubleConfig =
-                                              DoubleConfigModel(
-                                            amountStopGain: doubleConfigState
-                                                .doubleConfig.amountStopGain,
-                                            amountStopLoss: doubleConfigState
-                                                .doubleConfig.amountStopLoss,
-                                            elevations: doubleConfigState
-                                                .doubleConfig.elevations,
-                                            enabled: doubleConfigState
-                                                .doubleConfig.enabled,
-                                            entryAmount: doubleConfigState
-                                                .doubleConfig.entryAmount,
-                                            entryWhiteAmount: doubleConfigState
-                                                .doubleConfig.entryWhiteAmount,
-                                            gales: doubleConfigState
-                                                .doubleConfig.gales,
-                                            isActiveElevation: doubleConfigState
-                                                .doubleConfig.isActiveElevation,
-                                            isActiveStopGain: doubleConfigState
-                                                .doubleConfig.isActiveStopGain,
-                                            isActiveStopLoss: doubleConfigState
-                                                .doubleConfig.isActiveStopLoss,
-                                            maxElevation: doubleConfigState
-                                                .doubleConfig.maxElevation,
-                                            maxGales: doubleConfigState
-                                                .doubleConfig.maxGales,
-                                            strategies: doubleConfigState
-                                                .doubleConfig.strategies,
-                                            wallet: doubleConfigState
-                                                    .doubleConfig.wallet ??
-                                                0,
-                                          );
-
-                                          BlocProvider.of<DoubleConfigCubit>(
-                                                  context)
-                                              .saveDoubleConfig(doubleConfig);
-                                        },
-                                        icon: Icon(
-                                          Icons.close,
-                                          color: Colors.white,
-                                        ),
+                              child: SizedBox(
+                                height: 70,
+                                child: Card(
+                                  color: const Color(0xff0a1117),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Mutiplicador',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          Text(
+                                            '${doubleConfigState.doubleConfig.elevations[index]}x',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ],
                                       ),
-                                    )
-                                  ],
+                                      CircleAvatar(
+                                        backgroundColor:
+                                            const Color(0xfff12c4d),
+                                        child: IconButton(
+                                          splashRadius: 25,
+                                          onPressed: () {
+                                            doubleConfigState
+                                                .doubleConfig.elevations
+                                                .remove(doubleConfigState
+                                                    .doubleConfig
+                                                    .elevations[index]);
+
+                                            final DoubleConfigModel
+                                                doubleConfig =
+                                                DoubleConfigModel(
+                                              amountStopGain: doubleConfigState
+                                                  .doubleConfig.amountStopGain,
+                                              amountStopLoss: doubleConfigState
+                                                  .doubleConfig.amountStopLoss,
+                                              elevations: doubleConfigState
+                                                  .doubleConfig.elevations,
+                                              enabled: doubleConfigState
+                                                  .doubleConfig.enabled,
+                                              entryAmount: doubleConfigState
+                                                  .doubleConfig.entryAmount,
+                                              entryWhiteAmount:
+                                                  doubleConfigState.doubleConfig
+                                                      .entryWhiteAmount,
+                                              gales: doubleConfigState
+                                                  .doubleConfig.gales,
+                                              isActiveElevation:
+                                                  doubleConfigState.doubleConfig
+                                                      .isActiveElevation,
+                                              isActiveStopGain:
+                                                  doubleConfigState.doubleConfig
+                                                      .isActiveStopGain,
+                                              isActiveStopLoss:
+                                                  doubleConfigState.doubleConfig
+                                                      .isActiveStopLoss,
+                                              maxElevation: doubleConfigState
+                                                  .doubleConfig.maxElevation,
+                                              maxGales: doubleConfigState
+                                                  .doubleConfig.maxGales,
+                                              strategies: doubleConfigState
+                                                  .doubleConfig.strategies,
+                                              wallet: doubleConfigState
+                                                      .doubleConfig.wallet ??
+                                                  0,
+                                            );
+
+                                            BlocProvider.of<DoubleConfigCubit>(
+                                                    context)
+                                                .saveDoubleConfig(doubleConfig);
+                                          },
+                                          icon: Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

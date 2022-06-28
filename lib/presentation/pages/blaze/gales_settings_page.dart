@@ -21,9 +21,132 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final SettingsController settingsController = SettingsController();
 
+  void editGale({required List<Gale> gales, required int index}) =>
+      showDialog<void>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          backgroundColor: const Color(0xff0f1923),
+          content: Form(
+            key: settingsController.formkeyEdit,
+            child: SizedBox(
+              height: 350,
+              child: Column(
+                children: [
+                  Text(
+                    'Editar gale',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50, bottom: 30),
+                    child: TextFormField(
+                      controller:
+                          settingsController.editFirstBetPriceController,
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(color: Colors.white),
+                      validator: (String? input) {
+                        if (input != null && input.isNotEmpty) {
+                          return null;
+                        } else {
+                          return 'digite algum valor';
+                        }
+                      },
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xff1bb57f), width: 1.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.0),
+                        ),
+                        labelText: 'Vermelho ou preto',
+                        labelStyle: TextStyle(color: Colors.white),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(2),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: TextFormField(
+                      controller:
+                          settingsController.editFirstBetWhiteController,
+                      keyboardType: TextInputType.number,
+                      validator: (String? input) {
+                        if (input != null && input.isNotEmpty) {
+                          return null;
+                        } else {
+                          return 'digite algum valor';
+                        }
+                      },
+                      style: TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xff1bb57f), width: 1.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.0),
+                        ),
+                        labelText: 'Proteção Branco',
+                        labelStyle: TextStyle(color: Colors.white),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(2),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: const Color(0xff1bb57f),
+                    ),
+                    onPressed: () {
+                      final isValid = settingsController
+                          .formkeyEdit.currentState!
+                          .validate();
+
+                      if (isValid) {
+                        gales.removeAt(index);
+                        gales.insert(
+                          index,
+                          Gale(
+                            amount: double.parse(settingsController
+                                .editFirstBetPriceController.text),
+                            amountProtection: double.parse(settingsController
+                                .editFirstBetWhiteController.text),
+                          ),
+                        );
+                        settingsController.editFirstBetPriceController.clear();
+                        settingsController.editFirstBetWhiteController.clear();
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Center(
+                      child: Text(
+                        'Salvar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
     return BlocBuilder<DoubleConfigCubit, DoubleConfigState>(
       builder: (context, doubleConfigState) => doubleConfigState
               is DoubleConfigLoaded
@@ -120,13 +243,18 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                   .saveDoubleConfig(doubleConfig);
                             }),
                             itemBuilder: (BuildContext context, int index) =>
-                                SizedBox(
-                              height: 70,
+                                GestureDetector(
+                              onTap: () => editGale(
+                                  gales: doubleConfigState.doubleConfig.gales,
+                                  index: index),
                               key: Key('$index'),
-                              child: GaleWidget(
-                                index: index,
-                                gales: doubleConfigState.doubleConfig.gales,
-                                doubleConfig: doubleConfigState.doubleConfig,
+                              child: SizedBox(
+                                height: 70,
+                                child: GaleWidget(
+                                  index: index,
+                                  gales: doubleConfigState.doubleConfig.gales,
+                                  doubleConfig: doubleConfigState.doubleConfig,
+                                ),
                               ),
                             ),
                           ),
