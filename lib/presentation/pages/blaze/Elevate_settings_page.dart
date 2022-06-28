@@ -241,10 +241,12 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                         ],
                                       ),
                                       CircleAvatar(
+                                        radius: 17,
                                         backgroundColor:
                                             const Color(0xfff12c4d),
                                         child: IconButton(
-                                          splashRadius: 25,
+                                          padding: EdgeInsets.zero,
+                                          splashRadius: 20,
                                           onPressed: () {
                                             doubleConfigState
                                                 .doubleConfig.elevations
