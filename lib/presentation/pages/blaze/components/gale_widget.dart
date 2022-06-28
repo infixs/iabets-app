@@ -25,6 +25,10 @@ class GaleWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          Icon(
+            Icons.open_with,
+            color: Colors.white,
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
