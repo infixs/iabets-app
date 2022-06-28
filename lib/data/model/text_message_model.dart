@@ -1,9 +1,6 @@
 //model message
 
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore_platform_interface/src/timestamp.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 
 class TextMessageModel extends TextMessageEntity {
@@ -38,7 +35,10 @@ class TextMessageModel extends TextMessageEntity {
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
 
     FileEntity fileData = FileEntity(
-        mime: data['fileType'], name: data['fileName'], url: data['fileUrl'], id: data['fileId']);
+        mime: data['fileType'],
+        name: data['fileName'],
+        url: data['fileUrl'],
+        id: data['fileId']);
 
     return TextMessageModel(
       senderName: data['senderName'],

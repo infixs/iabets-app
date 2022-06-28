@@ -10,27 +10,17 @@ class UserEntity extends Equatable {
   final String profileUrl;
   final bool isAdmin;
 
-  UserEntity({
-    required this.name,
-    required this.email,
-    required this.phoneNumber,
-    required this.isOnline,
-    required this.uid,
-    this.status = "Hey there! I am Using WhatsApp Clone.",
-    required this.profileUrl,
-    required this.isAdmin
-  });
+  UserEntity(
+      {required this.name,
+      required this.email,
+      required this.phoneNumber,
+      required this.isOnline,
+      required this.uid,
+      this.status = "Hey there! I am Using WhatsApp Clone.",
+      required this.profileUrl,
+      required this.isAdmin});
 
   @override
-  // TODO: implement props
-  List<Object> get props => [
-        name,
-        email,
-        phoneNumber,
-        isOnline,
-        uid,
-        status,
-        profileUrl,
-        isAdmin
-      ];
+  List<Object> get props =>
+      [name, email, phoneNumber, isOnline, uid, status, profileUrl, isAdmin];
 }
