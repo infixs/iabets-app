@@ -484,6 +484,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                       );
                       BlocProvider.of<DoubleConfigCubit>(context)
                           .saveDoubleConfig(doubleConfig);
+                      Navigator.pop(context);
                     }
                   },
                   child: Icon(Icons.save),
