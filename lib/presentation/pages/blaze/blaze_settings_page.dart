@@ -68,73 +68,73 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                       child: Column(
                         children: [
                           Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, bottom: 8),
-                              child: FutureBuilder<List<StrategyEntity>>(
-                                future:
-                                    BlocProvider.of<DoubleConfigCubit>(context)
-                                        .getStrategies(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<List<StrategyEntity>>
-                                        snapshot) {
-                                  if (!snapshot.hasData)
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
+                            padding: const EdgeInsets.only(
+                                left: 8, right: 8, bottom: 8),
+                            child: FutureBuilder<List<StrategyEntity>>(
+                              future:
+                                  BlocProvider.of<DoubleConfigCubit>(context)
+                                      .getStrategies(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<StrategyEntity>>
+                                      snapshot) {
+                                if (!snapshot.hasData)
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                return Column(
+                                    children: snapshot.data!.map((element) {
+                                  final Strategy strategy = doubleConfigState
+                                      .doubleConfig.strategies
+                                      .firstWhere(
+                                    (el) => el.id == element.id,
+                                    orElse: () {
+                                      final strategy = Strategy(
+                                          id: element.id,
+                                          active: false,
+                                          name: element.name);
+                                      doubleConfigState.doubleConfig.strategies
+                                          .add(strategy);
+                                      return strategy;
+                                    },
+                                  );
                                   return Column(
-                                      children: snapshot.data!.map((element) {
-                                    final Strategy strategy = doubleConfigState
-                                        .doubleConfig.strategies
-                                        .firstWhere(
-                                      (el) => el.id == element.id,
-                                      orElse: () {
-                                        final strategy = Strategy(
-                                            id: element.id,
-                                            active: false,
-                                            name: element.name);
-                                        doubleConfigState
-                                            .doubleConfig.strategies
-                                            .add(strategy);
-                                        return strategy;
-                                      },
-                                    );
-                                    return Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              element.name,
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            Switch(
-                                              value: strategy.active,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  strategy.active =
-                                                      !strategy.active;
-                                                });
-                                              },
-                                              inactiveThumbColor:
-                                                  const Color(0xfff12c4d),
-                                              activeColor:
-                                                  const Color(0xff1bb57f),
-                                              activeTrackColor:
-                                                  const Color(0xff0e0812),
-                                            )
-                                          ],
-                                        ),
-                                        Container(
-                                          height: 1,
-                                          color: const Color(0xff0e0812),
-                                        )
-                                      ],
-                                    );
-                                  }).toList());
-                                },
-                              )),
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            element.name,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                          Switch(
+                                            value: strategy.active,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                strategy.active =
+                                                    !strategy.active;
+                                              });
+                                            },
+                                            inactiveThumbColor:
+                                                const Color(0xfff12c4d),
+                                            activeColor:
+                                                const Color(0xff1bb57f),
+                                            activeTrackColor:
+                                                const Color(0xff0e0812),
+                                          )
+                                        ],
+                                      ),
+                                      Container(
+                                        height: 1,
+                                        color: const Color(0xff0e0812),
+                                      )
+                                    ],
+                                  );
+                                }).toList());
+                              },
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(top: 20, bottom: 20),
                             child: Row(
@@ -358,10 +358,11 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                           Padding(
                             padding: const EdgeInsets.only(top: 20),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Spacer(),
                                 Flexible(
-                                  flex: 15,
+                                  flex: 5,
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       padding: EdgeInsets.all(0),
@@ -402,9 +403,25 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                                     ),
                                   ),
                                 ),
+                                const Spacer(),
+                                Flexible(
+                                    child: ValueListenableBuilder(
+                                  valueListenable: settingsController.galesIsOn,
+                                  builder: (BuildContext context, bool value,
+                                          Widget? child) =>
+                                      Switch(
+                                    value: settingsController.galesIsOn.value,
+                                    onChanged: (bool value) =>
+                                        settingsController.galesIsOn.value =
+                                            !settingsController.galesIsOn.value,
+                                    inactiveThumbColor: const Color(0xfff12c4d),
+                                    activeColor: const Color(0xff1bb57f),
+                                    activeTrackColor: const Color(0xff0e0812),
+                                  ),
+                                )),
                                 const Spacer(flex: 2),
                                 Flexible(
-                                  flex: 15,
+                                  flex: 5,
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       padding: EdgeInsets.all(0),
@@ -446,6 +463,28 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                                   ),
                                 ),
                                 const Spacer(),
+                                Flexible(
+                                  child: ValueListenableBuilder(
+                                    valueListenable:
+                                        settingsController.elevationIsOn,
+                                    builder: (BuildContext context, bool value,
+                                            Widget? child) =>
+                                        Switch(
+                                      value: settingsController
+                                          .elevationIsOn.value,
+                                      onChanged: (bool value) =>
+                                          settingsController
+                                                  .elevationIsOn.value =
+                                              !settingsController
+                                                  .elevationIsOn.value,
+                                      inactiveThumbColor:
+                                          const Color(0xfff12c4d),
+                                      activeColor: const Color(0xff1bb57f),
+                                      activeTrackColor: const Color(0xff0e0812),
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(),
                               ],
                             ),
                           )
@@ -472,8 +511,9 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                         entryWhiteAmount: double.parse(
                             settingsController.firstBetWhiteController.text),
                         gales: doubleConfigState.doubleConfig.gales,
+                        isActiveGale: settingsController.galesIsOn.value,
                         isActiveElevation:
-                            doubleConfigState.doubleConfig.isActiveElevation,
+                            settingsController.elevationIsOn.value,
                         isActiveStopGain: settingsController.stopGainIsOn.value,
                         isActiveStopLoss: settingsController.stopLossIsOn.value,
                         maxElevation:

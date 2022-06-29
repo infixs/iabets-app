@@ -7,6 +7,8 @@ class SettingsController {
   final GlobalKey<FormState> formkeyEdit = GlobalKey<FormState>();
   final ValueNotifier<bool> stopGainIsOn = ValueNotifier<bool>(true);
   final ValueNotifier<bool> stopLossIsOn = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> elevationIsOn = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> galesIsOn = ValueNotifier<bool>(true);
   final TextEditingController stopGainController = TextEditingController();
   final TextEditingController stoplossController = TextEditingController();
   final TextEditingController firstBetPriceController = TextEditingController();
@@ -30,9 +32,13 @@ class SettingsController {
     firstBetWhiteController.text = doubleConfig.entryWhiteAmount.toString();
     stopGainIsOn.value = doubleConfig.isActiveStopGain;
     stopLossIsOn.value = doubleConfig.isActiveStopLoss;
+    elevationIsOn.value = doubleConfig.isActiveElevation;
+    galesIsOn.value = doubleConfig.isActiveGale;
   }
 
   void dispose() {
+    galesIsOn.dispose();
+    elevationIsOn.dispose();
     stopGainIsOn.dispose();
     stopLossIsOn.dispose();
     stopGainController.dispose();

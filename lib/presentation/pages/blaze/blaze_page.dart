@@ -33,15 +33,25 @@ class _BlazePageState extends State<BlazePage> {
       return Scaffold(
         backgroundColor: const Color(0xff0f1923),
         appBar: CustomAppBarBlazePage(
-          height: 150,
+          height: 170,
           child: Padding(
-            padding: const EdgeInsets.only(top: 15, left: 30, right: 30),
+            padding: const EdgeInsets.only(left: 30, right: 30),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Text(
@@ -55,44 +65,50 @@ class _BlazePageState extends State<BlazePage> {
                         ),
                       ),
                     ),
-                    Text(
-                      (doubleConfigState is DoubleConfigLoaded)
-                          ? doubleConfigState.doubleConfig.amountStopGain
-                              .toString()
-                          : 'R\$--',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        // fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10, top: 10),
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Stop Gain: ',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: (doubleConfigState is DoubleConfigLoaded)
+                                  ? 'R\$ ${doubleConfigState.doubleConfig.amountStopGain.toStringAsFixed(2)}'
+                                  : 'R\$--',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        'Stop Gain',
+                    RichText(
+                      text: TextSpan(
+                        text: 'Stop loss: ',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
+                        children: [
+                          TextSpan(
+                            text: (doubleConfigState is DoubleConfigLoaded)
+                                ? 'R\$ ${doubleConfigState.doubleConfig.amountStopLoss.toStringAsFixed(2)}'
+                                : '--',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Text(
-                      (doubleConfigState is DoubleConfigLoaded)
-                          ? 'R\$ ${doubleConfigState.doubleConfig.amountStopLoss.toStringAsFixed(2)}'
-                          : '--',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        //fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Text(
-                      'Stop Loss',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -137,6 +153,8 @@ class _BlazePageState extends State<BlazePage> {
                                           .doubleConfig.isActiveStopGain,
                                       isActiveStopLoss: doubleConfigState
                                           .doubleConfig.isActiveStopLoss,
+                                      isActiveGale: doubleConfigState
+                                          .doubleConfig.isActiveGale,
                                       maxElevation: doubleConfigState
                                           .doubleConfig.maxElevation,
                                       maxGales: doubleConfigState

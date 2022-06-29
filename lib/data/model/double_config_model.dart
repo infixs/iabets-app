@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 
 class DoubleConfigModel extends DoubleConfigEntity {
-  DoubleConfigModel({
+  const DoubleConfigModel({
     required bool enabled,
+    required bool isActiveGale,
     required bool isActiveStopGain,
     required bool isActiveStopLoss,
     required double wallet,
@@ -20,6 +21,7 @@ class DoubleConfigModel extends DoubleConfigEntity {
   }) : super(
           wallet: wallet,
           enabled: enabled,
+          isActiveGale: isActiveGale,
           isActiveStopGain: isActiveStopGain,
           isActiveStopLoss: isActiveStopLoss,
           amountStopGain: amountStopGain,
@@ -41,6 +43,7 @@ class DoubleConfigModel extends DoubleConfigEntity {
       enabled: data['enabled'],
       isActiveStopGain: data['isActiveStopGain'],
       isActiveStopLoss: data['isActiveStopLoss'],
+      isActiveGale: data['isActiveGale'],
       amountStopGain: (data['amountStopGain'] is int)
           ? (data['amountStopGain'] as int).toDouble()
           : data['amountStopGain'],
@@ -77,6 +80,7 @@ class DoubleConfigModel extends DoubleConfigEntity {
       isActiveElevation: false,
       isActiveStopGain: false,
       isActiveStopLoss: false,
+      isActiveGale: false,
       maxElevation: 0,
       maxGales: 3,
       strategies: [],
@@ -108,6 +112,7 @@ class DoubleConfigModel extends DoubleConfigEntity {
       'gales': galesList,
       'elevations': elevations,
       'isActiveElevation': isActiveElevation,
+      'isActiveGale': isActiveGale,
       'strategies': strategiesList,
       'entryAmount': entryAmount,
       'entryWhiteAmount': entryWhiteAmount,

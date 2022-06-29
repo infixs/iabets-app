@@ -225,6 +225,8 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                 gales: doubleConfigState.doubleConfig.gales,
                                 isActiveElevation: doubleConfigState
                                     .doubleConfig.isActiveElevation,
+                                isActiveGale:
+                                    doubleConfigState.doubleConfig.isActiveGale,
                                 isActiveStopGain: doubleConfigState
                                     .doubleConfig.isActiveStopGain,
                                 isActiveStopLoss: doubleConfigState
@@ -392,6 +394,8 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                                 .doubleConfig.gales,
                                             isActiveElevation: doubleConfigState
                                                 .doubleConfig.isActiveElevation,
+                                            isActiveGale: doubleConfigState
+                                                .doubleConfig.isActiveGale,
                                             isActiveStopGain: doubleConfigState
                                                 .doubleConfig.isActiveStopGain,
                                             isActiveStopLoss: doubleConfigState

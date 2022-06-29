@@ -86,6 +86,7 @@ class GaleWidget extends StatelessWidget {
                   isActiveElevation: doubleConfig.isActiveElevation,
                   isActiveStopGain: doubleConfig.isActiveStopGain,
                   isActiveStopLoss: doubleConfig.isActiveStopLoss,
+                  isActiveGale: doubleConfig.isActiveGale,
                   maxElevation: doubleConfig.maxElevation,
                   maxGales: doubleConfig.maxGales,
                   strategies: doubleConfig.strategies,
