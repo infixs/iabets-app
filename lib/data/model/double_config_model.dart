@@ -7,7 +7,7 @@ class DoubleConfigModel extends DoubleConfigEntity {
     required bool isActiveGale,
     required bool isActiveStopGain,
     required bool isActiveStopLoss,
-    required double wallet,
+    required double? wallet,
     required double amountStopGain,
     required double amountStopLoss,
     required int maxGales,
