@@ -1,26 +1,34 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:ia_bet/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:ia_bet/constants/cores_constants.dart';
+import 'package:ia_bet/firebase_options.dart';
 import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
 import 'package:ia_bet/presentation/bloc/communication/communication_cubit.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
-import 'package:ia_bet/splash_page.dart';
+
 import 'injection_container.dart' as di;
+import 'presentation/pages/home_page.dart';
+import 'presentation/pages/login_page.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: kPrimaryColor,
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.light));
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+        statusBarColor: kPrimaryColor,
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light),
+  );
+
   runApp(MyApp());
 }
 
@@ -63,7 +71,18 @@ class MyApp extends StatelessWidget {
           }),
           fontFamily: 'Roboto',
         ),
-        home: SplashPage(),
+        home: BlocListener<AuthCubit, AuthState>(
+          child: Container(),
+          listener: (context, authState) => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                FlutterNativeSplash.remove();
+                return (authState is Authenticated) ? HomePage() : LoginPage();
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
