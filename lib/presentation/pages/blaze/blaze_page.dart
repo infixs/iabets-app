@@ -544,11 +544,15 @@ class _BlazePageState extends State<BlazePage> {
                                           .doubleConfig.isActiveGale
                                       ? Colors.green
                                       : Colors.red,
-                                  child: Text(
-                                    doubleConfigState.doubleConfig.isActiveGale
-                                        ? 'Ativado'
-                                        : 'Desativado',
-                                    style: TextStyle(color: Colors.white),
+                                  child: Container(
+                                    margin: EdgeInsets.all(3),
+                                    child: Text(
+                                      doubleConfigState
+                                              .doubleConfig.isActiveGale
+                                          ? 'Ativado'
+                                          : 'Desativado',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               )
@@ -721,12 +725,15 @@ class _BlazePageState extends State<BlazePage> {
                                         .doubleConfig.isActiveElevation
                                     ? Colors.green
                                     : Colors.red,
-                                child: Text(
-                                  doubleConfigState
-                                          .doubleConfig.isActiveElevation
-                                      ? 'Ativado'
-                                      : 'Desativado',
-                                  style: TextStyle(color: Colors.white),
+                                child: Container(
+                                  margin: EdgeInsets.all(3),
+                                  child: Text(
+                                    doubleConfigState
+                                            .doubleConfig.isActiveElevation
+                                        ? 'Ativado'
+                                        : 'Desativado',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                             )
