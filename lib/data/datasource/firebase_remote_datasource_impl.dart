@@ -115,7 +115,6 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
       if (e.code == 'user-not-found') {
         try {
-          final Map userLogin = {email: email, password: password};
           try {
             await auth.createUserWithEmailAndPassword(
                 email: email, password: password);

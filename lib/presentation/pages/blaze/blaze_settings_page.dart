@@ -70,69 +70,72 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: 8, right: 8, bottom: 8),
-                            child: FutureBuilder<List<StrategyEntity>>(
-                              future:
-                                  BlocProvider.of<DoubleConfigCubit>(context)
-                                      .getStrategies(),
+                            child: StatefulBuilder(
                               builder: (BuildContext context,
-                                  AsyncSnapshot<List<StrategyEntity>>
-                                      snapshot) {
-                                if (!snapshot.hasData)
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                return Column(
-                                    children: snapshot.data!.map((element) {
-                                  final Strategy strategy = doubleConfigState
-                                      .doubleConfig.strategies
-                                      .firstWhere(
-                                    (el) => el.id == element.id,
-                                    orElse: () {
-                                      final strategy = Strategy(
-                                          id: element.id,
-                                          active: false,
-                                          name: element.name);
-                                      doubleConfigState.doubleConfig.strategies
-                                          .add(strategy);
-                                      return strategy;
-                                    },
-                                  );
+                                      void Function(void Function())
+                                          setState) =>
+                                  FutureBuilder<List<StrategyEntity>>(
+                                future:
+                                    BlocProvider.of<DoubleConfigCubit>(context)
+                                        .getStrategies(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<List<StrategyEntity>>
+                                        snapshot) {
+                                  if (!snapshot.hasData)
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
                                   return Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            element.name,
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                          Switch(
-                                            value: strategy.active,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                strategy.active =
-                                                    !strategy.active;
-                                              });
-                                            },
-                                            inactiveThumbColor:
-                                                const Color(0xfff12c4d),
-                                            activeColor:
-                                                const Color(0xff1bb57f),
-                                            activeTrackColor:
-                                                const Color(0xff0e0812),
-                                          )
-                                        ],
-                                      ),
-                                      Container(
-                                        height: 1,
-                                        color: const Color(0xff0e0812),
-                                      )
-                                    ],
-                                  );
-                                }).toList());
-                              },
+                                      children: snapshot.data!.map((element) {
+                                    final Strategy strategy = doubleConfigState
+                                        .doubleConfig.strategies
+                                        .firstWhere(
+                                      (el) => el.id == element.id,
+                                      orElse: () {
+                                        final strategy = Strategy(
+                                            id: element.id,
+                                            active: false,
+                                            name: element.name);
+                                        doubleConfigState
+                                            .doubleConfig.strategies
+                                            .add(strategy);
+                                        return strategy;
+                                      },
+                                    );
+                                    return Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              element.name,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Switch(
+                                              value: strategy.active,
+                                              onChanged: (value) => setState(
+                                                  () => strategy.active =
+                                                      !strategy.active),
+                                              inactiveThumbColor:
+                                                  const Color(0xfff12c4d),
+                                              activeColor:
+                                                  const Color(0xff1bb57f),
+                                              activeTrackColor:
+                                                  const Color(0xff0e0812),
+                                            )
+                                          ],
+                                        ),
+                                        Container(
+                                          height: 1,
+                                          color: const Color(0xff0e0812),
+                                        )
+                                      ],
+                                    );
+                                  }).toList());
+                                },
+                              ),
                             ),
                           ),
                           Padding(
