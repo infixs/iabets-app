@@ -25,6 +25,10 @@ class GaleWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          Icon(
+            Icons.open_with,
+            color: Colors.white,
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -64,12 +68,13 @@ class GaleWidget extends StatelessWidget {
             ],
           ),
           CircleAvatar(
+            radius: 17,
             backgroundColor: const Color(0xfff12c4d),
             child: IconButton(
-              splashRadius: 25,
+              padding: EdgeInsets.zero,
+              splashRadius: 20,
               onPressed: () {
                 doubleConfig.gales.remove(gales[index]);
-
                 final DoubleConfigModel newDoubleConfig = DoubleConfigModel(
                   amountStopGain: doubleConfig.amountStopGain,
                   amountStopLoss: doubleConfig.amountStopLoss,
@@ -81,10 +86,11 @@ class GaleWidget extends StatelessWidget {
                   isActiveElevation: doubleConfig.isActiveElevation,
                   isActiveStopGain: doubleConfig.isActiveStopGain,
                   isActiveStopLoss: doubleConfig.isActiveStopLoss,
+                  isActiveGale: doubleConfig.isActiveGale,
                   maxElevation: doubleConfig.maxElevation,
                   maxGales: doubleConfig.maxGales,
                   strategies: doubleConfig.strategies,
-                  wallet: doubleConfig.wallet,
+                  wallet: doubleConfig.wallet ?? 0,
                 );
 
                 BlocProvider.of<DoubleConfigCubit>(context)

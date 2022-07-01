@@ -16,24 +16,22 @@ class MyChatEntity extends Equatable {
   final Timestamp time;
   final String name;
 
-  MyChatEntity({
-    required this.senderName,
-    required this.senderUID,
-    required this.recipientName,
-    required this.recipientUID,
-    required this.channelId,
-    required this.profileURL,
-    required this.recipientPhoneNumber,
-    required this.senderPhoneNumber,
-    required this.recentTextMessage,
-    required this.isRead,
-    required this.isArchived,
-    required this.time,
-    required this.name
-  });
+  MyChatEntity(
+      {required this.senderName,
+      required this.senderUID,
+      required this.recipientName,
+      required this.recipientUID,
+      required this.channelId,
+      required this.profileURL,
+      required this.recipientPhoneNumber,
+      required this.senderPhoneNumber,
+      required this.recentTextMessage,
+      required this.isRead,
+      required this.isArchived,
+      required this.time,
+      required this.name});
 
   @override
-  // TODO: implement props
   List<Object> get props => [
         senderName,
         senderUID,

@@ -6,7 +6,6 @@ import 'package:ia_bet/presentation/pages/blaze/components/custom_app_bar_blaze_
 
 import '../../../data/model/double_config_model.dart';
 import '../../../domain/entities/double_config.dart';
-import '../../../domain/entities/strategy_entity.dart';
 
 import 'blaze_settings_page.dart';
 import 'components/button-activity.dart';
@@ -34,9 +33,9 @@ class _BlazePageState extends State<BlazePage> {
       return Scaffold(
         backgroundColor: const Color(0xff0f1923),
         appBar: CustomAppBarBlazePage(
-          height: 150,
+          height: 170,
           child: Padding(
-            padding: const EdgeInsets.only(top: 15, left: 30, right: 30),
+            padding: const EdgeInsets.only(left: 30, right: 30),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -44,10 +43,20 @@ class _BlazePageState extends State<BlazePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Text(
                         (doubleConfigState is DoubleConfigLoaded)
-                            ? 'R\$ ${doubleConfigState.doubleConfig.wallet.toStringAsFixed(2)}'
+                            ? 'R\$ ${(doubleConfigState.doubleConfig.wallet ?? 0).toStringAsFixed(2)}'
                             : '--',
                         style: const TextStyle(
                           color: Colors.white,
@@ -56,44 +65,50 @@ class _BlazePageState extends State<BlazePage> {
                         ),
                       ),
                     ),
-                    Text(
-                      (doubleConfigState is DoubleConfigLoaded)
-                          ? doubleConfigState.doubleConfig.amountStopGain
-                              .toString()
-                          : 'R\$--',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        // fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10, top: 10),
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Stop Gain: ',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: (doubleConfigState is DoubleConfigLoaded)
+                                  ? 'R\$ ${doubleConfigState.doubleConfig.amountStopGain.toStringAsFixed(2)}'
+                                  : 'R\$--',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        'Stop Gain',
+                    RichText(
+                      text: TextSpan(
+                        text: 'Stop loss: ',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
+                        children: [
+                          TextSpan(
+                            text: (doubleConfigState is DoubleConfigLoaded)
+                                ? 'R\$ ${doubleConfigState.doubleConfig.amountStopLoss.toStringAsFixed(2)}'
+                                : '--',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Text(
-                      (doubleConfigState is DoubleConfigLoaded)
-                          ? 'R\$ ${doubleConfigState.doubleConfig.amountStopLoss.toStringAsFixed(2)}'
-                          : '--',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        //fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Text(
-                      'Stop Loss',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -138,14 +153,17 @@ class _BlazePageState extends State<BlazePage> {
                                           .doubleConfig.isActiveStopGain,
                                       isActiveStopLoss: doubleConfigState
                                           .doubleConfig.isActiveStopLoss,
+                                      isActiveGale: doubleConfigState
+                                          .doubleConfig.isActiveGale,
                                       maxElevation: doubleConfigState
                                           .doubleConfig.maxElevation,
                                       maxGales: doubleConfigState
                                           .doubleConfig.maxGales,
                                       strategies: doubleConfigState
                                           .doubleConfig.strategies,
-                                      wallet:
-                                          doubleConfigState.doubleConfig.wallet,
+                                      wallet: doubleConfigState
+                                              .doubleConfig.wallet ??
+                                          0,
                                     );
                                     BlocProvider.of<DoubleConfigCubit>(context)
                                         .saveDoubleConfig(doubleConfig);
@@ -218,7 +236,7 @@ class _BlazePageState extends State<BlazePage> {
                                 ),
                                 onPressed: () {},
                                 child: const Center(
-                                  child: Text('Estrategias'),
+                                  child: Text('Estrategias ativas'),
                                 ),
                               ),
                               IconButton(
@@ -233,34 +251,14 @@ class _BlazePageState extends State<BlazePage> {
                           ),
                         ),
                         if (doubleConfigState is DoubleConfigLoaded)
-                          FutureBuilder<List<StrategyEntity>>(
-                            future: BlocProvider.of<DoubleConfigCubit>(context)
-                                .getStrategies(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<List<StrategyEntity>> snapshot) {
-                              if (!snapshot.hasData)
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              else {
-                                return Column(
-                                    children: snapshot.data!.map((element) {
-                                  final Strategy strategy = doubleConfigState
-                                      .doubleConfig.strategies
-                                      .firstWhere(
-                                    (el) => el.id == element.id,
-                                    orElse: () {
-                                      final strategy = Strategy(
-                                          id: element.id,
-                                          active: false,
-                                          name: element.name);
-
-                                      return strategy;
-                                    },
-                                  );
-                                  return Column(
-                                    children: [
-                                      Padding(
+                          Column(
+                              children: doubleConfigState
+                                  .doubleConfig.strategies
+                                  .map((Strategy strategy) {
+                            return Column(
+                              children: [
+                                strategy.active
+                                    ? Padding(
                                         padding: const EdgeInsets.only(
                                             left: 20, right: 20, bottom: 15),
                                         child: Column(
@@ -278,17 +276,10 @@ class _BlazePageState extends State<BlazePage> {
                                                       color: Colors.white,
                                                       fontSize: 12),
                                                 ),
-                                                strategy.active
-                                                    ? const Icon(
-                                                        Icons.done,
-                                                        color:
-                                                            Color(0xff1bb57f),
-                                                      )
-                                                    : const Icon(
-                                                        Icons.close,
-                                                        color:
-                                                            Color(0xfff12c4d),
-                                                      )
+                                                const Icon(
+                                                  Icons.done,
+                                                  color: Color(0xff1bb57f),
+                                                )
                                               ],
                                             ),
                                             Padding(
@@ -301,13 +292,11 @@ class _BlazePageState extends State<BlazePage> {
                                             )
                                           ],
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                }).toList());
-                              }
-                            },
-                          ),
+                                      )
+                                    : Container(),
+                              ],
+                            );
+                          }).toList()),
                         if (doubleConfigState is! DoubleConfigLoaded)
                           Center(
                             child: CircularProgressIndicator(),
@@ -317,268 +306,293 @@ class _BlazePageState extends State<BlazePage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 30, bottom: 30),
-                  child: SizedBox(
-                    child: Card(
-                      color: const Color(0xff0a1117),
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.only(left: 20, right: 20, top: 15),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'APOSTA',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 18, bottom: 6),
-                                      child: Column(
+                    padding: const EdgeInsets.only(top: 30, bottom: 30),
+                    child: Stack(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: Card(
+                            color: const Color(0xff0a1117),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 15),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Entrada',
+                                            'APOSTA',
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 4),
-                                            child: Container(
-                                              height: 1,
-                                              color: const Color(0xff0f1923),
+                                            padding: const EdgeInsets.only(
+                                                top: 18, bottom: 6),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Entrada',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 4),
+                                                  child: Container(
+                                                    height: 1,
+                                                    color:
+                                                        const Color(0xff0f1923),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                          )
+                                          ),
+                                          if (doubleConfigState
+                                              is DoubleConfigLoaded)
+                                            for (int i = 0;
+                                                i !=
+                                                    doubleConfigState
+                                                        .doubleConfig
+                                                        .gales
+                                                        .length;
+                                                i++)
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 6.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      '${i + 1}° Gale',
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 4),
+                                                      child: Container(
+                                                        height: 1,
+                                                        color: const Color(
+                                                            0xff0f1923),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
                                         ],
                                       ),
-                                    ),
-                                    if (doubleConfigState is DoubleConfigLoaded)
-                                      for (int i = 0;
-                                          i !=
-                                              doubleConfigState
-                                                  .doubleConfig.gales.length;
-                                          i++)
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 6.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '${i + 1}° Gale',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 4),
-                                                child: Container(
-                                                  height: 1,
-                                                  color:
-                                                      const Color(0xff0f1923),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'VALOR',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 18, bottom: 6),
-                                      child: Column(
+                                      Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            (doubleConfigState
-                                                    is DoubleConfigLoaded)
-                                                ? '${doubleConfigState.doubleConfig.entryAmount}'
-                                                : '--',
+                                            'VALOR',
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 4),
-                                            child: Container(
-                                              height: 1,
-                                              color: const Color(0xff0f1923),
+                                            padding: const EdgeInsets.only(
+                                                top: 18, bottom: 6),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  (doubleConfigState
+                                                          is DoubleConfigLoaded)
+                                                      ? '${doubleConfigState.doubleConfig.entryAmount}'
+                                                      : '--',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 4),
+                                                  child: Container(
+                                                    height: 1,
+                                                    color:
+                                                        const Color(0xff0f1923),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                          )
+                                          ),
+                                          if (doubleConfigState
+                                              is DoubleConfigLoaded)
+                                            for (Gale gale in doubleConfigState
+                                                .doubleConfig.gales)
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 6.0),
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      '${gale.amount}',
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 4),
+                                                      child: Container(
+                                                        height: 1,
+                                                        color: const Color(
+                                                            0xff0f1923),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
                                         ],
                                       ),
-                                    ),
-                                    if (doubleConfigState is DoubleConfigLoaded)
-                                      for (Gale gale in doubleConfigState
-                                          .doubleConfig.gales)
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 6.0),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                '${gale.amount}',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 4),
-                                                child: Container(
-                                                  height: 1,
-                                                  color:
-                                                      const Color(0xff0f1923),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'BRANCO',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 18, bottom: 6),
-                                      child: Column(
+                                      Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            (doubleConfigState
-                                                    is DoubleConfigLoaded)
-                                                ? '${doubleConfigState.doubleConfig.entryWhiteAmount}'
-                                                : '--',
+                                            'BRANCO',
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 4),
-                                            child: Container(
-                                              height: 1,
-                                              color: const Color(0xff0f1923),
+                                            padding: const EdgeInsets.only(
+                                                top: 18, bottom: 6),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  (doubleConfigState
+                                                          is DoubleConfigLoaded)
+                                                      ? '${doubleConfigState.doubleConfig.entryWhiteAmount}'
+                                                      : '--',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 4),
+                                                  child: Container(
+                                                    height: 1,
+                                                    color:
+                                                        const Color(0xff0f1923),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                          )
+                                          ),
+                                          if (doubleConfigState
+                                              is DoubleConfigLoaded)
+                                            for (Gale gale in doubleConfigState
+                                                .doubleConfig.gales)
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 6.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      '${gale.amountProtection}',
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 4),
+                                                      child: Container(
+                                                        height: 1,
+                                                        color: const Color(
+                                                            0xff0f1923),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
                                         ],
                                       ),
-                                    ),
-                                    if (doubleConfigState is DoubleConfigLoaded)
-                                      for (Gale gale in doubleConfigState
-                                          .doubleConfig.gales)
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 6.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '${gale.amountProtection}',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 4),
-                                                child: Container(
-                                                  height: 1,
-                                                  color:
-                                                      const Color(0xff0f1923),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                ),
+                        (doubleConfigState is DoubleConfigLoaded)
+                            ? Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Card(
+                                  color: doubleConfigState
+                                          .doubleConfig.isActiveGale
+                                      ? Colors.green
+                                      : Colors.red,
+                                  child: Container(
+                                    margin: EdgeInsets.all(3),
+                                    child: Text(
+                                      doubleConfigState
+                                              .doubleConfig.isActiveGale
+                                          ? 'Ativado'
+                                          : 'Desativado',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container(),
+                      ],
+                    )),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 70),
-                  child: SizedBox(
-                    child: Card(
-                      color: const Color(0xff0a1117),
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.only(left: 20, right: 20, top: 15),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Stack(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 10),
+                        child: Card(
+                          color: const Color(0xff0a1117),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 15),
+                            child: Column(
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      'APOSTA',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 18, bottom: 6),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Entrada',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 4),
-                                            child: Container(
-                                              height: 1,
-                                              color: const Color(0xff0f1923),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    if (doubleConfigState is DoubleConfigLoaded)
-                                      for (int i = 0;
-                                          i !=
-                                              doubleConfigState.doubleConfig
-                                                  .elevations.length;
-                                          i++)
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'APOSTA',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 6.0),
+                                          padding: const EdgeInsets.only(
+                                              top: 18, bottom: 6),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                '${i + 1}° Loss',
+                                                'Entrada',
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               ),
@@ -594,53 +608,58 @@ class _BlazePageState extends State<BlazePage> {
                                             ],
                                           ),
                                         ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'MULTIPLICADOR',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 18, bottom: 6),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '1X',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 4),
-                                            child: Container(
-                                              height: 1,
-                                              color: const Color(0xff0f1923),
+                                        if (doubleConfigState
+                                            is DoubleConfigLoaded)
+                                          for (int i = 0;
+                                              i !=
+                                                  doubleConfigState.doubleConfig
+                                                      .elevations.length;
+                                              i++)
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 6.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '${i + 1}° Loss',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 4),
+                                                    child: Container(
+                                                      height: 1,
+                                                      color: const Color(
+                                                          0xff0f1923),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                             ),
-                                          )
-                                        ],
-                                      ),
+                                      ],
                                     ),
-                                    if (doubleConfigState is DoubleConfigLoaded)
-                                      for (int i = 0;
-                                          i !=
-                                              doubleConfigState.doubleConfig
-                                                  .elevations.length;
-                                          i++)
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'MULTIPLICADOR',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 6.0),
+                                          padding: const EdgeInsets.only(
+                                              top: 18, bottom: 6),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                '${doubleConfigState.doubleConfig.elevations[i]}X',
+                                                '1X',
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               ),
@@ -652,18 +671,74 @@ class _BlazePageState extends State<BlazePage> {
                                                   color:
                                                       const Color(0xff0f1923),
                                                 ),
-                                              ),
+                                              )
                                             ],
                                           ),
                                         ),
+                                        if (doubleConfigState
+                                            is DoubleConfigLoaded)
+                                          for (int i = 0;
+                                              i !=
+                                                  doubleConfigState.doubleConfig
+                                                      .elevations.length;
+                                              i++)
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 6.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '${doubleConfigState.doubleConfig.elevations[i]}X',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 4),
+                                                    child: Container(
+                                                      height: 1,
+                                                      color: const Color(
+                                                          0xff0f1923),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                      (doubleConfigState is DoubleConfigLoaded)
+                          ? Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Card(
+                                color: doubleConfigState
+                                        .doubleConfig.isActiveElevation
+                                    ? Colors.green
+                                    : Colors.red,
+                                child: Container(
+                                  margin: EdgeInsets.all(3),
+                                  child: Text(
+                                    doubleConfigState
+                                            .doubleConfig.isActiveElevation
+                                        ? 'Ativado'
+                                        : 'Desativado',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(),
+                    ],
                   ),
                 ),
               ],

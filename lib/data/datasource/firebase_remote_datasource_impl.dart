@@ -1,6 +1,8 @@
 //api firebase
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -113,11 +115,11 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
       if (e.code == 'user-not-found') {
         try {
-          Map userLogin = {email: email, password: password};
           try {
             await auth.createUserWithEmailAndPassword(
                 email: email, password: password);
           } on FirebaseAuthException catch (e) {
+            debugPrint(e.toString());
             return;
           }
         } catch (e) {
@@ -439,7 +441,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   @override
   Future<void> uploadFileMessage(
       String canalName, String name, Uint8List file) async {
-    TaskSnapshot resultTask =
+    final TaskSnapshot resultTask =
         await FirebaseStorage.instance.ref('$canalName}/$name').putData(file);
   }
 
@@ -474,14 +476,16 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         .collection('blaze')
         .doc('doubleConfig');
 
-    doubleConfigDoc.update(doubleConfig.toDocument());
+    doubleConfigDoc.set(doubleConfig.toDocument(), SetOptions(merge: true));
   }
 
   Future<List<StrategyEntity>> getStrategies() async {
     final strategiesCollection = fireStore.collection("blazeDoubleStrategies");
     return Future(() async {
-      final strategies =
-          await strategiesCollection.where('enabled', isEqualTo: true).get();
+      final strategies = await strategiesCollection
+          .where('enabled', isEqualTo: true)
+          .where('env', isEqualTo: 'Application')
+          .get();
       return strategies.docs
           .map((docQuerySnapshot) =>
               StrategyModel.fromSnapshot(docQuerySnapshot))

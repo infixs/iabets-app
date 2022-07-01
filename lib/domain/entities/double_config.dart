@@ -4,13 +4,14 @@ class DoubleConfigEntity {
   final int maxGales;
   final int maxElevation;
 
+  final bool isActiveGale;
   final bool isActiveElevation; // AFTER (RED (SUPER LOSS));
   final bool isActiveStopGain;
   final bool isActiveStopLoss;
 
   final double amountStopGain;
   final double amountStopLoss;
-  final double wallet;
+  final double? wallet;
 
   final double entryAmount;
   final double entryWhiteAmount;
@@ -24,6 +25,7 @@ class DoubleConfigEntity {
     required this.maxGales,
     required this.maxElevation,
     required this.isActiveElevation,
+    required this.isActiveGale,
     required this.isActiveStopGain,
     required this.isActiveStopLoss,
     required this.amountStopGain,
