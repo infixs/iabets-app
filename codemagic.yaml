@@ -4,7 +4,6 @@ workflows:
     max_build_duration: 120
     instance_type: mac_pro
     environment:
-      flutter: 2.17.5
       cocoapods: 1.11.2
       java: 11.0.13
       xcode: 13.2.1
