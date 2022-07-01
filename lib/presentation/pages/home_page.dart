@@ -74,13 +74,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void dispose() {
-    BlocProvider.of<UserCubit>(context).close();
-    BlocProvider.of<AuthCubit>(context).close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
