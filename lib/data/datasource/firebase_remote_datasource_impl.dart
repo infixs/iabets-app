@@ -482,8 +482,10 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   Future<List<StrategyEntity>> getStrategies() async {
     final strategiesCollection = fireStore.collection("blazeDoubleStrategies");
     return Future(() async {
-      final strategies =
-          await strategiesCollection.where('enabled', isEqualTo: true).get();
+      final strategies = await strategiesCollection
+          .where('enabled', isEqualTo: true)
+          .where('env', isEqualTo: 'Application')
+          .get();
       return strategies.docs
           .map((docQuerySnapshot) =>
               StrategyModel.fromSnapshot(docQuerySnapshot))

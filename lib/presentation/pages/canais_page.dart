@@ -73,7 +73,7 @@ class _CanaisPageState extends State<CanaisPage> {
     requestNotificationPermission(context);
     print('Home Page: Estou no build...');
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async => true,
       child: BlocBuilder<MyChatCubit, MyChatState>(
           builder: (context, myChatState) {
         print('Home Page: Bloc MyChatCubit...');

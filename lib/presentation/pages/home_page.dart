@@ -57,7 +57,13 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Stack(
           children: [
-            Image.asset('assets/images/background_home_page.png'),
+            Container(
+                decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/background_home_page.png'),
+                fit: BoxFit.cover,
+              ),
+            )),
             FutureBuilder(
               future: makeButtons(),
               builder: (BuildContext context,
@@ -95,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               const Spacer(
-                                flex: 3,
+                                flex: 1,
                               ),
                               Flexible(
                                 child: Icon(
