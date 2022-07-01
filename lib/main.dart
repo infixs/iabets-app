@@ -18,15 +18,17 @@ import 'presentation/pages/home_page.dart';
 import 'presentation/pages/login_page.dart';
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  FlutterNativeSplash.preserve(
+    widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
+  );
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
-        statusBarColor: kPrimaryColor,
-        statusBarBrightness: Brightness.light,
-        statusBarIconBrightness: Brightness.light),
+      statusBarColor: kPrimaryColor,
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.light,
+    ),
   );
 
   runApp(MyApp());
@@ -72,7 +74,9 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Roboto',
         ),
         home: BlocListener<AuthCubit, AuthState>(
-          child: Container(),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
           listener: (context, authState) => Navigator.pushReplacement(
             context,
             MaterialPageRoute(

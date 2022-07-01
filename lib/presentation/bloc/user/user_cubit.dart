@@ -8,6 +8,8 @@ import 'package:ia_bet/domain/usecases/get_all_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_current_usercase.dart';
 import 'package:ia_bet/domain/usecases/set_user_token_usecase.dart';
 
+import '../../../domain/usecases/is_sign_in_usecase.dart';
+
 part 'user_state.dart';
 
 class UserCubit extends Cubit<UserState> {
@@ -15,13 +17,15 @@ class UserCubit extends Cubit<UserState> {
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final CreateOneToOneChatChannelUseCase createOneToOneChatChannelUseCase;
   final SetUserTokenUseCase setUserTokenUseCase;
-  var allusersGlobal;
+  final IsSignInUseCase isSignInUseCase;
+  late final List<UserEntity> allusersGlobal;
 
   UserCubit(
       {required this.getAllUserUseCase,
       required this.createOneToOneChatChannelUseCase,
       required this.setUserTokenUseCase,
-      required this.getCurrentUserUseCase})
+      required this.getCurrentUserUseCase,
+      required this.isSignInUseCase})
       : super(UserInitial());
 
   Future<void> getAllUsers() async {
@@ -86,10 +90,8 @@ class UserCubit extends Cubit<UserState> {
   }
 
   Future<List<UserEntity>> getAllUsersWithReturn() async {
-    List<UserEntity> allUsers = [];
     final userStreamData = getAllUserUseCase.call();
     userStreamData.listen((users) {
-      allUsers = users;
       allusersGlobal = users;
     });
 

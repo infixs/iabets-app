@@ -189,13 +189,19 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                                               settingsController.stopGainIsOn,
                                           builder: (BuildContext context, value,
                                                   Widget? child) =>
-                                              Checkbox(
-                                                  value: settingsController
-                                                      .stopGainIsOn.value,
-                                                  onChanged: (bool? value) =>
-                                                      settingsController
-                                                          .stopGainIsOn
-                                                          .value = value!),
+                                              Switch(
+                                            value: settingsController
+                                                .stopGainIsOn.value,
+                                            onChanged: (bool? value) =>
+                                                settingsController.stopGainIsOn
+                                                    .value = value!,
+                                            inactiveThumbColor:
+                                                const Color(0xfff12c4d),
+                                            activeColor:
+                                                const Color(0xff1bb57f),
+                                            activeTrackColor:
+                                                const Color(0xff0e0812),
+                                          ),
                                         ),
                                       )
                                     ],
@@ -250,13 +256,19 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                                               settingsController.stopLossIsOn,
                                           builder: (BuildContext context, value,
                                                   Widget? child) =>
-                                              Checkbox(
-                                                  value: settingsController
-                                                      .stopLossIsOn.value,
-                                                  onChanged: (bool? value) =>
-                                                      settingsController
-                                                          .stopLossIsOn
-                                                          .value = value!),
+                                              Switch(
+                                            value: settingsController
+                                                .stopLossIsOn.value,
+                                            onChanged: (bool? value) =>
+                                                settingsController.stopLossIsOn
+                                                    .value = value!,
+                                            inactiveThumbColor:
+                                                const Color(0xfff12c4d),
+                                            activeColor:
+                                                const Color(0xff1bb57f),
+                                            activeTrackColor:
+                                                const Color(0xff0e0812),
+                                          ),
                                         ),
                                       )
                                     ],

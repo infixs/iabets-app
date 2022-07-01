@@ -35,10 +35,10 @@ class TextMessageModel extends TextMessageEntity {
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
 
     FileEntity fileData = FileEntity(
-        mime: data['fileType'],
-        name: data['fileName'],
-        url: data['fileUrl'],
-        id: data['fileId']);
+        mime: data['fileType'] ?? '',
+        name: data['fileName'] ?? '',
+        url: data['fileUrl'] ?? '',
+        id: data['fileId'] ?? '');
 
     return TextMessageModel(
       senderName: data['senderName'],

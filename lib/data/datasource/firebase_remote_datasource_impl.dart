@@ -66,14 +66,14 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     if (auth.currentUser == null) {
       throw Exception('User not logged');
     }
-    final uid = auth.currentUser!.uid;
+    final uid = auth.currentUser?.uid;
     return userCollection.doc(uid).snapshots().map((snapshot) {
       return UserModel.fromSnapshot(snapshot);
     });
   }
 
   @override
-  Future<bool> isSignIn() async => auth.currentUser!.uid != null;
+  Future<bool> isSignIn() async => auth.currentUser != null ? true : false;
 
   @override
   Future<void> setUserToken(String token) async {
@@ -229,7 +229,6 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     final userCollectionRef = fireStore.collection("users");
     final oneToOneChatChannelRef = fireStore.collection('myChatChannel');
 
-    final _chatChannelId = oneToOneChatChannelRef.doc().id;
     var channelMap = {
       "channelId": name,
       "channelType": "oneToOneChat",

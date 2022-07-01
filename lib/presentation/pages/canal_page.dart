@@ -1,23 +1,25 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
+import 'dart:typed_data';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:ia_bet/app_const.dart';
 import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:typed_data';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../bloc/communication/communication_cubit.dart';
 
@@ -989,7 +991,7 @@ class _CanalPageState extends State<CanalPage> {
     });
   }
 
-  _sendFile() async {
+  void _sendFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       withData: true,
       type: FileType.custom,
@@ -1039,7 +1041,7 @@ class _CanalPageState extends State<CanalPage> {
     }
   }*/
 
-  _getUrl(canal, name) {
+  Future<String> _getUrl(canal, name) {
     return BlocProvider.of<CommunicationCubit>(context)
         .getUrl(canalName: canal, name: name);
   }

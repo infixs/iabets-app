@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ia_bet/domain/usecases/get_current_uid_usecase.dart';
 import 'package:ia_bet/domain/usecases/is_sign_in_usecase.dart';
 import 'package:ia_bet/domain/usecases/sign_out_usecase.dart';
@@ -10,7 +11,7 @@ class AuthCubit extends Cubit<AuthState> {
   final IsSignInUseCase isSignInUseCase;
   final GetCurrentUidUseCase getCurrentUidUseCase;
   final SignOutUseCase signOutUseCase;
-  var globalUid;
+  late final String globalUid;
 
   AuthCubit({
     required this.isSignInUseCase,
@@ -23,11 +24,11 @@ class AuthCubit extends Cubit<AuthState> {
       bool isSignIn = await isSignInUseCase.call();
 
       if (isSignIn) {
-        print('esta autenticado');
+        debugPrint('esta autenticado');
         final uid = await getCurrentUidUseCase.call();
         emit(Authenticated(uid: uid));
       } else {
-        print('Não esta autenticado');
+        debugPrint('Não esta autenticado');
         emit(UnAuthenticated());
       }
     } catch (_) {
@@ -39,8 +40,8 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final uid = await getCurrentUidUseCase.call();
       globalUid = uid;
-      print('uid do usuário é');
-      print(uid);
+      debugPrint('uid do usuário é');
+      debugPrint(uid);
       emit(Authenticated(uid: uid));
     } catch (_) {
       emit(UnAuthenticated());
@@ -49,7 +50,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> loggedOut() async {
     try {
-      print('Deslogando...');
+      debugPrint('Deslogando...');
       await signOutUseCase.call();
       emit(UnAuthenticated());
     } catch (_) {}

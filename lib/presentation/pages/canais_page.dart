@@ -6,12 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/constants/text_input_decoration.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
-import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
 import 'package:ia_bet/presentation/pages/canal_page.dart';
-import 'package:ia_bet/presentation/pages/login_page.dart';
-import 'package:ia_bet/presentation/pages/perfil_page.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -52,31 +49,28 @@ class _CanaisPageState extends State<CanaisPage> {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       if (message.data.containsKey('channelId'))
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CanalPage(
-                      canalName: message.data['channelId'],
-                      senderName: widget.userInfo.name,
-                      senderUID: widget.userInfo.uid,
-                      userInfo: widget.userInfo,
-                    )));
-      /*setState(() {
-            print('A new onMessageOpenedApp event was published!');
-            Navigator.pushNamed(context, '/message',
-            arguments: MessageArguments(message, true));
-          }); */
+          context,
+          MaterialPageRoute(
+            builder: (context) => CanalPage(
+              canalName: message.data['channelId'],
+              senderName: widget.userInfo.name,
+              senderUID: widget.userInfo.uid,
+              userInfo: widget.userInfo,
+            ),
+          ),
+        );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     requestNotificationPermission(context);
-    print('Home Page: Estou no build...');
+    debugPrint('Home Page: Estou no build...');
     return WillPopScope(
       onWillPop: () async => true,
       child: BlocBuilder<MyChatCubit, MyChatState>(
           builder: (context, myChatState) {
-        print('Home Page: Bloc MyChatCubit...');
+        debugPrint('Home Page: Bloc MyChatCubit...');
         return Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: AppBar(
@@ -87,29 +81,14 @@ class _CanaisPageState extends State<CanaisPage> {
             elevation: 0,
             centerTitle: false,
             backgroundColor: kPrimaryColor,
-            title: Text("IABets",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                )),
-            actions: [
-              PopupMenuButton<String>(
-                onSelected: handleMenuClick,
-                itemBuilder: (BuildContext bcontext) {
-                  return [
-                    PopupMenuItem<String>(
-                      value: 'config',
-                      child: Text('Configurações'),
-                    ),
-                    PopupMenuItem<String>(value: 'logout', child: Text('Sair'))
-                  ];
-                },
+            title: Text(
+              "IABets",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
-              /*IconButton(
-                    icon: Icon(Icons.logout, color: Colors.red),
-                    onPressed: () => Navigator.of(context).pop())*/
-            ],
+            ),
           ),
           body: Stack(children: [
             Positioned(
@@ -218,7 +197,7 @@ class _CanaisPageState extends State<CanaisPage> {
                               ),
                             ),
                             onTap: () {
-                              print(2);
+                              debugPrint(2);
                               launchURL(
                                   'https://iabetsoficial.com.br/calculadora');
                             },
@@ -236,27 +215,26 @@ class _CanaisPageState extends State<CanaisPage> {
                   ),
                   BlocBuilder<UserCubit, UserState>(
                       builder: (context, userState) {
-                    print('Home Page: Estou no bloc builder do UserState');
+                    debugPrint('Home Page: Estou no bloc builder do UserState');
                     if (userState is CurrentUserChanged &&
                         userState.user.isAdmin) {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              child: Container(
-                                padding: EdgeInsets.all(15),
-                                decoration: BoxDecoration(
-                                  color: kPrimaryColor,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: Icon(Icons.add, color: kSecondColor),
-                                ),
+                            behavior: HitTestBehavior.translucent,
+                            child: Container(
+                              padding: EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: kPrimaryColor,
+                                shape: BoxShape.circle,
                               ),
-                              onTap: () {
-                                _showDialog();
-                              }),
+                              child: Center(
+                                child: Icon(Icons.add, color: kSecondColor),
+                              ),
+                            ),
+                            onTap: _showDialog,
+                          ),
                           SizedBox(height: 5),
                         ],
                       );
@@ -399,20 +377,6 @@ class _CanaisPageState extends State<CanaisPage> {
             });
   }
 
-  void handleMenuClick(String value) async {
-    switch (value) {
-      case 'config':
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PerfilPage()));
-        break;
-      case 'logout':
-        await BlocProvider.of<AuthCubit>(context).loggedOut();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
-        break;
-    }
-  }
-
   void _showDialog() {
     showDialog(
       context: context,
@@ -429,8 +393,8 @@ class _CanaisPageState extends State<CanaisPage> {
           ),
           actions: <Widget>[
             // define os botões na base do dialogo
-            new FlatButton(
-              child: new Text("Salvar"),
+            ElevatedButton(
+              child: Text("Salvar"),
               onPressed: () async {
                 BlocProvider.of<UserCubit>(context).createChatChannel(
                     uid: widget.userInfo.uid, name: _canalController.text);
@@ -438,14 +402,16 @@ class _CanaisPageState extends State<CanaisPage> {
                 // Navigator.of(context).pop();
                 //Abrir ChatScreen
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CanalPage(
-                              canalName: _canalController.text,
-                              senderName: widget.userInfo.name,
-                              senderUID: widget.userInfo.uid,
-                              userInfo: widget.userInfo,
-                            )));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CanalPage(
+                      canalName: _canalController.text,
+                      senderName: widget.userInfo.name,
+                      senderUID: widget.userInfo.uid,
+                      userInfo: widget.userInfo,
+                    ),
+                  ),
+                );
               },
             ),
           ],
@@ -470,14 +436,14 @@ class _CanaisPageState extends State<CanaisPage> {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
+      debugPrint('User granted permission');
       FirebaseMessaging.instance.subscribeToTopic('chat');
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
+      debugPrint('User granted provisional permission');
       FirebaseMessaging.instance.subscribeToTopic('chat');
     } else {
-      print('User declined or has not accepted permission');
+      debugPrint('User declined or has not accepted permission');
     }
   }
 }
