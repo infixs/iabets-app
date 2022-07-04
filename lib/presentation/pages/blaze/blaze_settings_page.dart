@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/entities/strategy_entity.dart';
@@ -61,7 +63,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
         amountStopLoss:
             double.parse(settingsController.stoplossController.text),
         elevations: await getElevationsDoubleConfigFirebase(),
-        enabled: settingsController.doubleConfigCopy.enabled,
+        enabled: settingsController.doubleConfigCopy!.enabled,
         entryAmount:
             double.parse(settingsController.firstBetPriceController.text),
         entryWhiteAmount:
@@ -71,14 +73,80 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
         isActiveElevation: settingsController.elevationIsOn.value,
         isActiveStopGain: settingsController.stopGainIsOn.value,
         isActiveStopLoss: settingsController.stopLossIsOn.value,
-        maxElevation: settingsController.doubleConfigCopy.maxElevation,
-        maxGales: settingsController.doubleConfigCopy.maxGales,
-        strategies: settingsController.doubleConfigCopy.strategies,
-        wallet: settingsController.doubleConfigCopy.wallet ?? 0,
+        maxElevation: settingsController.doubleConfigCopy!.maxElevation,
+        maxGales: settingsController.doubleConfigCopy!.maxGales,
+        strategies: settingsController.doubleConfigCopy!.strategies,
+        wallet: settingsController.doubleConfigCopy!.wallet ?? 0,
       );
       BlocProvider.of<DoubleConfigCubit>(context)
           .saveDoubleConfig(doubleConfig);
     }
+  }
+
+  Future<bool> isEqual() async {
+    bool isEqual = true;
+
+    final DoubleConfigEntity doubleConfigFirebase =
+        await getDoubleConfigFirebase();
+
+    if (settingsController.galesIsOn.value ==
+        doubleConfigFirebase.isActiveGale) {
+      if (doubleConfigFirebase.isActiveElevation ==
+          settingsController.elevationIsOn.value) {
+        if (doubleConfigFirebase.isActiveStopGain ==
+            settingsController.stopGainIsOn.value) {
+          if (doubleConfigFirebase.isActiveStopLoss ==
+              settingsController.stopLossIsOn.value) {
+            if (doubleConfigFirebase.amountStopGain ==
+                double.parse(settingsController.stopGainController.text)) {
+              if (doubleConfigFirebase.amountStopLoss ==
+                  double.parse(settingsController.stoplossController.text)) {
+                if (doubleConfigFirebase.entryAmount ==
+                    double.parse(
+                        settingsController.firstBetPriceController.text)) {
+                  if (doubleConfigFirebase.entryWhiteAmount ==
+                      double.parse(
+                          settingsController.firstBetWhiteController.text)) {
+                    final List<bool> strategiesFirebase = [];
+                    final List<bool> strategiesLocal = [];
+                    doubleConfigFirebase.strategies.forEach(
+                        (Strategy element) =>
+                            strategiesFirebase.add(element.active));
+                    settingsController.doubleConfigCopy!.strategies.forEach(
+                        (Strategy element) =>
+                            strategiesLocal.add(element.active));
+
+                    if (listEquals(strategiesFirebase, strategiesLocal)) {
+                      isEqual = true;
+                    } else {
+                      isEqual = false;
+                    }
+                  } else {
+                    isEqual = false;
+                  }
+                } else {
+                  isEqual = false;
+                }
+              } else {
+                isEqual = false;
+              }
+            } else {
+              isEqual = false;
+            }
+          } else {
+            isEqual = false;
+          }
+        } else {
+          isEqual = false;
+        }
+      } else {
+        isEqual = false;
+      }
+    } else {
+      isEqual = false;
+    }
+
+    return isEqual;
   }
 
   @override
@@ -91,9 +159,37 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
           child: Row(
             children: [
               IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () => isEqual().then((bool value) {
+                  if (value) {
+                    Navigator.pop(context);
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: Text(
+                            'Você não salvou as alterações deseja salvar?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            child: Text('Sair sem salvar'),
+                          ),
+                          TextButton(
+                            onPressed: () => validateAndSave().then(
+                              (_) {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                            ),
+                            child: Text('Salvar e sair'),
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                }),
                 icon: const Icon(
                   Icons.arrow_back,
                   color: Colors.white,
@@ -132,7 +228,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                           return Column(
                               children: snapshot.data!.map((element) {
                             final Strategy strategy = settingsController
-                                .doubleConfigCopy.strategies
+                                .doubleConfigCopy!.strategies
                                 .firstWhere(
                               (el) => el.id == element.id,
                               orElse: () {
@@ -140,7 +236,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                                     id: element.id,
                                     active: false,
                                     name: element.name);
-                                settingsController.doubleConfigCopy.strategies
+                                settingsController.doubleConfigCopy!.strategies
                                     .add(strategy);
                                 return strategy;
                               },
