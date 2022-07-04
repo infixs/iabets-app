@@ -177,13 +177,8 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                             child: Text('Sair sem salvar'),
                           ),
                           TextButton(
-                            onPressed: () => validateAndSave().then(
-                              (_) {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              },
-                            ),
-                            child: Text('Salvar e sair'),
+                            onPressed: () => Navigator.pop(context),
+                            child: Text('Cancelar'),
                           )
                         ],
                       ),
