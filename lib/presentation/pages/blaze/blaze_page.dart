@@ -706,8 +706,7 @@ class _BlazePageState extends State<BlazePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) => BlazeSettingsPage(
-                    doubleConfig: doubleConfigState.doubleConfig),
+                builder: (BuildContext context) => BlazeSettingsPage(),
               ),
             );
           },

@@ -194,68 +194,76 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                       children: [
                         SizedBox(
                           height: size.height * 0.75,
-                          child: ReorderableListView.builder(
-                            padding: const EdgeInsets.only(left: 20, right: 20),
-                            itemCount:
-                                doubleConfigState.doubleConfig.gales.length,
-                            onReorder: (oldPosition, newPosition) =>
-                                setState(() {
-                              if (oldPosition < newPosition) {
-                                newPosition -= 1;
-                              }
-                              final Gale gale = doubleConfigState
-                                  .doubleConfig.gales
-                                  .removeAt(oldPosition);
-                              doubleConfigState.doubleConfig.gales
-                                  .insert(newPosition, gale);
+                          child: StatefulBuilder(
+                            builder: (BuildContext context,
+                                    void Function(void Function()) setState) =>
+                                ReorderableListView.builder(
+                              padding:
+                                  const EdgeInsets.only(left: 20, right: 20),
+                              itemCount:
+                                  doubleConfigState.doubleConfig.gales.length,
+                              onReorder: (oldPosition, newPosition) =>
+                                  setState(() {
+                                if (oldPosition < newPosition) {
+                                  newPosition -= 1;
+                                }
+                                final Gale gale = doubleConfigState
+                                    .doubleConfig.gales
+                                    .removeAt(oldPosition);
+                                doubleConfigState.doubleConfig.gales
+                                    .insert(newPosition, gale);
 
-                              final DoubleConfigModel doubleConfig =
-                                  DoubleConfigModel(
-                                amountStopGain: doubleConfigState
-                                    .doubleConfig.amountStopGain,
-                                amountStopLoss: doubleConfigState
-                                    .doubleConfig.amountStopLoss,
-                                elevations:
-                                    doubleConfigState.doubleConfig.elevations,
-                                enabled: doubleConfigState.doubleConfig.enabled,
-                                entryAmount:
-                                    doubleConfigState.doubleConfig.entryAmount,
-                                entryWhiteAmount: doubleConfigState
-                                    .doubleConfig.entryWhiteAmount,
-                                gales: doubleConfigState.doubleConfig.gales,
-                                isActiveElevation: doubleConfigState
-                                    .doubleConfig.isActiveElevation,
-                                isActiveGale:
-                                    doubleConfigState.doubleConfig.isActiveGale,
-                                isActiveStopGain: doubleConfigState
-                                    .doubleConfig.isActiveStopGain,
-                                isActiveStopLoss: doubleConfigState
-                                    .doubleConfig.isActiveStopLoss,
-                                maxElevation:
-                                    doubleConfigState.doubleConfig.maxElevation,
-                                maxGales:
-                                    doubleConfigState.doubleConfig.maxGales,
-                                strategies:
-                                    doubleConfigState.doubleConfig.strategies,
-                                wallet:
-                                    doubleConfigState.doubleConfig.wallet ?? 0,
-                              );
+                                final DoubleConfigModel doubleConfig =
+                                    DoubleConfigModel(
+                                  amountStopGain: doubleConfigState
+                                      .doubleConfig.amountStopGain,
+                                  amountStopLoss: doubleConfigState
+                                      .doubleConfig.amountStopLoss,
+                                  elevations:
+                                      doubleConfigState.doubleConfig.elevations,
+                                  enabled:
+                                      doubleConfigState.doubleConfig.enabled,
+                                  entryAmount: doubleConfigState
+                                      .doubleConfig.entryAmount,
+                                  entryWhiteAmount: doubleConfigState
+                                      .doubleConfig.entryWhiteAmount,
+                                  gales: doubleConfigState.doubleConfig.gales,
+                                  isActiveElevation: doubleConfigState
+                                      .doubleConfig.isActiveElevation,
+                                  isActiveGale: doubleConfigState
+                                      .doubleConfig.isActiveGale,
+                                  isActiveStopGain: doubleConfigState
+                                      .doubleConfig.isActiveStopGain,
+                                  isActiveStopLoss: doubleConfigState
+                                      .doubleConfig.isActiveStopLoss,
+                                  maxElevation: doubleConfigState
+                                      .doubleConfig.maxElevation,
+                                  maxGales:
+                                      doubleConfigState.doubleConfig.maxGales,
+                                  strategies:
+                                      doubleConfigState.doubleConfig.strategies,
+                                  wallet:
+                                      doubleConfigState.doubleConfig.wallet ??
+                                          0,
+                                );
 
-                              BlocProvider.of<DoubleConfigCubit>(context)
-                                  .saveDoubleConfig(doubleConfig);
-                            }),
-                            itemBuilder: (BuildContext context, int index) =>
-                                GestureDetector(
-                              onTap: () => editGale(
-                                  gales: doubleConfigState.doubleConfig.gales,
-                                  index: index),
-                              key: Key('$index'),
-                              child: SizedBox(
-                                height: 70,
-                                child: GaleWidget(
-                                  index: index,
-                                  gales: doubleConfigState.doubleConfig.gales,
-                                  doubleConfig: doubleConfigState.doubleConfig,
+                                BlocProvider.of<DoubleConfigCubit>(context)
+                                    .saveDoubleConfig(doubleConfig);
+                              }),
+                              itemBuilder: (BuildContext context, int index) =>
+                                  GestureDetector(
+                                onTap: () => editGale(
+                                    gales: doubleConfigState.doubleConfig.gales,
+                                    index: index),
+                                key: Key('$index'),
+                                child: SizedBox(
+                                  height: 70,
+                                  child: GaleWidget(
+                                    index: index,
+                                    gales: doubleConfigState.doubleConfig.gales,
+                                    doubleConfig:
+                                        doubleConfigState.doubleConfig,
+                                  ),
                                 ),
                               ),
                             ),

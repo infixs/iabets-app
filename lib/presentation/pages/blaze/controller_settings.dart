@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 
 class SettingsController {
+  late final DoubleConfigEntity doubleConfigCopy;
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   final GlobalKey<FormState> formkeyEdit = GlobalKey<FormState>();
   final ValueNotifier<bool> stopGainIsOn = ValueNotifier<bool>(true);
@@ -26,6 +27,7 @@ class SettingsController {
       TextEditingController();
 
   Future<void> init(DoubleConfigEntity doubleConfig) async {
+    doubleConfigCopy = doubleConfig;
     stopGainController.text = doubleConfig.amountStopGain.toString();
     stoplossController.text = doubleConfig.amountStopLoss.toString();
     firstBetPriceController.text = doubleConfig.entryAmount.toString();

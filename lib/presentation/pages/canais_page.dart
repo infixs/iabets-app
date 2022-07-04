@@ -77,9 +77,7 @@ class _CanaisPageState extends State<CanaisPage> {
             iconTheme: IconThemeData(
               color: Colors.white,
             ),
-            automaticallyImplyLeading: false,
             elevation: 0,
-            centerTitle: false,
             backgroundColor: kPrimaryColor,
             title: Text(
               "IABets",
