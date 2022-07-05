@@ -9,6 +9,7 @@ import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
 import '../../../data/model/double_config_model.dart';
 
 import 'Elevate_settings_page.dart';
+import 'blaze_create_strategy_page.dart';
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
 import 'controller_settings.dart';
 import 'gales_settings_page.dart';
@@ -265,6 +266,52 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                             );
                           }).toList());
                         },
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.all(0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            BlazeCreateStrategyPage(),
+                      ),
+                    ),
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            const Color(0xff1bb57f),
+                            const Color(0xff08835d),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Adicionar estrategia',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Icon(Icons.add),
+                          )
+                        ],
                       ),
                     ),
                   ),
