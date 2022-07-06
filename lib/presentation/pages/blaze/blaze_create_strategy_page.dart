@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'blaze_create_strategy_controller.dart';
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
+import 'components/strategy_creation_item_widget.dart';
 
 class BlazeCreateStrategyPage extends StatefulWidget {
   const BlazeCreateStrategyPage({Key? key}) : super(key: key);
@@ -15,18 +16,20 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
   final BlazeCreateStrategyController blazeCreateStrategyController =
       BlazeCreateStrategyController();
 
-  void addResult(int index) {
+  void addStrategy() {
+    List<int> positions = [];
+
+    for (int i = 0; i != blazeCreateStrategyController.strategyes.length; i++) {
+      positions.add(i);
+    }
+
+    int buttonValue = 0;
+
     bool red = false;
     bool black = false;
+    bool white = false;
     bool equal = false;
-    bool isRule = false;
-
-    final isNew = (blazeCreateStrategyController.results.length <= index);
-
-    if (!isNew) {
-      red = blazeCreateStrategyController.results[index]['red'];
-      black = blazeCreateStrategyController.results[index]['black'];
-    }
+    bool isRuleActive = false;
 
     showDialog<void>(
       context: context,
@@ -34,131 +37,248 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
         builder:
             (BuildContext context, void Function(void Function()) setState) =>
                 AlertDialog(
-          title: Text('Cores'),
+          backgroundColor: const Color(0xff0f1923),
           content: SizedBox(
-            height: index != 0 ? 245 : 100,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Text('Vermelho'),
-                    Switch(
-                        value: red,
-                        onChanged: (bool value) => setState(() => red = !red))
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Preto'),
-                    Switch(
-                        value: black,
-                        onChanged: (bool value) =>
-                            setState(() => black = !black))
-                  ],
-                ),
-                index != 0
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            height:
+                blazeCreateStrategyController.strategyes.length > 0 ? 320 : 200,
+            child: Column(children: [
+              Text(
+                'Seleciona as cores',
+                style: TextStyle(color: Colors.white),
+              ),
+              Row(
+                children: [
+                  Text(
+                    'vermelho',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Switch(
+                    value: red,
+                    onChanged: (bool? value) => setState(() => red = !red),
+                    inactiveThumbColor: const Color(0xfff12c4d),
+                    activeColor: const Color(0xff1bb57f),
+                    activeTrackColor: const Color(0xff0e0812),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'preto',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Switch(
+                    value: black,
+                    onChanged: (bool? value) => setState(() => black = !black),
+                    inactiveThumbColor: const Color(0xfff12c4d),
+                    activeColor: const Color(0xff1bb57f),
+                    activeTrackColor: const Color(0xff0e0812),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Branco',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Switch(
+                    value: white,
+                    onChanged: (bool? value) => setState(() => white = !white),
+                    inactiveThumbColor: const Color(0xfff12c4d),
+                    activeColor: const Color(0xff1bb57f),
+                    activeTrackColor: const Color(0xff0e0812),
+                  )
+                ],
+              ),
+              blazeCreateStrategyController.strategyes.length > 0
+                  ? Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 10),
-                                  child: Text(
-                                    'Regras',
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ),
-                                Switch(
-                                    value: isRule,
-                                    onChanged: (bool value) =>
-                                        setState(() => isRule = !isRule))
-                              ],
+                            Text(
+                              'Regras',
+                              style: TextStyle(color: Colors.white),
                             ),
-                            isRule
-                                ? SizedBox(
-                                    height: 40,
-                                    width: 100,
-                                    child: PageView.builder(
-                                      controller: blazeCreateStrategyController
-                                          .pageControllerResults,
-                                      itemCount: index,
-                                      scrollDirection: Axis.vertical,
-                                      itemBuilder:
-                                          (BuildContext context, int index) =>
-                                              Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Resultado ${index + 1}',
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Container(),
-                            isRule
-                                ? Row(
-                                    children: [
-                                      Text('diferente'),
-                                      Switch(
-                                          value: equal,
-                                          onChanged: (bool value) =>
-                                              setState(() => equal = !equal)),
-                                      Text('igual'),
-                                    ],
-                                  )
-                                : Container(),
+                            Switch(
+                              value: isRuleActive,
+                              onChanged: (bool? value) =>
+                                  setState(() => isRuleActive = !isRuleActive),
+                              inactiveThumbColor: const Color(0xfff12c4d),
+                              activeColor: const Color(0xff1bb57f),
+                              activeTrackColor: const Color(0xff0e0812),
+                            ),
                           ],
                         ),
-                      )
-                    : Container()
-              ],
-            ),
+                        isRuleActive
+                            ? Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Operação',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 15),
+                                        child: DropdownButton<bool>(
+                                          dropdownColor:
+                                              const Color(0xff0f1923),
+                                          style: TextStyle(color: Colors.white),
+                                          value: equal,
+                                          items: [true, false]
+                                              .map<DropdownMenuItem<bool>>(
+                                                  (bool value) =>
+                                                      DropdownMenuItem<bool>(
+                                                        value: value,
+                                                        child: Text(
+                                                          value
+                                                              ? 'Igual'
+                                                              : 'Diferente',
+                                                        ),
+                                                      ))
+                                              .toList(),
+                                          onChanged: (value) =>
+                                              setState(() => equal = value!),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Posição',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 15),
+                                        child: DropdownButton<int>(
+                                          dropdownColor:
+                                              const Color(0xff0f1923),
+                                          style: TextStyle(color: Colors.white),
+                                          value: buttonValue,
+                                          items: positions
+                                              .map<DropdownMenuItem<int>>(
+                                                (int value) =>
+                                                    DropdownMenuItem<int>(
+                                                  value: value,
+                                                  child: Text(
+                                                    'Resultado ${value + 1}',
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
+                                          onChanged: (value) => setState(
+                                              () => buttonValue = value!),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              )
+                            : Container(),
+                      ],
+                    )
+                  : Container()
+            ]),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Cancelar'),
-            ),
-            TextButton(
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.all(0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
               onPressed: () {
-                if (isNew) {
-                  blazeCreateStrategyController.add({
-                    'red': red,
-                    'black': black,
-                    'rules': isRule
-                        ? {
-                            'equal': isRule,
-                            'reference':
-                                blazeCreateStrategyController.getResultIndice()
-                          }
-                        : {}
-                  });
-                } else {
-                  blazeCreateStrategyController.results.removeAt(index);
-                  blazeCreateStrategyController.insert(index, {
-                    'red': red,
-                    'black': black,
-                    'rules': isRule
-                        ? {
-                            'equal': isRule,
-                            'reference':
-                                blazeCreateStrategyController.getResultIndice()
-                          }
-                        : {}
-                  });
+                final List<StrategyColors> colors = [];
+                List<ResultRule>? rules;
+                if (red) {
+                  colors.add(StrategyColors.Red);
+                }
+                if (black) {
+                  colors.add(StrategyColors.Black);
+                }
+                if (white) {
+                  colors.add(StrategyColors.White);
                 }
 
+                if (isRuleActive) {
+                  if (equal) {
+                    rules = List.from([
+                      (ResultRule(
+                          operator: ResultRuleOperator.Equal,
+                          position: buttonValue))
+                    ]);
+                  } else {
+                    rules = List.from([
+                      (ResultRule(
+                          operator: ResultRuleOperator.Different,
+                          position: buttonValue))
+                    ]);
+                  }
+                }
+
+                final ResultStrategyEntity value = ResultStrategyEntity(
+                  colors: colors,
+                  rules: rules,
+                );
+
+                blazeCreateStrategyController.add(value);
                 Navigator.pop(context);
               },
-              child: Text('Salvar'),
+              child: Container(
+                width: 70,
+                height: 40,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      const Color(0xff1bb57f),
+                      const Color(0xff08835d),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(child: Text('Salvar')),
+              ),
             )
           ],
         ),
       ),
     );
   }
+
+  void saveStrategy() => showDialog<void>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Salvar'),
+          content: TextField(
+            decoration: InputDecoration(
+              labelText: 'Nome da estrategia',
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {},
+              child: Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: Text('Salvar'),
+            )
+          ],
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -181,42 +301,36 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
-            children: [
-              AnimatedBuilder(
-                animation: blazeCreateStrategyController,
-                builder: (BuildContext context, Widget? child) =>
-                    ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: (blazeCreateStrategyController.results.length + 1),
-                  itemBuilder: (BuildContext context, int index) => SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        padding: EdgeInsets.zero,
-                        primary: const Color(0xff0a1117),
-                      ),
-                      onPressed: () => addResult(index),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Resultado ${index + 1}',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+      body: AnimatedBuilder(
+        animation: blazeCreateStrategyController,
+        builder: (BuildContext context, Widget? child) => ListView.builder(
+          itemCount: blazeCreateStrategyController.strategyes.length,
+          itemBuilder: (BuildContext context, int index) =>
+              StrategyCreationitemWidget(
+            index: index,
+            strategy: blazeCreateStrategyController.strategyes[index],
           ),
         ),
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            backgroundColor: const Color(0xff1bb57f),
+            heroTag: "btn1",
+            onPressed: addStrategy,
+            child: Icon(Icons.add),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: FloatingActionButton(
+              backgroundColor: const Color(0xff1bb57f),
+              heroTag: "btn2",
+              onPressed: saveStrategy,
+              child: Icon(Icons.save),
+            ),
+          ),
+        ],
       ),
     );
   }

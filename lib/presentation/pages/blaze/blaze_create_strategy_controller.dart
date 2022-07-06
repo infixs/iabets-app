@@ -1,26 +1,39 @@
 import 'package:flutter/widgets.dart';
 
-typedef Results = List<Map<String, dynamic>>;
-
 class BlazeCreateStrategyController extends ChangeNotifier {
-  final PageController pageControllerResults = PageController();
-  final Results results = [];
+  final List<ResultStrategyEntity> strategyes = [];
 
-  void add(Map<String, dynamic> item) {
-    results.add(item);
+  void add(ResultStrategyEntity value) {
+    strategyes.add(value);
     notifyListeners();
   }
+}
 
-  void insert(int index, Map<String, dynamic> item) {
-    results.add(item);
-    notifyListeners();
-  }
+enum StrategyColors {
+  Red('red'),
+  Black('black'),
+  White('white');
 
-  int getResultIndice() => pageControllerResults.page!.toInt();
+  const StrategyColors(this.value);
+  final String value;
+}
 
-  @override
-  void dispose() {
-    pageControllerResults.dispose();
-    super.dispose();
-  }
+enum ResultRuleOperator {
+  Equal('='),
+  Different('!=');
+
+  const ResultRuleOperator(this.value);
+  final String value;
+}
+
+class ResultRule {
+  final ResultRuleOperator operator;
+  final int position;
+  const ResultRule({required this.operator, required this.position});
+}
+
+class ResultStrategyEntity {
+  final List<StrategyColors> colors;
+  final List<ResultRule>? rules;
+  const ResultStrategyEntity({required this.colors, required this.rules});
 }
