@@ -35,5 +35,13 @@ class ResultRule {
 class ResultStrategyEntity {
   final List<StrategyColors> colors;
   final List<ResultRule>? rules;
+
   const ResultStrategyEntity({required this.colors, required this.rules});
+}
+
+class EntryStrategy {
+  final StrategyColors colorTarget;
+  final StrategyColors colorResult;
+
+  EntryStrategy({required this.colorTarget, required this.colorResult});
 }

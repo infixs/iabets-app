@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'blaze_create_strategy_controller.dart';
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
+import 'components/strategy_creation_entry_widget.dart';
 import 'components/strategy_creation_item_widget.dart';
 
 class BlazeCreateStrategyPage extends StatefulWidget {
@@ -15,6 +16,14 @@ class BlazeCreateStrategyPage extends StatefulWidget {
 class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
   final BlazeCreateStrategyController blazeCreateStrategyController =
       BlazeCreateStrategyController();
+  final List<EntryStrategy> entrys = [];
+  final ValueNotifier<int> numberEntrys = ValueNotifier<int>(1);
+
+  @override
+  void dispose() {
+    numberEntrys.dispose();
+    super.dispose();
+  }
 
   void addStrategy() {
     List<int> positions = [];
@@ -226,7 +235,6 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                   colors: colors,
                   rules: rules,
                 );
-
                 blazeCreateStrategyController.add(value);
                 Navigator.pop(context);
               },
@@ -253,32 +261,42 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
     );
   }
 
-  void saveStrategy() => showDialog<void>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text('Salvar'),
-          content: TextField(
-            decoration: InputDecoration(
-              labelText: 'Nome da estrategia',
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
+  void saveStrategy() => (entrys.length > 0)
+      ? showDialog<void>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('Salvar'),
+            content: TextField(
+              decoration: InputDecoration(
+                labelText: 'Nome da estrategia',
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
                 ),
               ),
             ),
+            actions: [
+              TextButton(
+                onPressed: () {},
+                child: Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: Text('Salvar'),
+              )
+            ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {},
-              child: Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: Text('Salvar'),
-            )
-          ],
-        ),
-      );
+        )
+      : showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            Future.delayed(Duration(seconds: 2), () => Navigator.pop(context));
+            return AlertDialog(
+              content: Text('Você precisa configurar a entrada'),
+            );
+          },
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -303,13 +321,78 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
       ),
       body: AnimatedBuilder(
         animation: blazeCreateStrategyController,
-        builder: (BuildContext context, Widget? child) => ListView.builder(
-          itemCount: blazeCreateStrategyController.strategyes.length,
-          itemBuilder: (BuildContext context, int index) =>
-              StrategyCreationitemWidget(
-            index: index,
-            strategy: blazeCreateStrategyController.strategyes[index],
-          ),
+        builder: (BuildContext context, Widget? child) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            blazeCreateStrategyController.strategyes.length > 0
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 10),
+                    child: Text(
+                      'Resultados',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  )
+                : Container(),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: blazeCreateStrategyController.strategyes.length,
+              itemBuilder: (BuildContext context, int index) =>
+                  StrategyCreationitemWidget(
+                index: index,
+                strategy: blazeCreateStrategyController.strategyes[index],
+              ),
+            ),
+            blazeCreateStrategyController.strategyes.length > 0
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, top: 10),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 175),
+                              child: Text(
+                                'Entradas',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
+                            ),
+                            Text(
+                              'Adicionar',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                numberEntrys.value++;
+                              },
+                              icon: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      ValueListenableBuilder(
+                        valueListenable: numberEntrys,
+                        builder:
+                            (BuildContext context, int value, Widget? child) =>
+                                ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: numberEntrys.value,
+                          itemBuilder: (BuildContext context, int index) =>
+                              StrategyCreationEntryWidget(
+                            entrys: entrys,
+                            index: index,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Container()
+          ],
         ),
       ),
       floatingActionButton: Row(
