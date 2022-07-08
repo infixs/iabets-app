@@ -868,7 +868,7 @@ class _CanalPageState extends State<CanalPage> {
     return finalString;
   }
 
-  _sendMessage() async {
+  void _sendMessage() async {
     if (_textMessageController.text.isNotEmpty || _isFile) {
       setState(() {
         _isSendingFile = true;
