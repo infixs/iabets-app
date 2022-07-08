@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../blaze_create_strategy_controller.dart';
+import '../../../../domain/entities/custom_strategy_entity.dart';
 
 class StrategyCreationEntryWidget extends StatefulWidget {
   final List<EntryStrategy> entrys;

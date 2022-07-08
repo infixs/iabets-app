@@ -91,6 +91,7 @@ class GaleWidget extends StatelessWidget {
                   maxGales: doubleConfig.maxGales,
                   strategies: doubleConfig.strategies,
                   wallet: doubleConfig.wallet ?? 0,
+                  customStrategies: doubleConfig.customStrategies,
                 );
 
                 BlocProvider.of<DoubleConfigCubit>(context)

@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ia_bet/data/model/double_config_model.dart';
+
+import '../../../data/model/custom_strategy_model.dart';
+import '../../../domain/entities/custom_strategy_entity.dart';
+import '../../bloc/blaze/double_config_cubit.dart';
+
 import 'blaze_create_strategy_controller.dart';
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
 import 'components/strategy_creation_entry_widget.dart';
 import 'components/strategy_creation_item_widget.dart';
+import 'controller_settings.dart';
 
 class BlazeCreateStrategyPage extends StatefulWidget {
-  const BlazeCreateStrategyPage({Key? key}) : super(key: key);
+  final SettingsController settingsController;
+  const BlazeCreateStrategyPage({Key? key, required this.settingsController})
+      : super(key: key);
 
   @override
   State<BlazeCreateStrategyPage> createState() =>
@@ -16,6 +26,8 @@ class BlazeCreateStrategyPage extends StatefulWidget {
 class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
   final BlazeCreateStrategyController blazeCreateStrategyController =
       BlazeCreateStrategyController();
+  final TextEditingController textEditingControllerName =
+      TextEditingController();
   final List<EntryStrategy> entrys = [];
   final ValueNotifier<int> numberEntrys = ValueNotifier<int>(1);
 
@@ -261,42 +273,90 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
     );
   }
 
-  void saveStrategy() => (entrys.length > 0)
-      ? showDialog<void>(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text('Salvar'),
-            content: TextField(
-              decoration: InputDecoration(
-                labelText: 'Nome da estrategia',
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20),
+  void saveStrategy() =>
+      (entrys.length > 0 && blazeCreateStrategyController.strategyes.length > 0)
+          ? showDialog<void>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: Text('Salvar'),
+                content: TextField(
+                  controller: textEditingControllerName,
+                  decoration: InputDecoration(
+                    labelText: 'Nome da estrategia',
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
                   ),
                 ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      final CustomStrategyModel customStrategyModel =
+                          CustomStrategyModel(
+                        resultStrategyEntities:
+                            blazeCreateStrategyController.strategyes,
+                        entryStrategies: entrys,
+                        name: textEditingControllerName.text,
+                      );
+
+                      widget
+                          .settingsController.doubleConfigCopy?.customStrategies
+                          .add(customStrategyModel);
+
+                      final DoubleConfigModel doubleConfig = DoubleConfigModel(
+                          enabled: widget
+                              .settingsController.doubleConfigCopy!.enabled,
+                          isActiveGale: widget.settingsController
+                              .doubleConfigCopy!.isActiveGale,
+                          isActiveStopGain: widget.settingsController
+                              .doubleConfigCopy!.isActiveStopGain,
+                          isActiveStopLoss: widget.settingsController
+                              .doubleConfigCopy!.isActiveStopLoss,
+                          wallet: widget
+                              .settingsController.doubleConfigCopy!.wallet,
+                          amountStopGain: widget.settingsController
+                              .doubleConfigCopy!.amountStopGain,
+                          amountStopLoss: widget.settingsController
+                              .doubleConfigCopy!.amountStopLoss,
+                          maxGales: widget
+                              .settingsController.doubleConfigCopy!.maxGales,
+                          maxElevation: widget.settingsController
+                              .doubleConfigCopy!.maxElevation,
+                          gales:
+                              widget.settingsController.doubleConfigCopy!.gales,
+                          elevations: widget
+                              .settingsController.doubleConfigCopy!.elevations,
+                          isActiveElevation: widget.settingsController
+                              .doubleConfigCopy!.isActiveElevation,
+                          strategies: widget.settingsController.doubleConfigCopy!.strategies,
+                          entryAmount: widget.settingsController.doubleConfigCopy!.entryAmount,
+                          entryWhiteAmount: widget.settingsController.doubleConfigCopy!.entryWhiteAmount,
+                          customStrategies: widget.settingsController.doubleConfigCopy!.customStrategies);
+
+                      BlocProvider.of<DoubleConfigCubit>(context)
+                          .saveDoubleConfig(doubleConfig);
+                    },
+                    child: Text('Salvar'),
+                  )
+                ],
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {},
-                child: Text('Cancelar'),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: Text('Salvar'),
-              )
-            ],
-          ),
-        )
-      : showDialog<void>(
-          context: context,
-          builder: (BuildContext context) {
-            Future.delayed(Duration(seconds: 2), () => Navigator.pop(context));
-            return AlertDialog(
-              content: Text('Você precisa configurar a entrada'),
+            )
+          : showDialog<void>(
+              context: context,
+              builder: (BuildContext context) {
+                Future.delayed(
+                    Duration(seconds: 2), () => Navigator.pop(context));
+                return AlertDialog(
+                  content: Text('Você precisa configurar a entrada'),
+                );
+              },
             );
-          },
-        );
 
   @override
   Widget build(BuildContext context) {

@@ -203,6 +203,8 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                           0,
                                   isActiveGale: doubleConfigState
                                       .doubleConfig.isActiveGale,
+                                  customStrategies: doubleConfigState
+                                      .doubleConfig.customStrategies,
                                 );
 
                                 BlocProvider.of<DoubleConfigCubit>(context)
@@ -308,6 +310,10 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                                 wallet: doubleConfigState
                                                         .doubleConfig.wallet ??
                                                     0,
+                                                customStrategies:
+                                                    doubleConfigState
+                                                        .doubleConfig
+                                                        .customStrategies,
                                               );
 
                                               BlocProvider.of<
@@ -433,7 +439,8 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                                 .doubleConfig.strategies,
                                             wallet: doubleConfigState
                                                     .doubleConfig.wallet ??
-                                                0,
+                                                0, customStrategies: doubleConfigState
+                                                        .doubleConfig.customStrategies
                                           );
 
                                           BlocProvider.of<DoubleConfigCubit>(

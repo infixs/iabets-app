@@ -77,6 +77,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
         maxGales: settingsController.doubleConfigCopy!.maxGales,
         strategies: settingsController.doubleConfigCopy!.strategies,
         wallet: settingsController.doubleConfigCopy!.wallet ?? 0,
+        customStrategies: settingsController.doubleConfigCopy!.customStrategies,
       );
       BlocProvider.of<DoubleConfigCubit>(context)
           .saveDoubleConfig(doubleConfig);
@@ -280,7 +281,9 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) =>
-                            BlazeCreateStrategyPage(),
+                            BlazeCreateStrategyPage(
+                          settingsController: settingsController,
+                        ),
                       ),
                     ),
                     child: Container(

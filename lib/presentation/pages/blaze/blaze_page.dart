@@ -164,6 +164,8 @@ class _BlazePageState extends State<BlazePage> {
                                       wallet: doubleConfigState
                                               .doubleConfig.wallet ??
                                           0,
+                                      customStrategies: doubleConfigState
+                                          .doubleConfig.customStrategies,
                                     );
                                     BlocProvider.of<DoubleConfigCubit>(context)
                                         .saveDoubleConfig(doubleConfig);

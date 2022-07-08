@@ -23,6 +23,7 @@ abstract class FirebaseRepository {
 
   Stream<List<UserEntity>> getAllUsers();
   Stream<UserEntity> getCurrentUser();
+
   Stream<List<TextMessageEntity>> getMessages(String channelId);
   Stream<List<MyChatEntity>> getMyChat(String uid);
 

@@ -244,7 +244,8 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                       doubleConfigState.doubleConfig.strategies,
                                   wallet:
                                       doubleConfigState.doubleConfig.wallet ??
-                                          0,
+                                          0, customStrategies: doubleConfigState
+                                                        .doubleConfig.customStrategies
                                 );
 
                                 BlocProvider.of<DoubleConfigCubit>(context)
@@ -416,7 +417,8 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                                 .doubleConfig.strategies,
                                             wallet: doubleConfigState
                                                     .doubleConfig.wallet ??
-                                                0,
+                                                0, customStrategies: doubleConfigState
+                                                        .doubleConfig.customStrategies
                                           );
 
                                           BlocProvider.of<DoubleConfigCubit>(
