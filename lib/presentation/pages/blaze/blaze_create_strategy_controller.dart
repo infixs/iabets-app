@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../domain/entities/custom_strategy_entity.dart';
+import '../../../data/model/result_strategy_model.dart';
 
 class BlazeCreateStrategyController extends ChangeNotifier {
-  final List<ResultStrategyEntity> strategyes = [];
+  final List<ResultStrategyModel> strategyes = [];
 
-  void add(ResultStrategyEntity value) {
+  void add(ResultStrategyModel value) {
     strategyes.add(value);
     notifyListeners();
   }

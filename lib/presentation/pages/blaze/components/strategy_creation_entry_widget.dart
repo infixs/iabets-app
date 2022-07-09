@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:ia_bet/data/model/entry_strategy_model.dart';
+
 import '../../../../domain/entities/custom_strategy_entity.dart';
 
 class StrategyCreationEntryWidget extends StatefulWidget {
-  final List<EntryStrategy> entrys;
+  final List<EntryStrategyModel> entrys;
   final int index;
   const StrategyCreationEntryWidget(
       {Key? key, required this.entrys, required this.index})
@@ -69,22 +71,20 @@ class _StrategyCreationEntryWidgetState
                     colorResult = StrategyColors.Black;
                   } else if (colorResultText.value == 'Branco') {
                     colorResult = StrategyColors.White;
-                  } else {
-                    colorResult = null;
                   }
                   if (colorResult != null && colorTarget != null) {
                     if (widget.entrys.length > widget.index) {
                       widget.entrys.removeAt(widget.index);
                       widget.entrys.insert(
                         widget.index,
-                        EntryStrategy(
+                        EntryStrategyModel(
                             colorResult: colorResult!,
                             colorTarget: colorTarget!),
                       );
                     } else {
                       widget.entrys.insert(
                           widget.index,
-                          EntryStrategy(
+                          EntryStrategyModel(
                               colorResult: colorResult!,
                               colorTarget: colorTarget!));
                     }
@@ -125,24 +125,23 @@ class _StrategyCreationEntryWidgetState
                     colorTarget = StrategyColors.Black;
                   } else if (colorTargetText.value == 'Branco') {
                     colorTarget = StrategyColors.White;
-                  } else {
-                    colorTarget = null;
                   }
                   if (colorResult != null && colorTarget != null) {
                     if (widget.entrys.length > widget.index) {
                       widget.entrys.removeAt(widget.index);
                       widget.entrys.insert(
                         widget.index,
-                        EntryStrategy(
+                        EntryStrategyModel(
                             colorResult: colorResult!,
                             colorTarget: colorTarget!),
                       );
                     } else {
                       widget.entrys.insert(
-                          widget.index,
-                          EntryStrategy(
-                              colorResult: colorResult!,
-                              colorTarget: colorTarget!));
+                        widget.index,
+                        EntryStrategyModel(
+                            colorResult: colorResult!,
+                            colorTarget: colorTarget!),
+                      );
                     }
                   }
                 },

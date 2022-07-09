@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/data/model/double_config_model.dart';
+import 'package:ia_bet/data/model/entry_strategy_model.dart';
+import 'package:ia_bet/data/model/result_rule_model.dart';
+import 'package:ia_bet/data/model/result_strategy_model.dart';
 
 import '../../../data/model/custom_strategy_model.dart';
 import '../../../domain/entities/custom_strategy_entity.dart';
@@ -28,8 +31,9 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
       BlazeCreateStrategyController();
   final TextEditingController textEditingControllerName =
       TextEditingController();
-  final List<EntryStrategy> entrys = [];
+  final List<EntryStrategyModel> entrys = [];
   final ValueNotifier<int> numberEntrys = ValueNotifier<int>(1);
+  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -216,7 +220,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
               ),
               onPressed: () {
                 final List<StrategyColors> colors = [];
-                List<ResultRule>? rules;
+                List<ResultRuleModel>? rules;
                 if (red) {
                   colors.add(StrategyColors.Red);
                 }
@@ -230,20 +234,20 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                 if (isRuleActive) {
                   if (equal) {
                     rules = List.from([
-                      (ResultRule(
+                      (ResultRuleModel(
                           operator: ResultRuleOperator.Equal,
                           position: buttonValue))
                     ]);
                   } else {
                     rules = List.from([
-                      (ResultRule(
+                      (ResultRuleModel(
                           operator: ResultRuleOperator.Different,
                           position: buttonValue))
                     ]);
                   }
                 }
 
-                final ResultStrategyEntity value = ResultStrategyEntity(
+                final ResultStrategyModel value = ResultStrategyModel(
                   colors: colors,
                   rules: rules,
                 );
@@ -279,13 +283,23 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
               context: context,
               builder: (BuildContext context) => AlertDialog(
                 title: Text('Salvar'),
-                content: TextField(
-                  controller: textEditingControllerName,
-                  decoration: InputDecoration(
-                    labelText: 'Nome da estrategia',
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20),
+                content: Form(
+                  key: formkey,
+                  child: TextFormField(
+                    validator: (String? input) {
+                      if (input != null && input.isNotEmpty) {
+                        return null;
+                      } else {
+                        return 'digite algum valor';
+                      }
+                    },
+                    controller: textEditingControllerName,
+                    decoration: InputDecoration(
+                      labelText: 'Nome da estrategia',
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
                       ),
                     ),
                   ),
@@ -297,50 +311,54 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      final CustomStrategyModel customStrategyModel =
-                          CustomStrategyModel(
-                        resultStrategyEntities:
-                            blazeCreateStrategyController.strategyes,
-                        entryStrategies: entrys,
-                        name: textEditingControllerName.text,
-                      );
+                      final bool isValid = formkey.currentState!.validate();
 
-                      widget
-                          .settingsController.doubleConfigCopy?.customStrategies
-                          .add(customStrategyModel);
+                      if (isValid) {
+                        final CustomStrategyModel customStrategyModel =
+                            CustomStrategyModel(
+                          resultStrategyEntities:
+                              blazeCreateStrategyController.strategyes,
+                          entryStrategies: entrys,
+                          name: textEditingControllerName.text,
+                        );
 
-                      final DoubleConfigModel doubleConfig = DoubleConfigModel(
-                          enabled: widget
-                              .settingsController.doubleConfigCopy!.enabled,
-                          isActiveGale: widget.settingsController
-                              .doubleConfigCopy!.isActiveGale,
-                          isActiveStopGain: widget.settingsController
-                              .doubleConfigCopy!.isActiveStopGain,
-                          isActiveStopLoss: widget.settingsController
-                              .doubleConfigCopy!.isActiveStopLoss,
-                          wallet: widget
-                              .settingsController.doubleConfigCopy!.wallet,
-                          amountStopGain: widget.settingsController
-                              .doubleConfigCopy!.amountStopGain,
-                          amountStopLoss: widget.settingsController
-                              .doubleConfigCopy!.amountStopLoss,
-                          maxGales: widget
-                              .settingsController.doubleConfigCopy!.maxGales,
-                          maxElevation: widget.settingsController
-                              .doubleConfigCopy!.maxElevation,
-                          gales:
-                              widget.settingsController.doubleConfigCopy!.gales,
-                          elevations: widget
-                              .settingsController.doubleConfigCopy!.elevations,
-                          isActiveElevation: widget.settingsController
-                              .doubleConfigCopy!.isActiveElevation,
-                          strategies: widget.settingsController.doubleConfigCopy!.strategies,
-                          entryAmount: widget.settingsController.doubleConfigCopy!.entryAmount,
-                          entryWhiteAmount: widget.settingsController.doubleConfigCopy!.entryWhiteAmount,
-                          customStrategies: widget.settingsController.doubleConfigCopy!.customStrategies);
+                        widget.settingsController.doubleConfigCopy
+                            ?.customStrategies
+                            .add(customStrategyModel);
 
-                      BlocProvider.of<DoubleConfigCubit>(context)
-                          .saveDoubleConfig(doubleConfig);
+                        final DoubleConfigModel doubleConfig = DoubleConfigModel(
+                            enabled: widget
+                                .settingsController.doubleConfigCopy!.enabled,
+                            isActiveGale: widget.settingsController
+                                .doubleConfigCopy!.isActiveGale,
+                            isActiveStopGain: widget.settingsController
+                                .doubleConfigCopy!.isActiveStopGain,
+                            isActiveStopLoss: widget.settingsController
+                                .doubleConfigCopy!.isActiveStopLoss,
+                            wallet: widget
+                                .settingsController.doubleConfigCopy!.wallet,
+                            amountStopGain: widget.settingsController
+                                .doubleConfigCopy!.amountStopGain,
+                            amountStopLoss: widget.settingsController
+                                .doubleConfigCopy!.amountStopLoss,
+                            maxGales: widget
+                                .settingsController.doubleConfigCopy!.maxGales,
+                            maxElevation: widget.settingsController
+                                .doubleConfigCopy!.maxElevation,
+                            gales: widget
+                                .settingsController.doubleConfigCopy!.gales,
+                            elevations: widget.settingsController
+                                .doubleConfigCopy!.elevations,
+                            isActiveElevation: widget.settingsController.doubleConfigCopy!.isActiveElevation,
+                            strategies: widget.settingsController.doubleConfigCopy!.strategies,
+                            entryAmount: widget.settingsController.doubleConfigCopy!.entryAmount,
+                            entryWhiteAmount: widget.settingsController.doubleConfigCopy!.entryWhiteAmount,
+                            customStrategies: widget.settingsController.doubleConfigCopy!.customStrategies);
+
+                        BlocProvider.of<DoubleConfigCubit>(context)
+                            .saveDoubleConfig(doubleConfig);
+                        Navigator.pop(context);
+                      }
                     },
                     child: Text('Salvar'),
                   )

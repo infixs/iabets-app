@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../../data/model/result_strategy_model.dart';
 import '../../../../domain/entities/custom_strategy_entity.dart';
 
 class StrategyCreationitemWidget extends StatefulWidget {
-  final ResultStrategyEntity strategy;
+  final ResultStrategyModel strategy;
   final int index;
   const StrategyCreationitemWidget(
       {Key? key, required this.strategy, required this.index})
