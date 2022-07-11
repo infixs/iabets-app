@@ -12,11 +12,10 @@ class GaleWidget extends StatelessWidget {
   final List<Gale> gales;
 
   const GaleWidget(
-      {Key? key,
+      {super.key,
       required this.gales,
       required this.index,
-      required this.doubleConfig})
-      : super(key: key);
+      required this.doubleConfig});
 
   @override
   Widget build(BuildContext context) {

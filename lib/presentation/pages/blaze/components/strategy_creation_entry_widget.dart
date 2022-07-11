@@ -8,8 +8,7 @@ class StrategyCreationEntryWidget extends StatefulWidget {
   final List<EntryStrategyModel> entrys;
   final int index;
   const StrategyCreationEntryWidget(
-      {Key? key, required this.entrys, required this.index})
-      : super(key: key);
+      {super.key, required this.entrys, required this.index});
 
   @override
   State<StrategyCreationEntryWidget> createState() =>
@@ -35,11 +34,11 @@ class _StrategyCreationEntryWidgetState
     return SizedBox(
       height: 75,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.only(left: 20),
         child: Row(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
+              padding: const EdgeInsets.only(right: 10),
               child: Text(
                 'Resultado',
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -57,12 +56,14 @@ class _StrategyCreationEntryWidgetState
                   'Vermelho',
                   'Preto',
                   'Branco',
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                ]
+                    .map<DropdownMenuItem<String>>(
+                      (String value) => DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (value) {
                   colorResultText.value = value!;
                   if (colorResultText.value == 'Vermelho') {
@@ -83,10 +84,11 @@ class _StrategyCreationEntryWidgetState
                       );
                     } else {
                       widget.entrys.insert(
-                          widget.index,
-                          EntryStrategyModel(
-                              colorResult: colorResult!,
-                              colorTarget: colorTarget!));
+                        widget.index,
+                        EntryStrategyModel(
+                            colorResult: colorResult!,
+                            colorTarget: colorTarget!),
+                      );
                     }
                   }
                 },
@@ -111,12 +113,14 @@ class _StrategyCreationEntryWidgetState
                   'Vermelho',
                   'Preto',
                   'Branco',
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                ]
+                    .map<DropdownMenuItem<String>>(
+                      (String value) => DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (value) {
                   colorTargetText.value = value!;
                   if (colorTargetText.value == 'Vermelho') {

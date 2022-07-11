@@ -7,8 +7,7 @@ class StrategyCreationitemWidget extends StatefulWidget {
   final ResultStrategyModel strategy;
   final int index;
   const StrategyCreationitemWidget(
-      {Key? key, required this.strategy, required this.index})
-      : super(key: key);
+      {super.key, required this.strategy, required this.index});
 
   @override
   State<StrategyCreationitemWidget> createState() =>
