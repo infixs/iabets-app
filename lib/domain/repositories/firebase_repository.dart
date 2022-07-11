@@ -35,7 +35,7 @@ abstract class FirebaseRepository {
 
   Future<void> createOneToOneChatChannel(
       String uid, String name, List<UserEntity> allUsers);
-  Future<String> getOneToOneSingleUserChannelId(String uid, String canalName);
+  Future<String?> getOneToOneSingleUserChannelId(String uid, String canalName);
   Future<void> addToMyChat(MyChatEntity myChatEntity, UserEntity allUsers);
   Future<void> sendTextMessage(TextMessageEntity textMessageEntity,
       String channelId, UserEntity allUsers);

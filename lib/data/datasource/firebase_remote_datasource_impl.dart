@@ -92,7 +92,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   @override
   Future<void> sendPushMessage(
       String channelId, String title, String message) async {
-    HttpsCallable callable = fireFunctions.httpsCallable('sendMessage');
+    final HttpsCallable callable = fireFunctions.httpsCallable('sendMessage');
     final resp = callable.call(<String, dynamic>{
       'channelId': channelId,
       'channelName': title,
@@ -382,7 +382,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   }
 
   @override
-  Future<String> getOneToOneSingleUserChannelId(String uid, String canalName) {
+  Future<String?> getOneToOneSingleUserChannelId(String uid, String canalName) {
     final userCollectionRef = fireStore;
     return userCollectionRef
         .doc(uid)
@@ -393,7 +393,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       if (engagedChatChannel.docs.isNotEmpty) {
         return engagedChatChannel.docs.first.data()['channelId'];
       }
-      return Future.value(null);
+      return null;
     });
   }
 

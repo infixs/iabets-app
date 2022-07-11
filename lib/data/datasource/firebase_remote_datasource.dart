@@ -32,7 +32,7 @@ abstract class FirebaseRemoteDataSource {
 
   Future<void> createOneToOneChatChannel(
       String uid, String name, List<UserEntity> allusers);
-  Future<String> getOneToOneSingleUserChannelId(String uid, String otherUid);
+  Future<String?> getOneToOneSingleUserChannelId(String uid, String otherUid);
   Future<void> addToMyChat(MyChatEntity myChatEntity, UserEntity allUsers);
   Future<void> sendTextMessage(TextMessageEntity textMessageEntity,
       String channelId, UserEntity allUsers);

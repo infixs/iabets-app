@@ -705,65 +705,67 @@ class _CanalPageState extends State<CanalPage> {
             style: TextStyle(
                 color: _isSendingFile ? Colors.black12 : Colors.black),
             decoration: InputDecoration(
-                hintText: 'Mensagem...',
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding:
-                    const EdgeInsets.only(left: 15.0, bottom: 8.0, top: 8.0),
-                hintStyle: TextStyle(
-                    fontSize: AppConst.chatTextSize,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.grey),
-                labelStyle: TextStyle(
-                    fontSize: AppConst.chatTextSize,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.grey),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.white),
-                  borderRadius: new BorderRadius.circular(25),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.white),
-                  borderRadius: new BorderRadius.circular(25),
-                ),
-                prefixIcon: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.sentiment_satisfied_alt),
-                  color: _isSendingFile ? Colors.black12 : Colors.black,
-                ),
-                suffixIcon: Container(
-                  child: Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween, // added line
-                    mainAxisSize: MainAxisSize.min, // added line
-                    children: [
-                      Container(
-                        child: IconButton(
-                          onPressed: () {
-                            _sendFile();
-                          },
-                          icon: Icon(Icons.attach_file),
-                          color: _isSendingFile ? Colors.black12 : Colors.black,
-                        ),
+              hintText: 'Mensagem...',
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding:
+                  const EdgeInsets.only(left: 15.0, bottom: 8.0, top: 8.0),
+              hintStyle: TextStyle(
+                  fontSize: AppConst.chatTextSize,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey),
+              labelStyle: TextStyle(
+                  fontSize: AppConst.chatTextSize,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey),
+              focusedBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: Colors.white),
+                borderRadius: new BorderRadius.circular(25),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: Colors.white),
+                borderRadius: new BorderRadius.circular(25),
+              ),
+              prefixIcon: IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.sentiment_satisfied_alt),
+                color: _isSendingFile ? Colors.black12 : Colors.black,
+              ),
+              suffixIcon: Container(
+                child: Row(
+                  mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween, // added line
+                  mainAxisSize: MainAxisSize.min, // added line
+                  children: [
+                    Container(
+                      child: IconButton(
+                        onPressed: () {
+                          _sendFile();
+                        },
+                        icon: Icon(Icons.attach_file),
+                        color: _isSendingFile ? Colors.black12 : Colors.black,
                       ),
-                      Container(
-                        child: IconButton(
-                          onPressed: () {
-                            _sendMessage();
-                          },
-                          icon: Icon(Icons.send),
-                          color: _isSendingFile ? Colors.black12 : Colors.black,
-                        ),
-                      )
-                    ],
-                  ),
-                )),
+                    ),
+                    Container(
+                      child: IconButton(
+                        onPressed: () {
+                          _sendMessage();
+                        },
+                        icon: Icon(Icons.send),
+                        color: _isSendingFile ? Colors.black12 : Colors.black,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
           )
         ]),
       ),
     );
   }
 
+/*
   void _scrollDown([int duration = 1]) {
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
@@ -771,7 +773,7 @@ class _CanalPageState extends State<CanalPage> {
       curve: Curves.fastOutSlowIn,
     );
   }
-
+*/
   void _selectMessage(int index) {
     if (_selectMode) {
       setState(() {
@@ -1039,12 +1041,12 @@ class _CanalPageState extends State<CanalPage> {
     if (pickedFile != null) {
         File imageFile = File(pickedFile.path);
     }
-  }*/
+  }
 
   Future<String> _getUrl(canal, name) {
     return BlocProvider.of<CommunicationCubit>(context)
         .getUrl(canalName: canal, name: name);
-  }
+  }*/
 }
 
 Future<String> getFilePath({required String fileName}) async {
@@ -1084,7 +1086,7 @@ Future<File> getLocalFileOrDownload(FileEntity fileEntity) async {
 
   return file;
 }
-
+/*
 void _launchURL(url) async {
   if (!await launch(url)) throw 'Could not launch $url';
-}
+}*/
