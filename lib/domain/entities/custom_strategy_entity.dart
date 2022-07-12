@@ -2,23 +2,28 @@ import '../../data/model/entry_strategy_model.dart';
 import '../../data/model/result_strategy_model.dart';
 
 abstract class CustomStrategyEntity {
-  late final String name;
-  late final List<ResultStrategyModel> resultStrategyEntities;
-  late final List<EntryStrategyModel> entryStrategies;
+  final String name;
+  final List<ResultStrategyModel> resultStrategyEntities;
+  final List<EntryStrategyModel> entryStrategies;
+
+  CustomStrategyEntity(
+      {required this.name,
+      required this.resultStrategyEntities,
+      required this.entryStrategies});
 }
 
 enum StrategyColors {
-  Red('red'),
-  Black('black'),
-  White('white');
+  red('red'),
+  black('black'),
+  white('white');
 
   const StrategyColors(this.value);
   final String value;
 }
 
 enum ResultRuleOperator {
-  Equal('='),
-  Different('!=');
+  equal('='),
+  different('!=');
 
   const ResultRuleOperator(this.value);
   final String value;

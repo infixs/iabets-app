@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class PerfilPage extends StatefulWidget {
-  PerfilPage({Key? key}) : super(key: key);
+  const PerfilPage({super.key});
 
   @override
   State<PerfilPage> createState() => _PerfilPageState();
@@ -21,10 +21,10 @@ class _PerfilPageState extends State<PerfilPage> {
     return Scaffold(
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        leading: BackButton(color: kSecondColor),
+        leading: const BackButton(color: kSecondColor),
         elevation: 0,
         centerTitle: true,
-        title: Text("Perfil",
+        title: const Text("Perfil",
             style: TextStyle(
               color: Colors.white,
               fontSize: 17,
@@ -37,7 +37,7 @@ class _PerfilPageState extends State<PerfilPage> {
             SliverFillRemaining(
               hasScrollBody: false,
               child: Padding(
-                padding: EdgeInsets.all(30),
+                padding: const EdgeInsets.all(30),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,7 +51,7 @@ class _PerfilPageState extends State<PerfilPage> {
                             color: Colors.grey[300],
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.perm_identity_outlined,
                             color: Colors.white,
                             size: 100,
@@ -59,7 +59,7 @@ class _PerfilPageState extends State<PerfilPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     GestureDetector(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -69,15 +69,15 @@ class _PerfilPageState extends State<PerfilPage> {
                                   color: Colors.grey[500],
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.w400)),
-                          SizedBox(width: 10),
-                          Icon(Icons.edit, size: 15, color: kSecondColor),
+                          const SizedBox(width: 10),
+                          const Icon(Icons.edit, size: 15, color: kSecondColor),
                         ],
                       ),
                       onTap: () =>
                           _picker.pickImage(source: ImageSource.gallery),
                     ),
-                    SizedBox(height: 15),
-                    Align(
+                    const SizedBox(height: 15),
+                    const Align(
                       alignment: Alignment.topLeft,
                       child: Text("Nome",
                           style: TextStyle(
@@ -85,18 +85,18 @@ class _PerfilPageState extends State<PerfilPage> {
                             fontWeight: FontWeight.bold,
                           )),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     TextField(
                       keyboardType: TextInputType.text,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                       decoration: textInputDecoration.copyWith(
                         hintText: 'Usuário exemplo',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        labelStyle: TextStyle(color: Colors.grey),
+                        hintStyle: const TextStyle(color: Colors.grey),
+                        labelStyle: const TextStyle(color: Colors.grey),
                       ),
                     ),
-                    SizedBox(height: 15),
-                    Align(
+                    const SizedBox(height: 15),
+                    const Align(
                       alignment: Alignment.topLeft,
                       child: Text("E-mail",
                           style: TextStyle(
@@ -104,18 +104,18 @@ class _PerfilPageState extends State<PerfilPage> {
                             fontWeight: FontWeight.bold,
                           )),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     TextField(
                       keyboardType: TextInputType.emailAddress,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                       decoration: textInputDecoration.copyWith(
                         hintText: 'usuário@exemplo.com.br',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        labelStyle: TextStyle(color: Colors.grey),
+                        hintStyle: const TextStyle(color: Colors.grey),
+                        labelStyle: const TextStyle(color: Colors.grey),
                       ),
                     ),
-                    SizedBox(height: 15),
-                    Align(
+                    const SizedBox(height: 15),
+                    const Align(
                       alignment: Alignment.topLeft,
                       child: Text("Telefone",
                           style: TextStyle(
@@ -123,25 +123,25 @@ class _PerfilPageState extends State<PerfilPage> {
                             fontWeight: FontWeight.bold,
                           )),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     TextField(
                       keyboardType: TextInputType.text,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                       decoration: textInputDecoration.copyWith(
                         hintText: '(00)00000-0000',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        labelStyle: TextStyle(color: Colors.grey),
+                        hintStyle: const TextStyle(color: Colors.grey),
+                        labelStyle: const TextStyle(color: Colors.grey),
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Spacer(),
+                    const SizedBox(height: 10),
+                    const Spacer(),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(kSecondColor)),
-                        child: Text('Salvar alterações',
+                        child: const Text('Salvar alterações',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.0,

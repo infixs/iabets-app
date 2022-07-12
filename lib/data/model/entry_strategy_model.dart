@@ -2,44 +2,37 @@ import '../../domain/entities/custom_strategy_entity.dart';
 import '../../domain/entities/entry_strategy_entity.dart';
 
 class EntryStrategyModel extends EntryStrategyEntity {
-  late StrategyColors colorTarget;
-  late StrategyColors colorResult;
+  EntryStrategyModel({required super.colorTarget, required super.colorResult});
 
-  EntryStrategyModel({required this.colorTarget, required this.colorResult});
-
-  EntryStrategyModel.fromJson(Map<String, dynamic> json) {
-    if (json['condition'] == 'red') {
-      colorResult = StrategyColors.Red;
-    } else if (json['condition'] == 'black') {
-      colorResult = StrategyColors.Black;
-    } else if (json['condition'] == 'white') {
-      colorResult = StrategyColors.White;
-    }
-
-    if (json['target'] == 'red') {
-      colorTarget = StrategyColors.Red;
-    } else if (json['target'] == 'black') {
-      colorTarget = StrategyColors.Black;
-    } else if (json['target'] == 'white') {
-      colorTarget = StrategyColors.White;
-    }
-  }
+  factory EntryStrategyModel.fromJson(Map<String, dynamic> json) =>
+      EntryStrategyModel(
+        colorResult: (json['condition'] == 'red')
+            ? StrategyColors.red
+            : (json['condition'] == 'black'
+                ? StrategyColors.black
+                : StrategyColors.white),
+        colorTarget: (json['target'] == 'red')
+            ? StrategyColors.red
+            : (json['target'] == 'black'
+                ? StrategyColors.black
+                : StrategyColors.white),
+      );
 
   Map<String, dynamic> toJson() {
     String target = '';
     String condition = '';
-    if (colorTarget == StrategyColors.Red) {
+    if (colorTarget == StrategyColors.red) {
       target = 'red';
-    } else if (colorTarget == StrategyColors.Black) {
+    } else if (colorTarget == StrategyColors.black) {
       target = 'black';
-    } else if (colorTarget == StrategyColors.White) {
+    } else if (colorTarget == StrategyColors.white) {
       target = 'white';
     }
-    if (colorResult == StrategyColors.Red) {
+    if (colorResult == StrategyColors.red) {
       condition = 'red';
-    } else if (colorTarget == StrategyColors.Black) {
+    } else if (colorTarget == StrategyColors.black) {
       condition = 'black';
-    } else if (colorTarget == StrategyColors.White) {
+    } else if (colorTarget == StrategyColors.white) {
       condition = 'white';
     }
 

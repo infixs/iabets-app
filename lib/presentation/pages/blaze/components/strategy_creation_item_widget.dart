@@ -28,41 +28,41 @@ class _StrategyCreationitemWidgetState
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
                   'Resultado ${widget.index + 1}',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 5),
+              const Padding(
+                padding: EdgeInsets.only(left: 20, right: 5),
                 child: Text(
                   'Cores:',
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
-              widget.strategy.colors.contains(StrategyColors.Red)
+              widget.strategy.colors.contains(StrategyColors.red)
                   ? Container(
                       height: 20,
                       width: 20,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                     )
                   : Container(),
-              widget.strategy.colors.contains(StrategyColors.Black)
+              widget.strategy.colors.contains(StrategyColors.black)
                   ? Container(
                       height: 20,
                       width: 20,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.black,
                         shape: BoxShape.circle,
                       ),
                     )
                   : Container(),
-              widget.strategy.colors.contains(StrategyColors.White)
+              widget.strategy.colors.contains(StrategyColors.white)
                   ? Container(
                       height: 20,
                       width: 20,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
                       ),
@@ -73,7 +73,8 @@ class _StrategyCreationitemWidgetState
                 child: widget.strategy.rules != null
                     ? Text(
                         'Regra: ${widget.strategy.rules!.first.operator.value} a posição ${widget.strategy.rules!.first.position + 1}',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 16),
                       )
                     : Container(),
               ),

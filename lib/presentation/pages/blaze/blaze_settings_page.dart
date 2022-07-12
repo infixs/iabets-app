@@ -8,7 +8,7 @@ import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
 
 import '../../../data/model/double_config_model.dart';
 
-import 'Elevate_settings_page.dart';
+import 'elevate_settings_page.dart';
 import 'blaze_create_strategy_page.dart';
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
 import 'controller_settings.dart';
@@ -54,7 +54,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
         await getDoubleConfigFirebase(),
       );
 
-  Future<void> validateAndSave() async {
+  Future<DoubleConfigModel?> validateAndSave() async {
     final isValid = settingsController.formkey.currentState!.validate();
     if (isValid) {
       final DoubleConfigModel doubleConfig = DoubleConfigModel(
@@ -79,9 +79,9 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
         wallet: settingsController.doubleConfigCopy!.wallet ?? 0,
         customStrategies: settingsController.doubleConfigCopy!.customStrategies,
       );
-      BlocProvider.of<DoubleConfigCubit>(context)
-          .saveDoubleConfig(doubleConfig);
+      return doubleConfig;
     }
+    return null;
   }
 
   Future<bool> isEqual() async {
@@ -110,12 +110,13 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                           settingsController.firstBetWhiteController.text)) {
                     final List<bool> strategiesFirebase = [];
                     final List<bool> strategiesLocal = [];
-                    doubleConfigFirebase.strategies.forEach(
-                        (Strategy element) =>
-                            strategiesFirebase.add(element.active));
-                    settingsController.doubleConfigCopy!.strategies.forEach(
-                        (Strategy element) =>
-                            strategiesLocal.add(element.active));
+                    for (Strategy element in doubleConfigFirebase.strategies) {
+                      strategiesFirebase.add(element.active);
+                    }
+                    for (Strategy element
+                        in settingsController.doubleConfigCopy!.strategies) {
+                      strategiesLocal.add(element.active);
+                    }
 
                     if (listEquals(strategiesFirebase, strategiesLocal)) {
                       isEqual = true;
@@ -167,7 +168,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
-                        title: Text(
+                        title: const Text(
                             'Você não salvou as alterações deseja salvar?'),
                         actions: [
                           TextButton(
@@ -175,11 +176,11 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },
-                            child: Text('Sair sem salvar'),
+                            child: const Text('Sair sem salvar'),
                           ),
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: Text('Cancelar'),
+                            child: const Text('Cancelar'),
                           )
                         ],
                       ),
@@ -216,11 +217,11 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                             .getStrategies(),
                         builder: (BuildContext context,
                             AsyncSnapshot<List<StrategyEntity>> snapshot) {
-                          if (!snapshot.hasData)
-                            return Center(
+                          if (!snapshot.hasData) {
+                            return const Center(
                               child: CircularProgressIndicator(),
                             );
-
+                          }
                           return Column(
                               children: snapshot.data!.map((element) {
                             final Strategy strategy = settingsController
@@ -272,7 +273,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(0),
+                      padding: const EdgeInsets.all(0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -289,19 +290,19 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            const Color(0xff1bb57f),
-                            const Color(0xff08835d),
+                            Color(0xff1bb57f),
+                            Color(0xff08835d),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        children: const [
                           Text(
                             'Adicionar estrategia',
                             style: TextStyle(
@@ -311,7 +312,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 20),
+                            padding: EdgeInsets.only(left: 20),
                             child: Icon(Icons.add),
                           )
                         ],
@@ -336,10 +337,10 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                                   }
                                 },
                                 keyboardType: TextInputType.number,
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                                 controller:
                                     settingsController.stopGainController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   fillColor: Colors.white,
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
@@ -396,7 +397,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                                   }
                                 },
                                 keyboardType: TextInputType.number,
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                                 controller:
                                     settingsController.stoplossController,
                                 decoration: const InputDecoration(
@@ -444,7 +445,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                       ],
                     ),
                   ),
-                  Text(
+                  const Text(
                     'Primeira aposta',
                     style: TextStyle(
                       color: Colors.white,
@@ -468,7 +469,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                               }
                             },
                             keyboardType: TextInputType.number,
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                             controller:
                                 settingsController.firstBetPriceController,
                             decoration: const InputDecoration(
@@ -505,7 +506,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                               }
                             },
                             keyboardType: TextInputType.number,
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                             controller:
                                 settingsController.firstBetWhiteController,
                             decoration: const InputDecoration(
@@ -542,7 +543,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                           flex: 5,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(0),
+                              padding: const EdgeInsets.all(0),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -551,23 +552,23 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    GalesSettingsPage(),
+                                    const GalesSettingsPage(),
                               ),
                             ),
                             child: Container(
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
+                                gradient: const LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    const Color(0xff1bb57f),
-                                    const Color(0xff08835d),
+                                    Color(0xff1bb57f),
+                                    Color(0xff08835d),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               height: 50,
-                              child: Center(
+                              child: const Center(
                                 child: Text(
                                   'Gales',
                                   style: TextStyle(
@@ -601,7 +602,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                           flex: 5,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(0),
+                              padding: const EdgeInsets.all(0),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -610,23 +611,23 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    ElevateSettingsPage(),
+                                    const ElevateSettingsPage(),
                               ),
                             ),
                             child: Container(
                               height: 50,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
+                                gradient: const LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    const Color(0xff1bb57f),
-                                    const Color(0xff08835d),
+                                    Color(0xff1bb57f),
+                                    Color(0xff08835d),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: Center(
+                              child: const Center(
                                 child: Text(
                                   'Alavancar',
                                   style: TextStyle(
@@ -668,8 +669,14 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: const Color(0xff1bb57f),
           onPressed: () =>
-              validateAndSave().then((_) => Navigator.pop(context)),
-          child: Icon(Icons.save),
+              validateAndSave().then((DoubleConfigModel? doubleConfig) {
+            if (doubleConfig != null) {
+              BlocProvider.of<DoubleConfigCubit>(context)
+                  .saveDoubleConfig(doubleConfig);
+              Navigator.pop(context);
+            }
+          }),
+          child: const Icon(Icons.save),
         ),
       ),
     );

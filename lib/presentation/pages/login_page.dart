@@ -12,24 +12,30 @@ import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
 import 'package:ia_bet/presentation/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-TextEditingController _emailController = TextEditingController();
-TextEditingController _passwordController = TextEditingController();
-late final users;
+final TextEditingController _emailController = TextEditingController();
+final TextEditingController _passwordController = TextEditingController();
 
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
-  final _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -52,17 +58,20 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ],
           child: BlocConsumer<EmailAuthCubit, EmailAuthState>(
-              listener: (context, emailAuthState) async {
+              listener: (context, emailAuthState) {
             if (emailAuthState is PhoneAuthSmsCodeReceived) {
-              await BlocProvider.of<AuthCubit>(context).loggedIn();
+              BlocProvider.of<AuthCubit>(context).loggedIn().whenComplete(() {
+                debugPrint('Login page: depois do getCurrentUserWithReturn..');
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const HomePage(),
+                  ),
+                );
+              });
               //545590pqjlrd
-
-              print('Login page: depois do getCurrentUserWithReturn..');
-
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => HomePage()));
             }
-
             if (emailAuthState is PhoneAuthFailure) {
               BlocProvider.of<EmailAuthCubit>(context).emit(PhoneAuthInitial());
               ScaffoldMessenger.of(context).showSnackBar(
@@ -72,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      children: const [
                         Text("Verifique seu usuário ou senha."),
                         Icon(Icons.error_outline)
                       ],
@@ -83,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
             }
           }, builder: (context, emailAuthState) {
             if (emailAuthState is PhoneAuthLoading) {
-              return Scaffold(
+              return const Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(),
                 ),
@@ -98,8 +107,8 @@ class _LoginPageState extends State<LoginPage> {
                   child: Container(
                     width: double.infinity,
                     height: MediaQuery.of(context).size.height * 0.25,
-                    decoration: BoxDecoration(
-                      image: new DecorationImage(
+                    decoration: const BoxDecoration(
+                      image:  DecorationImage(
                         fit: BoxFit.contain,
                         image: AssetImage(
                           "assets/images/marcadagua-full.png",
@@ -117,26 +126,26 @@ class _LoginPageState extends State<LoginPage> {
                     child: Form(
                       key: formKey,
                       child: Padding(
-                        padding: EdgeInsets.all(30),
+                        padding: const EdgeInsets.all(30),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SizedBox(height: 50),
+                            const SizedBox(height: 50),
                             SvgPicture.asset(
                               "assets/images/logo.svg",
                               fit: BoxFit.cover,
                               alignment: Alignment.center,
                             ),
-                            SizedBox(height: 35),
+                            const SizedBox(height: 35),
                             RichText(
                               textAlign: TextAlign.center,
-                              text: TextSpan(
+                              text: const TextSpan(
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w300,
                                       fontSize: 18.0),
-                                  children: const <TextSpan>[
+                                  children: <TextSpan>[
                                     TextSpan(text: 'A '),
                                     TextSpan(
                                         text: ' melhor plataforma ',
@@ -149,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                                             fontWeight: FontWeight.w300)),
                                   ]),
                             ),
-                            SizedBox(height: 50),
+                            const SizedBox(height: 50),
                             TextFormField(
                               controller: _emailController,
                               keyboardType: TextInputType.text,
@@ -157,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                                 hintText: 'Email',
                               ),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             TextFormField(
                               controller: _passwordController,
                               keyboardType: TextInputType.text,
@@ -169,9 +178,9 @@ class _LoginPageState extends State<LoginPage> {
                             Align(
                               alignment: Alignment.centerRight,
                               child: TextButton(
-                                child: Text(
+                                child: const Text(
                                   'Esqueci minha senha',
-                                  style: TextStyle(
+                                  style:  TextStyle(
                                       fontSize: 12,
                                       color: Colors.white,
                                       decoration: TextDecoration.underline),
@@ -179,24 +188,24 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed: () {},
                               ),
                             ),
-                            SizedBox(height: 0),
+                            const SizedBox(height: 0),
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
                                   style: ButtonStyle(
                                       padding:
                                           MaterialStateProperty.all<EdgeInsets>(
-                                              EdgeInsets.all(15)),
+                                              const EdgeInsets.all(15)),
                                       backgroundColor:
                                           MaterialStateProperty.all(
                                               kSecondColor)),
-                                  child: Text('Efetuar login',
-                                      style: TextStyle(
+                                  child: const Text('Efetuar login',
+                                      style:  TextStyle(
                                           color: Colors.white,
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.w700)),
                                   onPressed: () async {
-                                    print(_emailController.text);
+                                    debugPrint(_emailController.text);
                                     if (_emailController.text.isNotEmpty &&
                                         _passwordController.text.isNotEmpty) {
                                       await BlocProvider.of<EmailAuthCubit>(
@@ -208,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                                     }
                                   }),
                             ),
-                            SizedBox(height: 30),
+                            const SizedBox(height: 30),
                           ],
                         ),
                       ),

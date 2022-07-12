@@ -13,24 +13,27 @@ class PhoneAuthLoading extends EmailAuthState {
   @override
   List<Object> get props => [];
 }
+
 class PhoneAuthSmsCodeReceived extends EmailAuthState {
   @override
   List<Object> get props => [];
   @override
   String toString() {
-    print("auth sms received");
+    debugPrint("auth sms received");
     return super.toString();
   }
 }
+
 class PhoneAuthProfileInfo extends EmailAuthState {
   @override
   List<Object> get props => [];
 }
-class PhoneAuthSuccess extends EmailAuthState {
 
+class PhoneAuthSuccess extends EmailAuthState {
   @override
   List<Object> get props => [];
 }
+
 class PhoneAuthFailure extends EmailAuthState {
   @override
   List<Object> get props => [];

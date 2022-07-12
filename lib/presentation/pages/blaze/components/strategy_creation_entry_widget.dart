@@ -37,8 +37,8 @@ class _StrategyCreationEntryWidgetState
         padding: const EdgeInsets.only(left: 20),
         child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
+            const Padding(
+              padding: EdgeInsets.only(right: 10),
               child: Text(
                 'Resultado',
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -49,7 +49,7 @@ class _StrategyCreationEntryWidgetState
               builder: (BuildContext context, value, Widget? child) =>
                   DropdownButton<String>(
                 dropdownColor: const Color(0xff0f1923),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 value: colorResultText.value,
                 items: <String>[
                   '',
@@ -67,11 +67,11 @@ class _StrategyCreationEntryWidgetState
                 onChanged: (value) {
                   colorResultText.value = value!;
                   if (colorResultText.value == 'Vermelho') {
-                    colorResult = StrategyColors.Red;
+                    colorResult = StrategyColors.red;
                   } else if (colorResultText.value == 'Preto') {
-                    colorResult = StrategyColors.Black;
+                    colorResult = StrategyColors.black;
                   } else if (colorResultText.value == 'Branco') {
-                    colorResult = StrategyColors.White;
+                    colorResult = StrategyColors.white;
                   }
                   if (colorResult != null && colorTarget != null) {
                     if (widget.entrys.length > widget.index) {
@@ -94,8 +94,8 @@ class _StrategyCreationEntryWidgetState
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
+            const Padding(
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Text(
                 'Entrada',
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -106,7 +106,7 @@ class _StrategyCreationEntryWidgetState
               builder: (BuildContext context, value, Widget? child) =>
                   DropdownButton<String>(
                 dropdownColor: const Color(0xff0f1923),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 value: colorTargetText.value,
                 items: <String>[
                   '',
@@ -124,11 +124,11 @@ class _StrategyCreationEntryWidgetState
                 onChanged: (value) {
                   colorTargetText.value = value!;
                   if (colorTargetText.value == 'Vermelho') {
-                    colorTarget = StrategyColors.Red;
+                    colorTarget = StrategyColors.red;
                   } else if (colorTargetText.value == 'Preto') {
-                    colorTarget = StrategyColors.Black;
+                    colorTarget = StrategyColors.black;
                   } else if (colorTargetText.value == 'Branco') {
-                    colorTarget = StrategyColors.White;
+                    colorTarget = StrategyColors.white;
                   }
                   if (colorResult != null && colorTarget != null) {
                     if (widget.entrys.length > widget.index) {

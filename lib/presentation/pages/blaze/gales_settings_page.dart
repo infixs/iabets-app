@@ -32,7 +32,7 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
               height: 350,
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     'Editar gale',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -42,7 +42,7 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                       controller:
                           settingsController.editFirstBetPriceController,
                       keyboardType: TextInputType.number,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                       validator: (String? input) {
                         if (input != null && input.isNotEmpty) {
                           return null;
@@ -83,7 +83,7 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                           return 'digite algum valor';
                         }
                       },
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         fillColor: Colors.white,
                         focusedBorder: OutlineInputBorder(
@@ -129,7 +129,7 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                         Navigator.pop(context);
                       }
                     },
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         'Salvar',
                         style: TextStyle(color: Colors.white),
@@ -177,7 +177,7 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                     ),
                     IconButton(
                       onPressed: () => scaffoldKey.currentState?.openDrawer(),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.menu,
                         color: Colors.white,
                       ),
@@ -213,40 +213,39 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                 doubleConfigState.doubleConfig.gales
                                     .insert(newPosition, gale);
 
-                                final DoubleConfigModel doubleConfig =
-                                    DoubleConfigModel(
-                                  amountStopGain: doubleConfigState
-                                      .doubleConfig.amountStopGain,
-                                  amountStopLoss: doubleConfigState
-                                      .doubleConfig.amountStopLoss,
-                                  elevations:
-                                      doubleConfigState.doubleConfig.elevations,
-                                  enabled:
-                                      doubleConfigState.doubleConfig.enabled,
-                                  entryAmount: doubleConfigState
-                                      .doubleConfig.entryAmount,
-                                  entryWhiteAmount: doubleConfigState
-                                      .doubleConfig.entryWhiteAmount,
-                                  gales: doubleConfigState.doubleConfig.gales,
-                                  isActiveElevation: doubleConfigState
-                                      .doubleConfig.isActiveElevation,
-                                  isActiveGale: doubleConfigState
-                                      .doubleConfig.isActiveGale,
-                                  isActiveStopGain: doubleConfigState
-                                      .doubleConfig.isActiveStopGain,
-                                  isActiveStopLoss: doubleConfigState
-                                      .doubleConfig.isActiveStopLoss,
-                                  maxElevation: doubleConfigState
-                                      .doubleConfig.maxElevation,
-                                  maxGales:
-                                      doubleConfigState.doubleConfig.maxGales,
-                                  strategies:
-                                      doubleConfigState.doubleConfig.strategies,
-                                  wallet:
-                                      doubleConfigState.doubleConfig.wallet ??
-                                          0, customStrategies: doubleConfigState
-                                                        .doubleConfig.customStrategies
-                                );
+                                final DoubleConfigModel doubleConfig = DoubleConfigModel(
+                                    amountStopGain: doubleConfigState
+                                        .doubleConfig.amountStopGain,
+                                    amountStopLoss: doubleConfigState
+                                        .doubleConfig.amountStopLoss,
+                                    elevations: doubleConfigState
+                                        .doubleConfig.elevations,
+                                    enabled:
+                                        doubleConfigState.doubleConfig.enabled,
+                                    entryAmount: doubleConfigState
+                                        .doubleConfig.entryAmount,
+                                    entryWhiteAmount: doubleConfigState
+                                        .doubleConfig.entryWhiteAmount,
+                                    gales: doubleConfigState.doubleConfig.gales,
+                                    isActiveElevation: doubleConfigState
+                                        .doubleConfig.isActiveElevation,
+                                    isActiveGale: doubleConfigState
+                                        .doubleConfig.isActiveGale,
+                                    isActiveStopGain: doubleConfigState
+                                        .doubleConfig.isActiveStopGain,
+                                    isActiveStopLoss: doubleConfigState
+                                        .doubleConfig.isActiveStopLoss,
+                                    maxElevation: doubleConfigState
+                                        .doubleConfig.maxElevation,
+                                    maxGales:
+                                        doubleConfigState.doubleConfig.maxGales,
+                                    strategies: doubleConfigState
+                                        .doubleConfig.strategies,
+                                    wallet:
+                                        doubleConfigState.doubleConfig.wallet ??
+                                            0,
+                                    customStrategies: doubleConfigState
+                                        .doubleConfig.customStrategies);
 
                                 BlocProvider.of<DoubleConfigCubit>(context)
                                     .saveDoubleConfig(doubleConfig);
@@ -276,7 +275,7 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                             left: 20,
                             right: 20,
                           ),
-                          child: Container(
+                          child: SizedBox(
                             height: 70,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -288,7 +287,7 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                     controller: settingsController
                                         .newFirstBetPriceController,
                                     keyboardType: TextInputType.number,
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                     validator: (String? input) {
                                       if (input != null && input.isNotEmpty) {
                                         return null;
@@ -332,7 +331,7 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                         return 'digite algum valor';
                                       }
                                     },
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                     decoration: const InputDecoration(
                                       fillColor: Colors.white,
                                       focusedBorder: OutlineInputBorder(
@@ -385,41 +384,38 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
 
                                           FocusManager.instance.primaryFocus
                                               ?.unfocus();
-                                          final DoubleConfigModel doubleConfig =
-                                              DoubleConfigModel(
-                                            amountStopGain: doubleConfigState
-                                                .doubleConfig.amountStopGain,
-                                            amountStopLoss: doubleConfigState
-                                                .doubleConfig.amountStopLoss,
-                                            elevations: doubleConfigState
-                                                .doubleConfig.elevations,
-                                            enabled: doubleConfigState
-                                                .doubleConfig.enabled,
-                                            entryAmount: doubleConfigState
-                                                .doubleConfig.entryAmount,
-                                            entryWhiteAmount: doubleConfigState
-                                                .doubleConfig.entryWhiteAmount,
-                                            gales: doubleConfigState
-                                                .doubleConfig.gales,
-                                            isActiveElevation: doubleConfigState
-                                                .doubleConfig.isActiveElevation,
-                                            isActiveGale: doubleConfigState
-                                                .doubleConfig.isActiveGale,
-                                            isActiveStopGain: doubleConfigState
-                                                .doubleConfig.isActiveStopGain,
-                                            isActiveStopLoss: doubleConfigState
-                                                .doubleConfig.isActiveStopLoss,
-                                            maxElevation: doubleConfigState
-                                                .doubleConfig.maxElevation,
-                                            maxGales: doubleConfigState
-                                                .doubleConfig.maxGales,
-                                            strategies: doubleConfigState
-                                                .doubleConfig.strategies,
-                                            wallet: doubleConfigState
-                                                    .doubleConfig.wallet ??
-                                                0, customStrategies: doubleConfigState
-                                                        .doubleConfig.customStrategies
-                                          );
+                                          final DoubleConfigModel doubleConfig = DoubleConfigModel(
+                                              amountStopGain: doubleConfigState
+                                                  .doubleConfig.amountStopGain,
+                                              amountStopLoss: doubleConfigState
+                                                  .doubleConfig.amountStopLoss,
+                                              elevations: doubleConfigState
+                                                  .doubleConfig.elevations,
+                                              enabled: doubleConfigState
+                                                  .doubleConfig.enabled,
+                                              entryAmount: doubleConfigState
+                                                  .doubleConfig.entryAmount,
+                                              entryWhiteAmount: doubleConfigState
+                                                  .doubleConfig
+                                                  .entryWhiteAmount,
+                                              gales: doubleConfigState
+                                                  .doubleConfig.gales,
+                                              isActiveElevation:
+                                                  doubleConfigState.doubleConfig
+                                                      .isActiveElevation,
+                                              isActiveGale: doubleConfigState
+                                                  .doubleConfig.isActiveGale,
+                                              isActiveStopGain: doubleConfigState
+                                                  .doubleConfig
+                                                  .isActiveStopGain,
+                                              isActiveStopLoss: doubleConfigState
+                                                  .doubleConfig
+                                                  .isActiveStopLoss,
+                                              maxElevation: doubleConfigState.doubleConfig.maxElevation,
+                                              maxGales: doubleConfigState.doubleConfig.maxGales,
+                                              strategies: doubleConfigState.doubleConfig.strategies,
+                                              wallet: doubleConfigState.doubleConfig.wallet ?? 0,
+                                              customStrategies: doubleConfigState.doubleConfig.customStrategies);
 
                                           BlocProvider.of<DoubleConfigCubit>(
                                                   context)
@@ -432,7 +428,7 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                               .clear();
                                         }
                                       },
-                                      icon: Icon(Icons.add),
+                                      icon: const Icon(Icons.add),
                                     ),
                                   ),
                                 ),
@@ -446,7 +442,7 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                 ),
               ),
             )
-          : Center(
+          : const Center(
               child: CircularProgressIndicator(),
             ),
     );

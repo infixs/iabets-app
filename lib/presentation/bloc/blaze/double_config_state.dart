@@ -12,7 +12,7 @@ class DoubleConfigInitial extends DoubleConfigState {
 class DoubleConfigLoaded extends DoubleConfigState {
   final DoubleConfigEntity doubleConfig;
 
-  DoubleConfigLoaded({required this.doubleConfig});
+  const DoubleConfigLoaded({required this.doubleConfig});
   @override
   List<Object> get props => [doubleConfig];
 }

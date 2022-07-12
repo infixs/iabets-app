@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 
 class TextMessageModel extends TextMessageEntity {
-  TextMessageModel({
+  const TextMessageModel({
     required String senderName,
     required String sederUID,
     required String recipientName,
@@ -67,11 +67,11 @@ class TextMessageModel extends TextMessageEntity {
       "messageType": messsageType,
       "message": message,
       "messageId": messageId,
-      "isResponse": isResponse == null ? false : isResponse,
+      "isResponse": isResponse ?? false,
       "responseText":
-          responseText != null && responseText!.length > 0 ? responseText : '',
+          responseText != null && responseText!.isNotEmpty ? responseText : '',
       "responseSenderName":
-          responseSenderName != null && responseSenderName!.length > 0
+          responseSenderName != null && responseSenderName!.isNotEmpty
               ? responseSenderName
               : '',
       "fileUrl": file?.url,

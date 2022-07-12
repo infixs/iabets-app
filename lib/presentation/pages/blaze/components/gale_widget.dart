@@ -24,14 +24,14 @@ class GaleWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Icon(
+          const Icon(
             Icons.open_with,
             color: Colors.white,
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'Vermelho/Preto',
                 style: TextStyle(
                     color: Colors.white,
@@ -40,7 +40,7 @@ class GaleWidget extends StatelessWidget {
               ),
               Text(
                 '${gales[index].amount}',
-                style: TextStyle(
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w600),
@@ -50,7 +50,7 @@ class GaleWidget extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'Branco',
                 style: TextStyle(
                     color: Colors.white,
@@ -59,7 +59,7 @@ class GaleWidget extends StatelessWidget {
               ),
               Text(
                 '${gales[index].amountProtection}',
-                style: TextStyle(
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w600),
@@ -96,7 +96,7 @@ class GaleWidget extends StatelessWidget {
                 BlocProvider.of<DoubleConfigCubit>(context)
                     .saveDoubleConfig(newDoubleConfig);
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.white,
               ),

@@ -65,15 +65,15 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
           backgroundColor: const Color(0xff0f1923),
           content: SizedBox(
             height:
-                blazeCreateStrategyController.strategyes.length > 0 ? 320 : 200,
+                blazeCreateStrategyController.strategyes.isNotEmpty ? 320 : 200,
             child: Column(children: [
-              Text(
+              const Text(
                 'Seleciona as cores',
                 style: TextStyle(color: Colors.white),
               ),
               Row(
                 children: [
-                  Text(
+                  const Text(
                     'vermelho',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -88,7 +88,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
               ),
               Row(
                 children: [
-                  Text(
+                  const Text(
                     'preto',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -103,7 +103,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
               ),
               Row(
                 children: [
-                  Text(
+                  const Text(
                     'Branco',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -116,13 +116,13 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                   )
                 ],
               ),
-              blazeCreateStrategyController.strategyes.length > 0
+              blazeCreateStrategyController.strategyes.isNotEmpty
                   ? Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               'Regras',
                               style: TextStyle(color: Colors.white),
                             ),
@@ -141,7 +141,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                                 children: [
                                   Row(
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Operação',
                                         style: TextStyle(color: Colors.white),
                                       ),
@@ -151,7 +151,8 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                                         child: DropdownButton<bool>(
                                           dropdownColor:
                                               const Color(0xff0f1923),
-                                          style: TextStyle(color: Colors.white),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                           value: equal,
                                           items: [true, false]
                                               .map<DropdownMenuItem<bool>>(
@@ -173,7 +174,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                                   ),
                                   Row(
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Posição',
                                         style: TextStyle(color: Colors.white),
                                       ),
@@ -183,7 +184,8 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                                         child: DropdownButton<int>(
                                           dropdownColor:
                                               const Color(0xff0f1923),
-                                          style: TextStyle(color: Colors.white),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                           value: buttonValue,
                                           items: positions
                                               .map<DropdownMenuItem<int>>(
@@ -213,7 +215,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
           actions: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -222,26 +224,26 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                 final List<StrategyColors> colors = [];
                 List<ResultRuleModel>? rules;
                 if (red) {
-                  colors.add(StrategyColors.Red);
+                  colors.add(StrategyColors.red);
                 }
                 if (black) {
-                  colors.add(StrategyColors.Black);
+                  colors.add(StrategyColors.black);
                 }
                 if (white) {
-                  colors.add(StrategyColors.White);
+                  colors.add(StrategyColors.white);
                 }
 
                 if (isRuleActive) {
                   if (equal) {
                     rules = List.from([
                       (ResultRuleModel(
-                          operator: ResultRuleOperator.Equal,
+                          operator: ResultRuleOperator.equal,
                           position: buttonValue))
                     ]);
                   } else {
                     rules = List.from([
                       (ResultRuleModel(
-                          operator: ResultRuleOperator.Different,
+                          operator: ResultRuleOperator.different,
                           position: buttonValue))
                     ]);
                   }
@@ -258,17 +260,17 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                 width: 70,
                 height: 40,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      const Color(0xff1bb57f),
-                      const Color(0xff08835d),
+                      Color(0xff1bb57f),
+                      Color(0xff08835d),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Center(child: Text('Salvar')),
+                child: const Center(child: Text('Salvar')),
               ),
             )
           ],
@@ -278,11 +280,11 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
   }
 
   void saveStrategy() =>
-      (entrys.length > 0 && blazeCreateStrategyController.strategyes.length > 0)
+      (entrys.isNotEmpty && blazeCreateStrategyController.strategyes.isNotEmpty)
           ? showDialog<void>(
               context: context,
               builder: (BuildContext context) => AlertDialog(
-                title: Text('Salvar'),
+                title: const Text('Salvar'),
                 content: Form(
                   key: formkey,
                   child: TextFormField(
@@ -294,9 +296,9 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                       }
                     },
                     controller: textEditingControllerName,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Nome da estrategia',
-                      border: const OutlineInputBorder(
+                      border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(20),
                         ),
@@ -307,7 +309,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text('Cancelar'),
+                    child: const Text('Cancelar'),
                   ),
                   TextButton(
                     onPressed: () {
@@ -360,7 +362,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                         Navigator.pop(context);
                       }
                     },
-                    child: Text('Salvar'),
+                    child: const Text('Salvar'),
                   )
                 ],
               ),
@@ -369,8 +371,8 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
               context: context,
               builder: (BuildContext context) {
                 Future.delayed(
-                    Duration(seconds: 2), () => Navigator.pop(context));
-                return AlertDialog(
+                    const Duration(seconds: 2), () => Navigator.pop(context));
+                return const AlertDialog(
                   content: Text('Você precisa configurar a entrada'),
                 );
               },
@@ -402,9 +404,9 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
         builder: (BuildContext context, Widget? child) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            blazeCreateStrategyController.strategyes.length > 0
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 10),
+            blazeCreateStrategyController.strategyes.isNotEmpty
+                ? const Padding(
+                    padding: EdgeInsets.only(left: 20, top: 10),
                     child: Text(
                       'Resultados',
                       style: TextStyle(color: Colors.white, fontSize: 16),
@@ -420,7 +422,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                 strategy: blazeCreateStrategyController.strategyes[index],
               ),
             ),
-            blazeCreateStrategyController.strategyes.length > 0
+            blazeCreateStrategyController.strategyes.isNotEmpty
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -428,15 +430,15 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                         padding: const EdgeInsets.only(left: 20, top: 10),
                         child: Row(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 175),
+                            const Padding(
+                              padding: EdgeInsets.only(right: 175),
                               child: Text(
                                 'Entradas',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 16),
                               ),
                             ),
-                            Text(
+                            const Text(
                               'Adicionar',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 16),
@@ -445,7 +447,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                               onPressed: () {
                                 numberEntrys.value++;
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.add,
                                 color: Colors.white,
                               ),
@@ -480,7 +482,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
             backgroundColor: const Color(0xff1bb57f),
             heroTag: "btn1",
             onPressed: addStrategy,
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10),
@@ -488,7 +490,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
               backgroundColor: const Color(0xff1bb57f),
               heroTag: "btn2",
               onPressed: saveStrategy,
-              child: Icon(Icons.save),
+              child: const Icon(Icons.save),
             ),
           ),
         ],

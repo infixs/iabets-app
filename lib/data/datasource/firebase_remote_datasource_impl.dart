@@ -106,12 +106,12 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   @override
   Future<void> signInWithEmail(
       {required String email, required String password}) async {
-    print(email);
+    debugPrint(email);
 
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      print(e);
+      debugPrint(e.toString());
 
       if (e.code == 'user-not-found') {
         try {
@@ -129,26 +129,25 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     }
   }
 
+  void phoneVerificationCompleted(AuthCredential authCredential) {
+    debugPrint("phone verified : Token ${authCredential.token}");
+  }
+
+  void phoneVerificationFailed(FirebaseAuthException firebaseAuthException) {
+    debugPrint(
+      "phone failed : ${firebaseAuthException.message},${firebaseAuthException.code}",
+    );
+  }
+
+  void phoneCodeAutoRetrievalTimeout(String verificationId) {
+    _verificationId = verificationId;
+    debugPrint("time out :$verificationId");
+  }
+
+  void phoneCodeSent(String verificationId, [int? forceResendingToken]) {}
+
   @override
   Future<void> verifyPhoneNumber(String phoneNumber) async {
-    final PhoneVerificationCompleted phoneVerificationCompleted =
-        (AuthCredential authCredential) {
-      print("phone verified : Token ${authCredential.token}");
-    };
-
-    final PhoneVerificationFailed phoneVerificationFailed =
-        (FirebaseAuthException firebaseAuthException) {
-      print(
-        "phone failed : ${firebaseAuthException.message},${firebaseAuthException.code}",
-      );
-    };
-    final PhoneCodeAutoRetrievalTimeout phoneCodeAutoRetrievalTimeout =
-        (String verificationId) {
-      this._verificationId = verificationId;
-      print("time out :$verificationId");
-    };
-    final PhoneCodeSent phoneCodeSent =
-        (String verificationId, [int? forceResendingToken]) {};
     auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: phoneVerificationCompleted,
@@ -206,13 +205,13 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     myChatRef.doc(myChatEntity.channelId).get().then((myChatDoc) {
       if (!myChatDoc.exists) {
-        print('teste1223');
+        debugPrint('teste1223');
         //Create
         myChatRef.doc(myChatEntity.channelId).set(myNewChat);
         otherChatRef.doc(myChatEntity.channelId).set(otherNewChat);
         return;
       } else {
-        print('teste321');
+        debugPrint('teste321');
         //Update
         myChatRef.doc(myChatEntity.channelId).update(myNewChat);
         otherChatRef.doc(myChatEntity.channelId).update(otherNewChat);
@@ -229,7 +228,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     final userCollectionRef = fireStore.collection("users");
     final oneToOneChatChannelRef = fireStore.collection('myChatChannel');
 
-    var channelMap = {
+    final Map<String, String> channelMap = {
       "channelId": name,
       "channelType": "oneToOneChat",
       "name": name,
@@ -237,7 +236,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     };
     oneToOneChatChannelRef.doc(name).set(channelMap);
 
-    MyChatEntity myChatEntity = MyChatEntity(
+    final MyChatEntity myChatEntity = MyChatEntity(
       time: Timestamp.now(),
       senderUID: '111',
       recentTextMessage: "",
@@ -360,11 +359,11 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         .doc(channelId)
         .collection('messages');
 
-    WriteBatch messagesBatch = fireStore.batch();
+    final WriteBatch messagesBatch = fireStore.batch();
 
-    messages.forEach((message) {
+    for (String message in messages) {
       messagesBatch.delete(messagesRef.doc(message));
-    });
+    }
 
     return await messagesBatch.commit();
   }
@@ -478,6 +477,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     doubleConfigDoc.set(doubleConfig.toDocument(), SetOptions(merge: true));
   }
 
+  @override
   Future<List<StrategyEntity>> getStrategies() async {
     final strategiesCollection = fireStore.collection("blazeDoubleStrategies");
     return Future(() async {

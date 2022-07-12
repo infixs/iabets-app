@@ -1,29 +1,24 @@
 import '../../domain/entities/custom_strategy_entity.dart';
-
 import '../../domain/entities/result_strategy_entity.dart';
+
 import 'result_rule_model.dart';
 
 class ResultStrategyModel extends ResultStrategyEntity {
-  late List<StrategyColors> colors;
-  late List<ResultRuleModel>? rules;
+  ResultStrategyModel({required super.colors, required super.rules});
 
-  ResultStrategyModel({required this.colors, required this.rules});
-
-  ResultStrategyModel.fromJson(Map<String, dynamic> json) {
-    colors = [];
-    (json['colors'] as List).forEach((element) {
-      if (element == 'red') {
-        colors.add(StrategyColors.Red);
-      } else if (element == 'black') {
-        colors.add(StrategyColors.Black);
-      } else if (element == 'white') {
-        colors.add(StrategyColors.White);
-      }
-      rules = (json['rules'] as List)
-          .map((e) => ResultRuleModel.fromJson(e))
-          .toList();
-    });
-  }
+  factory ResultStrategyModel.fromJson(Map<String, dynamic> json) =>
+      ResultStrategyModel(
+        colors: (json['colors'] as List)
+            .map((e) => e == 'red'
+                ? StrategyColors.red
+                : e == 'black'
+                    ? StrategyColors.black
+                    : StrategyColors.white)
+            .toList(),
+        rules: (json['rules'] as List)
+            .map((e) => ResultRuleModel.fromJson(e))
+            .toList(),
+      );
 
   Map<String, dynamic> toJson() {
     final List<Map<String, dynamic>> rulesList = [];
@@ -33,15 +28,15 @@ class ResultStrategyModel extends ResultStrategyEntity {
       rulesList.add(element.toJson());
     });
 
-    colors.forEach((element) {
-      if (element == StrategyColors.Red) {
+    for (StrategyColors element in colors) {
+      if (element == StrategyColors.red) {
         colorsList.add('red');
-      } else if (element == StrategyColors.Black) {
+      } else if (element == StrategyColors.black) {
         colorsList.add('black');
-      } else if (element == StrategyColors.White) {
+      } else if (element == StrategyColors.white) {
         colorsList.add('white');
       }
-    });
+    }
 
     return {
       'rules': rulesList,

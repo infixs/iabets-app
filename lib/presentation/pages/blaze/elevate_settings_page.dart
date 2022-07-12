@@ -30,7 +30,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
               height: 250,
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     'Editar Elevação',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -39,7 +39,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                     child: TextFormField(
                       controller: settingsController.editMultiplierController,
                       keyboardType: TextInputType.number,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                       validator: (String? input) {
                         if (input != null && input.isNotEmpty) {
                           return null;
@@ -87,7 +87,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                         Navigator.pop(context);
                       }
                     },
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         'Salvar',
                         style: TextStyle(color: Colors.white),
@@ -135,7 +135,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                     ),
                     IconButton(
                       onPressed: () => scaffoldKey.currentState?.openDrawer(),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.menu,
                         color: Colors.white,
                       ),
@@ -226,7 +226,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.open_with,
                                           color: Colors.white,
                                         ),
@@ -234,7 +234,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Text(
+                                            const Text(
                                               'Mutiplicador',
                                               style: TextStyle(
                                                   color: Colors.white,
@@ -243,7 +243,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                             ),
                                             Text(
                                               '${doubleConfigState.doubleConfig.elevations[index]}x',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600),
@@ -322,7 +322,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                                   .saveDoubleConfig(
                                                       doubleConfig);
                                             },
-                                            icon: Icon(
+                                            icon: const Icon(
                                               Icons.close,
                                               color: Colors.white,
                                             ),
@@ -342,7 +342,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                             left: 20,
                             right: 20,
                           ),
-                          child: Container(
+                          child: SizedBox(
                             height: 70,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -354,7 +354,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                     keyboardType: TextInputType.number,
                                     controller:
                                         settingsController.multiplierController,
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                     validator: (String? input) {
                                       if (input != null && input.isNotEmpty) {
                                         return null;
@@ -407,41 +407,38 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                           FocusManager.instance.primaryFocus
                                               ?.unfocus();
 
-                                          final DoubleConfigModel doubleConfig =
-                                              DoubleConfigModel(
-                                            amountStopGain: doubleConfigState
-                                                .doubleConfig.amountStopGain,
-                                            amountStopLoss: doubleConfigState
-                                                .doubleConfig.amountStopLoss,
-                                            elevations: doubleConfigState
-                                                .doubleConfig.elevations,
-                                            enabled: doubleConfigState
-                                                .doubleConfig.enabled,
-                                            entryAmount: doubleConfigState
-                                                .doubleConfig.entryAmount,
-                                            entryWhiteAmount: doubleConfigState
-                                                .doubleConfig.entryWhiteAmount,
-                                            gales: doubleConfigState
-                                                .doubleConfig.gales,
-                                            isActiveGale: doubleConfigState
-                                                .doubleConfig.isActiveGale,
-                                            isActiveElevation: doubleConfigState
-                                                .doubleConfig.isActiveElevation,
-                                            isActiveStopGain: doubleConfigState
-                                                .doubleConfig.isActiveStopGain,
-                                            isActiveStopLoss: doubleConfigState
-                                                .doubleConfig.isActiveStopLoss,
-                                            maxElevation: doubleConfigState
-                                                .doubleConfig.maxElevation,
-                                            maxGales: doubleConfigState
-                                                .doubleConfig.maxGales,
-                                            strategies: doubleConfigState
-                                                .doubleConfig.strategies,
-                                            wallet: doubleConfigState
-                                                    .doubleConfig.wallet ??
-                                                0, customStrategies: doubleConfigState
-                                                        .doubleConfig.customStrategies
-                                          );
+                                          final DoubleConfigModel doubleConfig = DoubleConfigModel(
+                                              amountStopGain: doubleConfigState
+                                                  .doubleConfig.amountStopGain,
+                                              amountStopLoss: doubleConfigState
+                                                  .doubleConfig.amountStopLoss,
+                                              elevations: doubleConfigState
+                                                  .doubleConfig.elevations,
+                                              enabled: doubleConfigState
+                                                  .doubleConfig.enabled,
+                                              entryAmount: doubleConfigState
+                                                  .doubleConfig.entryAmount,
+                                              entryWhiteAmount: doubleConfigState
+                                                  .doubleConfig
+                                                  .entryWhiteAmount,
+                                              gales: doubleConfigState
+                                                  .doubleConfig.gales,
+                                              isActiveGale: doubleConfigState
+                                                  .doubleConfig.isActiveGale,
+                                              isActiveElevation:
+                                                  doubleConfigState.doubleConfig
+                                                      .isActiveElevation,
+                                              isActiveStopGain: doubleConfigState
+                                                  .doubleConfig
+                                                  .isActiveStopGain,
+                                              isActiveStopLoss: doubleConfigState
+                                                  .doubleConfig
+                                                  .isActiveStopLoss,
+                                              maxElevation: doubleConfigState.doubleConfig.maxElevation,
+                                              maxGales: doubleConfigState.doubleConfig.maxGales,
+                                              strategies: doubleConfigState.doubleConfig.strategies,
+                                              wallet: doubleConfigState.doubleConfig.wallet ?? 0,
+                                              customStrategies: doubleConfigState.doubleConfig.customStrategies);
 
                                           BlocProvider.of<DoubleConfigCubit>(
                                                   context)
@@ -451,7 +448,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                               .clear();
                                         }
                                       },
-                                      icon: Icon(Icons.add),
+                                      icon: const Icon(Icons.add),
                                     ),
                                   ),
                                 ),
@@ -465,7 +462,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                 ),
               ),
             )
-          : Center(
+          : const Center(
               child: CircularProgressIndicator(),
             ),
     );

@@ -47,7 +47,7 @@ class _CanaisPageState extends State<CanaisPage> {
     BlocProvider.of<MyChatCubit>(context).getMyChat(uid: '111');
     super.initState();
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      if (message.data.containsKey('channelId'))
+      if (message.data.containsKey('channelId')) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -59,6 +59,7 @@ class _CanaisPageState extends State<CanaisPage> {
             ),
           ),
         );
+      }
     });
   }
 
@@ -74,12 +75,12 @@ class _CanaisPageState extends State<CanaisPage> {
         return Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: AppBar(
-            iconTheme: IconThemeData(
+            iconTheme: const IconThemeData(
               color: Colors.white,
             ),
             elevation: 0,
             backgroundColor: kPrimaryColor,
-            title: Text(
+            title: const Text(
               "IABets",
               style: TextStyle(
                 color: Colors.white,
@@ -96,7 +97,7 @@ class _CanaisPageState extends State<CanaisPage> {
               bottom: 0,
               child: ShaderMask(
                 shaderCallback: (rect) {
-                  return LinearGradient(
+                  return const LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [Colors.black, Colors.transparent],
@@ -149,8 +150,8 @@ class _CanaisPageState extends State<CanaisPage> {
                               launchURL('https://placar.iabetsoficial.com.br/');
                             },
                             child: Container(
-                              padding: EdgeInsets.all(15),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(15),
+                              decoration: const BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8)),
                                 color: kPrimaryColor,
@@ -164,8 +165,8 @@ class _CanaisPageState extends State<CanaisPage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 5),
-                          Text("Placar",
+                          const SizedBox(height: 5),
+                          const Text("Placar",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
@@ -221,19 +222,19 @@ class _CanaisPageState extends State<CanaisPage> {
                         children: [
                           GestureDetector(
                             behavior: HitTestBehavior.translucent,
+                            onTap: _showDialog,
                             child: Container(
-                              padding: EdgeInsets.all(15),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(15),
+                              decoration: const BoxDecoration(
                                 color: kPrimaryColor,
                                 shape: BoxShape.circle,
                               ),
-                              child: Center(
+                              child: const Center(
                                 child: Icon(Icons.add, color: kSecondColor),
                               ),
                             ),
-                            onTap: _showDialog,
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                         ],
                       );
                     } else {
@@ -258,19 +259,19 @@ class _CanaisPageState extends State<CanaisPage> {
         fillColor: Colors.grey[300],
         contentPadding:
             const EdgeInsets.only(left: 15.0, bottom: 8.0, top: 8.0),
-        hintStyle: TextStyle(
+        hintStyle: const TextStyle(
             fontSize: 16, fontWeight: FontWeight.w300, color: Colors.grey),
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
             fontSize: 16, fontWeight: FontWeight.w300, color: Colors.grey),
         focusedBorder: OutlineInputBorder(
-          borderSide: new BorderSide(color: Colors.grey.shade300),
-          borderRadius: new BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: new BorderSide(color: Colors.grey.shade300),
-          borderRadius: new BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
         ),
-        suffixIcon: Material(
+        suffixIcon: const Material(
           color: kPrimaryColor,
           shadowColor: kPrimaryColor,
           borderRadius: BorderRadius.only(
@@ -289,7 +290,7 @@ class _CanaisPageState extends State<CanaisPage> {
   //Listar Canais
 
   Widget listaCanaisWidget(MyChatLoaded myChatData) {
-    final nowTime = new DateTime.now();
+    final nowTime = DateTime.now();
     return myChatData.myChat.isEmpty
         ? Container()
         : ListView.builder(
@@ -301,20 +302,20 @@ class _CanaisPageState extends State<CanaisPage> {
               return Column(
                 children: [
                   ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                     leading: Container(
                       height: 48,
                       width: 48,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(48)),
-                          image: new DecorationImage(
+                          image: DecorationImage(
                               fit: BoxFit.contain,
                               alignment: Alignment.center,
                               image:
                                   AssetImage("assets/images/canal-image.png"))),
                     ),
                     title: Text(myChatData.myChat[index].channelId,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: kSecondColor,
                             fontSize: 16.0,
                             fontWeight: FontWeight.w600)),
@@ -329,7 +330,7 @@ class _CanaisPageState extends State<CanaisPage> {
                                         .indexOf('\n'))
                             : myChatData.myChat[index].recentTextMessage,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 15.0,
                             fontWeight: FontWeight.w400)),
@@ -337,19 +338,19 @@ class _CanaisPageState extends State<CanaisPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Padding(
-                              padding: EdgeInsets.only(top: 6),
+                              padding: const EdgeInsets.only(top: 6),
                               child: Text(
                                   chatTime.day != nowTime.day
                                       ? timeago.format(
                                           nowTime.subtract(difference),
                                           locale: 'pt_BR')
                                       : "${chatTime.hour.toString().padLeft(2, '0')}:${chatTime.minute.toString().padLeft(2, '0')}",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.w400))),
                           Padding(
-                              padding: EdgeInsets.only(top: 5, right: 2),
+                              padding: const EdgeInsets.only(top: 5, right: 2),
                               child: SvgPicture.asset(
                                 "assets/icons/pin.svg",
                                 height: 15,
@@ -381,7 +382,7 @@ class _CanaisPageState extends State<CanaisPage> {
       builder: (BuildContext context) {
         // retorna um objeto do tipo Dialog
         return AlertDialog(
-          title: new Text("Novo Canal:"),
+          title: const Text("Novo Canal:"),
           content: TextFormField(
             controller: _canalController,
             keyboardType: TextInputType.text,
@@ -392,7 +393,7 @@ class _CanaisPageState extends State<CanaisPage> {
           actions: <Widget>[
             // define os botões na base do dialogo
             ElevatedButton(
-              child: Text("Salvar"),
+              child: const Text("Salvar"),
               onPressed: () async {
                 BlocProvider.of<UserCubit>(context).createChatChannel(
                     uid: widget.userInfo.uid, name: _canalController.text);

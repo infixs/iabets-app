@@ -60,7 +60,7 @@ class DoubleConfigModel extends DoubleConfigEntity {
   }
 
   factory DoubleConfigModel.createDefault() {
-    return DoubleConfigModel(
+    return const DoubleConfigModel(
       amountStopGain: 0,
       amountStopLoss: 0,
       elevations: [],
@@ -82,18 +82,18 @@ class DoubleConfigModel extends DoubleConfigEntity {
 
   Map<String, dynamic> toDocument() {
     final List<Map<String, dynamic>> galesList = [];
-    gales.forEach((element) {
+    for (Gale element in gales) {
       galesList.add(element.toJson());
-    });
+    }
 
     final List<Map<String, dynamic>> strategiesList = [];
-    strategies.forEach((element) {
+    for (Strategy element in strategies) {
       strategiesList.add(element.toJson());
-    });
+    }
     final List<Map<String, dynamic>> customStrategiesList = [];
-    customStrategies.forEach((element) {
+    for (CustomStrategyModel element in customStrategies) {
       customStrategiesList.add(element.toJson());
-    });
+    }
 
     return {
       'enabled': enabled,

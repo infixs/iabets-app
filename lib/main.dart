@@ -24,7 +24,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
+    const SystemUiOverlayStyle(
       statusBarColor: kPrimaryColor,
       statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.light,
@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Roboto',
         ),
         home: BlocListener<AuthCubit, AuthState>(
-          child: Center(
+          child: const Center(
             child: CircularProgressIndicator(),
           ),
           listener: (context, authState) => Navigator.pushReplacement(
@@ -83,7 +83,9 @@ class MyApp extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) {
                 FlutterNativeSplash.remove();
-                return (authState is Authenticated) ? HomePage() : LoginPage();
+                return (authState is Authenticated)
+                    ? const HomePage()
+                    : const LoginPage();
               },
             ),
           ),
@@ -94,5 +96,5 @@ class MyApp extends StatelessWidget {
 }
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Notificação recebida: $message");
+  debugPrint("Notificação recebida: $message");
 }
