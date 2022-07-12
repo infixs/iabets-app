@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
 import 'package:ia_bet/presentation/pages/blaze/components/custom_app_bar_blaze_page/custom_app_bar_blaze_page.dart';
 
+import '../../../data/model/custom_strategy_model.dart';
 import '../../../data/model/double_config_model.dart';
 import '../../../domain/entities/double_config.dart';
 
@@ -11,7 +12,7 @@ import 'blaze_settings_page.dart';
 import 'components/button_activity.dart';
 
 class BlazePage extends StatefulWidget {
-  const BlazePage({Key? key}) : super(key: key);
+  const BlazePage({super.key});
 
   @override
   State<BlazePage> createState() => _BlazePageState();
@@ -254,51 +255,115 @@ class _BlazePageState extends State<BlazePage> {
                         ),
                         if (doubleConfigState is DoubleConfigLoaded)
                           Column(
-                              children: doubleConfigState
-                                  .doubleConfig.strategies
-                                  .map((Strategy strategy) {
-                            return Column(
-                              children: [
-                                strategy.active
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 20, right: 20, bottom: 15),
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                            children: [
+                              Column(
+                                  children: doubleConfigState
+                                      .doubleConfig.strategies
+                                      .map((Strategy strategy) {
+                                return Column(
+                                  children: [
+                                    strategy.active
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20,
+                                                right: 20,
+                                                bottom: 15),
+                                            child: Column(
                                               children: [
-                                                Text(
-                                                  strategy.name
-                                                      .toString()
-                                                      .toUpperCase(),
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      strategy.name
+                                                          .toString()
+                                                          .toUpperCase(),
+                                                      style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 12),
+                                                    ),
+                                                    const Icon(
+                                                      Icons.done,
+                                                      color: Color(0xff1bb57f),
+                                                    )
+                                                  ],
                                                 ),
-                                                const Icon(
-                                                  Icons.done,
-                                                  color: Color(0xff1bb57f),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 4.0),
+                                                  child: Container(
+                                                    height: 1,
+                                                    color:
+                                                        const Color(0xff0f1923),
+                                                  ),
                                                 )
                                               ],
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 4.0),
-                                              child: Container(
-                                                height: 1,
-                                                color: const Color(0xff0f1923),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    : Container(),
-                              ],
-                            );
-                          }).toList()),
+                                          )
+                                        : Container(),
+                                  ],
+                                );
+                              }).toList()),
+                              Column(
+                                children: doubleConfigState
+                                    .doubleConfig.customStrategies
+                                    .map(
+                                  (CustomStrategyModel customStrategy) {
+                                    return Column(
+                                      children: [
+                                        customStrategy.enabled
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 20,
+                                                    right: 20,
+                                                    bottom: 15),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          customStrategy.name
+                                                              .toString()
+                                                              .toUpperCase(),
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 12),
+                                                        ),
+                                                        const Icon(
+                                                          Icons.done,
+                                                          color:
+                                                              Color(0xff1bb57f),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 4.0),
+                                                      child: Container(
+                                                        height: 1,
+                                                        color: const Color(
+                                                            0xff0f1923),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            : Container(),
+                                      ],
+                                    );
+                                  },
+                                ).toList(),
+                              ),
+                            ],
+                          ),
                         if (doubleConfigState is! DoubleConfigLoaded)
                           const Center(
                             child: CircularProgressIndicator(),

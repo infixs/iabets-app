@@ -7,17 +7,20 @@ class CustomStrategyModel extends CustomStrategyEntity {
   CustomStrategyModel(
       {required super.resultStrategyEntities,
       required super.entryStrategies,
-      required super.name});
+      required super.name,
+      super.enabled});
 
   factory CustomStrategyModel.fromJson(Map<String, dynamic> json) =>
       CustomStrategyModel(
-          resultStrategyEntities: (json['sequences'] as List)
-              .map((e) => ResultStrategyModel.fromJson(e))
-              .toList(),
-          entryStrategies: (json['targets'] as List)
-              .map((e) => EntryStrategyModel.fromJson(e))
-              .toList(),
-          name: json['name']);
+        resultStrategyEntities: (json['sequences'] as List)
+            .map((e) => ResultStrategyModel.fromJson(e))
+            .toList(),
+        entryStrategies: (json['targets'] as List)
+            .map((e) => EntryStrategyModel.fromJson(e))
+            .toList(),
+        name: json['name'],
+        enabled: json['enabled'],
+      );
 
   Map<String, dynamic> toJson() {
     final List<Map<String, dynamic>> resultStrategyEntitiesList = [];
@@ -34,6 +37,7 @@ class CustomStrategyModel extends CustomStrategyEntity {
       'name': name,
       'sequences': resultStrategyEntitiesList,
       'targets': entryStrategiesList,
+      'enabled': enabled
     };
   }
 }

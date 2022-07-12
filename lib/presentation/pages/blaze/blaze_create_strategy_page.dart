@@ -322,6 +322,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                               blazeCreateStrategyController.strategyes,
                           entryStrategies: entrys,
                           name: textEditingControllerName.text,
+                          enabled: false,
                         );
 
                         widget.settingsController.doubleConfigCopy
