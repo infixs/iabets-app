@@ -60,12 +60,13 @@ Future<void> init() async {
       getMyChatUseCase: sl.call(), sendPushMessageUseCase: sl.call()));
 
   sl.registerFactory<UserCubit>(() => UserCubit(
-      createOneToOneChatChannelUseCase: sl.call(),
-      getAllUserUseCase: sl.call(),
-      setUserTokenUseCase: sl.call(),
-      getCurrentUserUseCase: sl.call(),
-      isSignInUseCase: sl.call(),
-      authCubit: sl.call()));
+        createOneToOneChatChannelUseCase: sl.call(),
+        getAllUserUseCase: sl.call(),
+        setUserTokenUseCase: sl.call(),
+        getCurrentUserUseCase: sl.call(),
+        isSignInUseCase: sl.call(),
+        signOutUseCase: sl.call(),
+      ));
 
   sl.registerFactory<EmailAuthCubit>(() => EmailAuthCubit(
       signInWithEmailUseCase: sl.call(),

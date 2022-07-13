@@ -9,9 +9,9 @@ import 'package:ia_bet/domain/usecases/create_one_to_one_chat_channel_usecase.da
 import 'package:ia_bet/domain/usecases/get_all_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_current_usercase.dart';
 import 'package:ia_bet/domain/usecases/set_user_token_usecase.dart';
-import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 
 import '../../../domain/usecases/is_sign_in_usecase.dart';
+import '../../../domain/usecases/sign_out_usecase.dart';
 
 part 'user_state.dart';
 
@@ -21,17 +21,17 @@ class UserCubit extends Cubit<UserState> {
   final CreateOneToOneChatChannelUseCase createOneToOneChatChannelUseCase;
   final SetUserTokenUseCase setUserTokenUseCase;
   final IsSignInUseCase isSignInUseCase;
-  final AuthCubit authCubit;
+  final SignOutUseCase signOutUseCase;
   late final List<UserEntity> allusersGlobal;
 
-  UserCubit(
-      {required this.getAllUserUseCase,
-      required this.createOneToOneChatChannelUseCase,
-      required this.setUserTokenUseCase,
-      required this.getCurrentUserUseCase,
-      required this.isSignInUseCase,
-      required this.authCubit})
-      : super(UserInitial());
+  UserCubit({
+    required this.getAllUserUseCase,
+    required this.createOneToOneChatChannelUseCase,
+    required this.setUserTokenUseCase,
+    required this.getCurrentUserUseCase,
+    required this.isSignInUseCase,
+    required this.signOutUseCase,
+  }) : super(UserInitial());
 
   Future<void> getAllUsers() async {
     try {
@@ -55,12 +55,17 @@ class UserCubit extends Cubit<UserState> {
     return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
   }
 
+  void logout() {
+    signOutUseCase.call();
+    emit(UserLogout());
+  }
+
   Future<void> getCurrentUser() async {
     try {
       final userStreamData = getCurrentUserUseCase.call();
       userStreamData.listen((user) async {
         if (user.deviceId != await getDeviceInfo()) {
-          authCubit.loggedOut();
+          logout();
         }
         emit(CurrentUserChanged(user));
       });

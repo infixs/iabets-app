@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../domain/entities/user_entity.dart';
-import '../bloc/auth/auth_cubit.dart';
 import '../bloc/user/user_cubit.dart';
 
 import 'blaze/blaze_page.dart';
@@ -62,14 +60,7 @@ class _HomePageState extends State<HomePage> {
         );
         break;
       case 'logout':
-        BlocProvider.of<AuthCubit>(context).loggedOut().then(
-              (_) => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
-                ),
-              ),
-            );
+        BlocProvider.of<UserCubit>(context).logout();
         break;
     }
   }
@@ -78,108 +69,122 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Row(
-            children: [
-              SvgPicture.asset(
-                'assets/images/logo.svg',
-                width: 100,
-                color: Colors.white,
+    return BlocListener<UserCubit, UserState>(
+      child: WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Row(
+              children: [
+                SvgPicture.asset(
+                  'assets/images/logo.svg',
+                  width: 100,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+            actions: [
+              PopupMenuButton<String>(
+                onSelected: handleMenuClick,
+                itemBuilder: (BuildContext bcontext) => [
+                  const PopupMenuItem<String>(
+                    value: 'config',
+                    child: Text('Configurações'),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'logout',
+                    child: Text('Sair'),
+                  )
+                ],
               ),
             ],
           ),
-          actions: [
-            PopupMenuButton<String>(
-              onSelected: handleMenuClick,
-              itemBuilder: (BuildContext bcontext) => [
-                const PopupMenuItem<String>(
-                  value: 'config',
-                  child: Text('Configurações'),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'logout',
-                  child: Text('Sair'),
-                )
-              ],
-            ),
-          ],
-        ),
-        body: Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/background_home_page.png'),
-                  fit: BoxFit.cover,
+          body: Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/background_home_page.png'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            FutureBuilder(
-              future: makeButtons(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.done &&
-                    snapshot.hasData) {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (BuildContext context, int index) => SizedBox(
-                      height: size.height * 0.09,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          padding: EdgeInsets.zero,
-                          primary: Colors.grey.shade300.withAlpha(120),
-                        ),
-                        onPressed: () => snapshot.data![index]['route'] != null
-                            ? Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        snapshot.data![index]['route']),
-                              )
-                            : null,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: size.width * 0.07),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(child: snapshot.data![index]['icon']),
-                              Flexible(
-                                child: Text(
-                                  snapshot.data![index]['title'],
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 18),
+              FutureBuilder(
+                future: makeButtons(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (BuildContext context, int index) =>
+                          SizedBox(
+                        height: size.height * 0.09,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            padding: EdgeInsets.zero,
+                            primary: Colors.grey.shade300.withAlpha(120),
+                          ),
+                          onPressed: () =>
+                              snapshot.data![index]['route'] != null
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              snapshot.data![index]['route']),
+                                    )
+                                  : null,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.07),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(child: snapshot.data![index]['icon']),
+                                Flexible(
+                                  child: Text(
+                                    snapshot.data![index]['title'],
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 18),
+                                  ),
                                 ),
-                              ),
-                              const Spacer(
-                                flex: 1,
-                              ),
-                              const Flexible(
-                                child: Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  color: Colors.black,
+                                const Spacer(
+                                  flex: 1,
                                 ),
-                              )
-                            ],
+                                const Flexible(
+                                  child: Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    color: Colors.black,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
-          ],
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
+      listener: (context, authState) {
+        if (authState is UserLogout) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const LoginPage(),
+            ),
+          );
+        }
+      },
     );
   }
 }
