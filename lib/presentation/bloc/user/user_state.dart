@@ -34,3 +34,8 @@ class UserFailure extends UserState {
   @override
   List<Object> get props => [];
 }
+
+class UserLogout extends UserState {
+  @override
+  List<Object> get props => [];
+}
