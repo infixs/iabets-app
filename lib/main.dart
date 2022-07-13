@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           create: (_) => di.sl<AuthCubit>()..appStarted(),
         ),
         BlocProvider<UserCubit>(
-          create: (_) => di.sl<UserCubit>()..getCurrentUser(),
+          create: (context) => di.sl<UserCubit>()..getCurrentUser(),
         ),
         BlocProvider<CommunicationCubit>(
           create: (_) => di.sl<CommunicationCubit>(),
@@ -78,17 +78,19 @@ class MyApp extends StatelessWidget {
           child: const Center(
             child: CircularProgressIndicator(),
           ),
-          listener: (context, authState) => Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                FlutterNativeSplash.remove();
-                return (authState is Authenticated)
-                    ? const HomePage()
-                    : const LoginPage();
-              },
-            ),
-          ),
+          listener: (context, authState) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  FlutterNativeSplash.remove();
+                  return (authState is Authenticated)
+                      ? const HomePage()
+                      : const LoginPage();
+                },
+              ),
+            );
+          },
         ),
       ),
     );

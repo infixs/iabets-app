@@ -1,12 +1,15 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/domain/usecases/create_one_to_one_chat_channel_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_all_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_current_usercase.dart';
 import 'package:ia_bet/domain/usecases/set_user_token_usecase.dart';
+import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 
 import '../../../domain/usecases/is_sign_in_usecase.dart';
 
@@ -18,6 +21,7 @@ class UserCubit extends Cubit<UserState> {
   final CreateOneToOneChatChannelUseCase createOneToOneChatChannelUseCase;
   final SetUserTokenUseCase setUserTokenUseCase;
   final IsSignInUseCase isSignInUseCase;
+  final AuthCubit authCubit;
   late final List<UserEntity> allusersGlobal;
 
   UserCubit(
@@ -25,7 +29,8 @@ class UserCubit extends Cubit<UserState> {
       required this.createOneToOneChatChannelUseCase,
       required this.setUserTokenUseCase,
       required this.getCurrentUserUseCase,
-      required this.isSignInUseCase})
+      required this.isSignInUseCase,
+      required this.authCubit})
       : super(UserInitial());
 
   Future<void> getAllUsers() async {
@@ -45,10 +50,18 @@ class UserCubit extends Cubit<UserState> {
     return (state as CurrentUserChanged).user.isAdmin == true;
   }
 
+  Future<String> getDeviceInfo() async {
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
+  }
+
   Future<void> getCurrentUser() async {
     try {
       final userStreamData = getCurrentUserUseCase.call();
-      userStreamData.listen((user) {
+      userStreamData.listen((user) async {
+        if (user.deviceId != await getDeviceInfo()) {
+          authCubit.loggedOut();
+        }
         emit(CurrentUserChanged(user));
       });
     } on SocketException catch (_) {

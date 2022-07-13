@@ -3,7 +3,7 @@ import 'package:ia_bet/data/model/custom_strategy_model.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 
 class DoubleConfigModel extends DoubleConfigEntity {
-  const DoubleConfigModel({
+  DoubleConfigModel({
     required super.enabled,
     required super.isActiveGale,
     required super.isActiveStopGain,
@@ -60,7 +60,7 @@ class DoubleConfigModel extends DoubleConfigEntity {
   }
 
   factory DoubleConfigModel.createDefault() {
-    return const DoubleConfigModel(
+    return DoubleConfigModel(
       amountStopGain: 0,
       amountStopLoss: 0,
       elevations: [],

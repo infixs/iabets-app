@@ -8,7 +8,7 @@ import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
 
 import '../../../data/model/double_config_model.dart';
 
-import 'blaze_create_strategy_page.dart';
+import 'blaze_custom_strategies_manager.dart';
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
 import 'controller_settings.dart';
 import 'elevate_settings_page.dart';
@@ -89,7 +89,6 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
 
     final DoubleConfigEntity doubleConfigFirebase =
         await getDoubleConfigFirebase();
-
     if (settingsController.galesIsOn.value ==
         doubleConfigFirebase.isActiveGale) {
       if (doubleConfigFirebase.isActiveElevation ==
@@ -117,7 +116,6 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                         in settingsController.doubleConfigCopy!.strategies) {
                       strategiesLocal.add(element.active);
                     }
-
                     if (listEquals(strategiesFirebase, strategiesLocal)) {
                       isEqual = true;
                     } else {
@@ -147,7 +145,6 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
     } else {
       isEqual = false;
     }
-
     return isEqual;
   }
 
@@ -212,58 +209,57 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 8, right: 8, bottom: 8),
-                          child: StatefulBuilder(
+                          child: FutureBuilder<List<StrategyEntity>>(
+                            future: BlocProvider.of<DoubleConfigCubit>(context)
+                                .getStrategies(),
                             builder: (BuildContext context,
-                                    void Function(void Function()) setState) =>
-                                FutureBuilder<List<StrategyEntity>>(
-                              future:
-                                  BlocProvider.of<DoubleConfigCubit>(context)
-                                      .getStrategies(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<List<StrategyEntity>>
-                                      snapshot) {
-                                if (!snapshot.hasData) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                                return Column(
-                                  children: [
-                                    const Text(
-                                      'Estrategias padrão',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.white),
-                                    ),
-                                    Column(
-                                        children: snapshot.data!.map((element) {
-                                      final Strategy strategy =
-                                          settingsController
-                                              .doubleConfigCopy!.strategies
-                                              .firstWhere(
-                                        (el) => el.id == element.id,
-                                        orElse: () {
-                                          final strategy = Strategy(
-                                              id: element.id,
-                                              active: false,
-                                              name: element.name);
-                                          settingsController
-                                              .doubleConfigCopy!.strategies
-                                              .add(strategy);
-                                          return strategy;
-                                        },
-                                      );
-                                      return Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                element.name,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              Switch(
+                                AsyncSnapshot<List<StrategyEntity>> snapshot) {
+                              if (!snapshot.hasData) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              return Column(
+                                children: [
+                                  const Text(
+                                    'Estrategias padrão',
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.white),
+                                  ),
+                                  Column(
+                                      children: snapshot.data!.map((element) {
+                                    final Strategy strategy = settingsController
+                                        .doubleConfigCopy!.strategies
+                                        .firstWhere(
+                                      (el) => el.id == element.id,
+                                      orElse: () {
+                                        final strategy = Strategy(
+                                            id: element.id,
+                                            active: false,
+                                            name: element.name);
+                                        settingsController
+                                            .doubleConfigCopy!.strategies
+                                            .add(strategy);
+                                        return strategy;
+                                      },
+                                    );
+                                    return Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              element.name,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            StatefulBuilder(
+                                              builder: (BuildContext context,
+                                                      void Function(
+                                                              void Function())
+                                                          setState) =>
+                                                  Switch(
                                                 value: strategy.active,
                                                 onChanged: (value) => setState(
                                                     () => strategy.active =
@@ -274,20 +270,20 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                                                     const Color(0xff1bb57f),
                                                 activeTrackColor:
                                                     const Color(0xff0e0812),
-                                              )
-                                            ],
-                                          ),
-                                          Container(
-                                            height: 1,
-                                            color: const Color(0xff0e0812),
-                                          )
-                                        ],
-                                      );
-                                    }).toList()),
-                                  ],
-                                );
-                              },
-                            ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Container(
+                                          height: 1,
+                                          color: const Color(0xff0e0812),
+                                        )
+                                      ],
+                                    );
+                                  }).toList()),
+                                ],
+                              );
+                            },
                           ),
                         ),
                         settingsController
@@ -370,7 +366,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    BlazeCreateStrategyPage(
+                                    BlazeCustomStrategiesManager(
                                   settingsController: settingsController,
                                 ),
                               ),
@@ -633,7 +629,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(top: 20, bottom: 100),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

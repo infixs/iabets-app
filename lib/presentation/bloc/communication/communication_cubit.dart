@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
@@ -46,6 +47,11 @@ class CommunicationCubit extends Cubit<CommunicationState> {
       required this.editMessageUseCase})
       : super(CommunicationInitial());
 
+  Future<String> getDeviceInfo() async {
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
+  }
+
   Future<void> sendTextMessage(
       {required String senderId,
       required String message,
@@ -66,14 +72,15 @@ class CommunicationCubit extends Cubit<CommunicationState> {
 
       allUsers = await userStreamData.first;*/
 
-      UserEntity userDefault = UserEntity(
+      final UserEntity userDefault = UserEntity(
           name: senderName,
           email: 'admin@iabets.com.br',
           phoneNumber: '+55',
           isOnline: false,
           uid: senderId,
           profileUrl: '',
-          isAdmin: true);
+          isAdmin: true,
+          deviceId: await getDeviceInfo());
 
       await sendTextMessageUseCase.sendTextMessage(
           TextMessageEntity(
