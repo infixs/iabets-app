@@ -9,14 +9,14 @@ class ButtonActivity extends StatelessWidget {
   final void Function(bool)? onPressed;
 
   const ButtonActivity({
-    Key? key,
+    super.key,
     required this.activityChild,
     required this.inactivityChild,
     required this.enabled,
     required this.activeColors,
     required this.inactiveColors,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

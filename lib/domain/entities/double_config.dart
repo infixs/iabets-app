@@ -1,3 +1,5 @@
+import '../../data/model/custom_strategy_model.dart';
+
 class DoubleConfigEntity {
   final bool enabled;
 
@@ -20,6 +22,8 @@ class DoubleConfigEntity {
   final List<Gale> gales;
   final List<int> elevations;
 
+  final List<CustomStrategyModel> customStrategies;
+
   const DoubleConfigEntity({
     required this.enabled,
     required this.maxGales,
@@ -36,6 +40,7 @@ class DoubleConfigEntity {
     required this.wallet,
     required this.entryAmount,
     required this.entryWhiteAmount,
+    required this.customStrategies,
   });
 }
 

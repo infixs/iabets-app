@@ -13,7 +13,7 @@ import 'login_page.dart';
 import 'perfil_page.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
             'assets/images/blaze.svg',
             width: 30,
           ),
-          'route': BlazePage(),
+          'route': const BlazePage(),
         },
       ];
 
@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PerfilPage(),
+            builder: (context) => const PerfilPage(),
           ),
         );
         break;
@@ -65,19 +65,12 @@ class _HomePageState extends State<HomePage> {
               (_) => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => LoginPage(),
+                  builder: (context) => const LoginPage(),
                 ),
               ),
             );
         break;
     }
-  }
-
-  @override
-  void dispose() {
-    BlocProvider.of<UserCubit>(context).close();
-    BlocProvider.of<AuthCubit>(context).close();
-    super.dispose();
   }
 
   @override
@@ -101,11 +94,11 @@ class _HomePageState extends State<HomePage> {
             PopupMenuButton<String>(
               onSelected: handleMenuClick,
               itemBuilder: (BuildContext bcontext) => [
-                PopupMenuItem<String>(
+                const PopupMenuItem<String>(
                   value: 'config',
                   child: Text('Configurações'),
                 ),
-                PopupMenuItem<String>(
+                const PopupMenuItem<String>(
                   value: 'logout',
                   child: Text('Sair'),
                 )
@@ -116,7 +109,7 @@ class _HomePageState extends State<HomePage> {
         body: Stack(
           children: [
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/background_home_page.png'),
                   fit: BoxFit.cover,
@@ -157,14 +150,14 @@ class _HomePageState extends State<HomePage> {
                               Flexible(
                                 child: Text(
                                   snapshot.data![index]['title'],
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.black, fontSize: 18),
                                 ),
                               ),
                               const Spacer(
                                 flex: 1,
                               ),
-                              Flexible(
+                              const Flexible(
                                 child: Icon(
                                   Icons.arrow_forward_ios_rounded,
                                   color: Colors.black,
@@ -177,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 } else {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }

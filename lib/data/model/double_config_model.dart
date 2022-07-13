@@ -1,40 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ia_bet/data/model/custom_strategy_model.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 
 class DoubleConfigModel extends DoubleConfigEntity {
   const DoubleConfigModel({
-    required bool enabled,
-    required bool isActiveGale,
-    required bool isActiveStopGain,
-    required bool isActiveStopLoss,
-    required double? wallet,
-    required double amountStopGain,
-    required double amountStopLoss,
-    required int maxGales,
-    required int maxElevation,
-    required List<Gale> gales,
-    required List<int> elevations,
-    required bool isActiveElevation,
-    required List<Strategy> strategies,
-    required double entryAmount,
-    required double entryWhiteAmount,
-  }) : super(
-          wallet: wallet,
-          enabled: enabled,
-          isActiveGale: isActiveGale,
-          isActiveStopGain: isActiveStopGain,
-          isActiveStopLoss: isActiveStopLoss,
-          amountStopGain: amountStopGain,
-          amountStopLoss: amountStopLoss,
-          maxGales: maxGales,
-          maxElevation: maxElevation,
-          gales: gales,
-          elevations: elevations,
-          isActiveElevation: isActiveElevation,
-          strategies: strategies,
-          entryAmount: entryAmount,
-          entryWhiteAmount: entryWhiteAmount,
-        );
+    required super.enabled,
+    required super.isActiveGale,
+    required super.isActiveStopGain,
+    required super.isActiveStopLoss,
+    required super.wallet,
+    required super.amountStopGain,
+    required super.amountStopLoss,
+    required super.maxGales,
+    required super.maxElevation,
+    required super.gales,
+    required super.elevations,
+    required super.isActiveElevation,
+    required super.strategies,
+    required super.entryAmount,
+    required super.entryWhiteAmount,
+    required super.customStrategies,
+  });
 
   factory DoubleConfigModel.fromSnapshot(DocumentSnapshot snapshot) {
     final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
@@ -67,11 +53,14 @@ class DoubleConfigModel extends DoubleConfigEntity {
       entryWhiteAmount: (data['entryWhiteAmount'] is int)
           ? (data['entryWhiteAmount'] as int).toDouble()
           : data['entryWhiteAmount'],
+      customStrategies: (data['customStrategies'] as List)
+          .map((e) => CustomStrategyModel.fromJson(e))
+          .toList(),
     );
   }
 
   factory DoubleConfigModel.createDefault() {
-    return DoubleConfigModel(
+    return const DoubleConfigModel(
       amountStopGain: 0,
       amountStopLoss: 0,
       elevations: [],
@@ -87,19 +76,24 @@ class DoubleConfigModel extends DoubleConfigEntity {
       wallet: 0,
       entryAmount: 0,
       entryWhiteAmount: 0,
+      customStrategies: [],
     );
   }
 
   Map<String, dynamic> toDocument() {
     final List<Map<String, dynamic>> galesList = [];
-    gales.forEach((element) {
+    for (Gale element in gales) {
       galesList.add(element.toJson());
-    });
+    }
 
     final List<Map<String, dynamic>> strategiesList = [];
-    strategies.forEach((element) {
+    for (Strategy element in strategies) {
       strategiesList.add(element.toJson());
-    });
+    }
+    final List<Map<String, dynamic>> customStrategiesList = [];
+    for (CustomStrategyModel element in customStrategies) {
+      customStrategiesList.add(element.toJson());
+    }
 
     return {
       'enabled': enabled,
@@ -116,6 +110,7 @@ class DoubleConfigModel extends DoubleConfigEntity {
       'strategies': strategiesList,
       'entryAmount': entryAmount,
       'entryWhiteAmount': entryWhiteAmount,
+      'customStrategies': customStrategiesList,
     };
   }
 }

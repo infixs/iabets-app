@@ -10,7 +10,7 @@ class UserEntity extends Equatable {
   final String profileUrl;
   final bool isAdmin;
 
-  UserEntity(
+  const UserEntity(
       {required this.name,
       required this.email,
       required this.phoneNumber,

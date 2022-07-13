@@ -16,7 +16,7 @@ class TextMessageEntity extends Equatable {
   final FileEntity? file;
   final Timestamp time;
 
-  TextMessageEntity({
+  const TextMessageEntity({
     required this.senderName,
     required this.sederUID,
     required this.recipientName,

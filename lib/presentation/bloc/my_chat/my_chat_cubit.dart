@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/usecases/get_my_chat_usecase.dart';
 import 'package:ia_bet/domain/usecases/send_push_message_usecase.dart';
@@ -23,8 +24,8 @@ class MyChatCubit extends Cubit<MyChatState> {
       myChatStreamData.listen((myChatData) {
         emit(MyChatLoaded(myChat: myChatData));
       });
-      List<MyChatEntity> list = await myChatStreamData.first;
-      print(list.length);
+      final List<MyChatEntity> list = await myChatStreamData.first;
+      debugPrint(list.length.toString());
     } on SocketException catch (_) {
     } catch (_) {}
   }

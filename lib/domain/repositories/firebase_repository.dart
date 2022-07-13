@@ -23,6 +23,7 @@ abstract class FirebaseRepository {
 
   Stream<List<UserEntity>> getAllUsers();
   Stream<UserEntity> getCurrentUser();
+
   Stream<List<TextMessageEntity>> getMessages(String channelId);
   Stream<List<MyChatEntity>> getMyChat(String uid);
 
@@ -34,7 +35,7 @@ abstract class FirebaseRepository {
 
   Future<void> createOneToOneChatChannel(
       String uid, String name, List<UserEntity> allUsers);
-  Future<String> getOneToOneSingleUserChannelId(String uid, String canalName);
+  Future<String?> getOneToOneSingleUserChannelId(String uid, String canalName);
   Future<void> addToMyChat(MyChatEntity myChatEntity, UserEntity allUsers);
   Future<void> sendTextMessage(TextMessageEntity textMessageEntity,
       String channelId, UserEntity allUsers);

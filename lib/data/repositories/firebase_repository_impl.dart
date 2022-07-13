@@ -83,7 +83,8 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   }
 
   @override
-  Future<String> getOneToOneSingleUserChannelId(String uid, String canalName) =>
+  Future<String?> getOneToOneSingleUserChannelId(
+          String uid, String canalName) =>
       remoteDataSource.getOneToOneSingleUserChannelId(uid, canalName);
 
   @override

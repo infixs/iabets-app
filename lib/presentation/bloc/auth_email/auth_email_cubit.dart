@@ -1,4 +1,7 @@
 import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -47,10 +50,10 @@ class EmailAuthCubit extends Cubit<EmailAuthState> {
 
       emit(PhoneAuthSmsCodeReceived());
     } on SocketException catch (e) {
-      print(e);
+      debugPrint(e.toString());
       emit(PhoneAuthFailure());
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       emit(PhoneAuthFailure());
     }
   }
@@ -72,17 +75,17 @@ class EmailAuthCubit extends Cubit<EmailAuthState> {
           profileUrl: profileUrl,
           isAdmin: isAdmin);
 
-      print('testando...');
-      print(user.isAdmin);
+      debugPrint('testando...');
+      debugPrint(user.isAdmin.toString());
       await getCreateCurrentUserUseCase.call(user);
       emit(PhoneAuthSuccess());
-      print('depois testando...');
-      print(user.isAdmin);
+      debugPrint('depois testando...');
+      debugPrint(user.isAdmin.toString());
     } on SocketException catch (e) {
-      print(e);
+      debugPrint(e.toString());
       emit(PhoneAuthFailure());
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       emit(PhoneAuthFailure());
     }
   }

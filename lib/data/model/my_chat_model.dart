@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 
 class MyChatModel extends MyChatEntity {
-  MyChatModel(
+  const MyChatModel(
       {required String senderName,
       required String senderUID,
       required String recipientName,

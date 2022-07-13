@@ -16,7 +16,7 @@ class MyChatEntity extends Equatable {
   final Timestamp time;
   final String name;
 
-  MyChatEntity(
+  const MyChatEntity(
       {required this.senderName,
       required this.senderUID,
       required this.recipientName,
