@@ -18,13 +18,13 @@ class DoubleConfigEntity {
   final double entryAmount;
   final double entryWhiteAmount;
 
-  final List<Strategy> strategies;
+  List<Strategy> strategies;
   final List<Gale> gales;
   final List<int> elevations;
 
   final List<CustomStrategyModel> customStrategies;
 
-  const DoubleConfigEntity({
+  DoubleConfigEntity({
     required this.enabled,
     required this.maxGales,
     required this.maxElevation,

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 import 'package:bloc/bloc.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ia_bet/data/datasource/api.dart';
@@ -58,6 +59,11 @@ class EmailAuthCubit extends Cubit<EmailAuthState> {
     }
   }
 
+  Future<String> getDeviceInfo() async {
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
+  }
+
   Future<void> submitProfileInfo(
       {required String name,
       required String profileUrl,
@@ -66,14 +72,15 @@ class EmailAuthCubit extends Cubit<EmailAuthState> {
       required String uid,
       required bool isAdmin}) async {
     try {
-      UserEntity user = UserEntity(
+      final UserEntity user = UserEntity(
           uid: uid,
           name: name,
           email: email,
           phoneNumber: phoneNumber,
           isOnline: true,
           profileUrl: profileUrl,
-          isAdmin: isAdmin);
+          isAdmin: isAdmin,
+          deviceId: await getDeviceInfo());
 
       debugPrint('testando...');
       debugPrint(user.isAdmin.toString());

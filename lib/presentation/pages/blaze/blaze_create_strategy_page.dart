@@ -400,80 +400,82 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
           ],
         ),
       ),
-      body: AnimatedBuilder(
-        animation: blazeCreateStrategyController,
-        builder: (BuildContext context, Widget? child) => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            blazeCreateStrategyController.strategyes.isNotEmpty
-                ? const Padding(
-                    padding: EdgeInsets.only(left: 20, top: 10),
-                    child: Text(
-                      'Resultados',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  )
-                : Container(),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: blazeCreateStrategyController.strategyes.length,
-              itemBuilder: (BuildContext context, int index) =>
-                  StrategyCreationitemWidget(
-                index: index,
-                strategy: blazeCreateStrategyController.strategyes[index],
+      body: SingleChildScrollView(
+        child: AnimatedBuilder(
+          animation: blazeCreateStrategyController,
+          builder: (BuildContext context, Widget? child) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              blazeCreateStrategyController.strategyes.isNotEmpty
+                  ? const Padding(
+                      padding: EdgeInsets.only(left: 20, top: 10),
+                      child: Text(
+                        'Resultados',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    )
+                  : Container(),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: blazeCreateStrategyController.strategyes.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    StrategyCreationitemWidget(
+                  index: index,
+                  strategy: blazeCreateStrategyController.strategyes[index],
+                ),
               ),
-            ),
-            blazeCreateStrategyController.strategyes.isNotEmpty
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20, top: 10),
-                        child: Row(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(right: 175),
-                              child: Text(
-                                'Entradas',
+              blazeCreateStrategyController.strategyes.isNotEmpty
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, top: 10),
+                          child: Row(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(right: 175),
+                                child: Text(
+                                  'Entradas',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                ),
+                              ),
+                              const Text(
+                                'Adicionar',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 16),
                               ),
-                            ),
-                            const Text(
-                              'Adicionar',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                numberEntrys.value++;
-                              },
-                              icon: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      ValueListenableBuilder(
-                        valueListenable: numberEntrys,
-                        builder:
-                            (BuildContext context, int value, Widget? child) =>
-                                ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: numberEntrys.value,
-                          itemBuilder: (BuildContext context, int index) =>
-                              StrategyCreationEntryWidget(
-                            entrys: entrys,
-                            index: index,
+                              IconButton(
+                                onPressed: () {
+                                  numberEntrys.value++;
+                                },
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
                           ),
                         ),
-                      ),
-                    ],
-                  )
-                : Container()
-          ],
+                        ValueListenableBuilder(
+                          valueListenable: numberEntrys,
+                          builder: (BuildContext context, int value,
+                                  Widget? child) =>
+                              ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: numberEntrys.value,
+                            itemBuilder: (BuildContext context, int index) =>
+                                StrategyCreationEntryWidget(
+                              entrys: entrys,
+                              index: index,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container()
+            ],
+          ),
         ),
       ),
       floatingActionButton: Row(

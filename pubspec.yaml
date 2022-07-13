@@ -26,6 +26,7 @@ dependencies:
   equatable: ^2.0.3
 
   #firebase
+  firebase_core: ^1.19.2
   firebase_auth: 
   cloud_firestore: 
   firebase_storage: 
@@ -56,6 +57,7 @@ dependencies:
 
   #splash
   flutter_native_splash: ^2.2.3+1
+  device_info_plus: ^4.0.0
 
 dev_dependencies:
   flutter_test:

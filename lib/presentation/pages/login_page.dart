@@ -108,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: double.infinity,
                     height: MediaQuery.of(context).size.height * 0.25,
                     decoration: const BoxDecoration(
-                      image:  DecorationImage(
+                      image: DecorationImage(
                         fit: BoxFit.contain,
                         image: AssetImage(
                           "assets/images/marcadagua-full.png",
@@ -180,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: TextButton(
                                 child: const Text(
                                   'Esqueci minha senha',
-                                  style:  TextStyle(
+                                  style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.white,
                                       decoration: TextDecoration.underline),
@@ -200,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                                           MaterialStateProperty.all(
                                               kSecondColor)),
                                   child: const Text('Efetuar login',
-                                      style:  TextStyle(
+                                      style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.w700)),

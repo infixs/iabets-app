@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ia_bet/data/datasource/firebase_remote_datasource.dart';
@@ -32,11 +33,16 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       required this.fireStore,
       required this.fireFunctions});
 
+  Future<String> getDeviceInfo() async {
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
+  }
+
   @override
   Future<void> getCreateCurrentUser(UserEntity user) async {
     final userCollection = fireStore.collection("users");
     final uid = await getCurrentUID();
-    await userCollection.doc(uid).get().then((userDoc) {
+    await userCollection.doc(uid).get().then((userDoc) async {
       final newUser = UserModel(
               status: user.status,
               profileUrl: user.profileUrl,
@@ -45,7 +51,8 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
               phoneNumber: user.phoneNumber,
               email: user.email,
               name: user.name,
-              isAdmin: user.isAdmin)
+              isAdmin: user.isAdmin,
+              deviceId: await getDeviceInfo())
           .toDocument();
       if (!userDoc.exists) {
         //create new user

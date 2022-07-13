@@ -1,6 +1,7 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:ia_bet/domain/usecases/get_current_uid_usecase.dart';
 import 'package:ia_bet/domain/usecases/is_sign_in_usecase.dart';
 import 'package:ia_bet/domain/usecases/sign_out_usecase.dart';
