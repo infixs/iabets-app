@@ -356,7 +356,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                             strategies: widget.settingsController.doubleConfigCopy!.strategies,
                             entryAmount: widget.settingsController.doubleConfigCopy!.entryAmount,
                             entryWhiteAmount: widget.settingsController.doubleConfigCopy!.entryWhiteAmount,
-                            customStrategies: widget.settingsController.doubleConfigCopy!.customStrategies);
+                            customStrategies: widget.settingsController.doubleConfigCopy!.customStrategies, stopWithWhite: widget.settingsController.doubleConfigCopy!.stopWithWhite);
 
                         BlocProvider.of<DoubleConfigCubit>(context)
                             .saveDoubleConfig(doubleConfig);

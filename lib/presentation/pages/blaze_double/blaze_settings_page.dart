@@ -78,6 +78,7 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
         strategies: settingsController.doubleConfigCopy!.strategies,
         wallet: settingsController.doubleConfigCopy!.wallet ?? 0,
         customStrategies: settingsController.doubleConfigCopy!.customStrategies,
+        stopWithWhite: settingsController.stopWithWhite.value,
       );
       return doubleConfig;
     }
@@ -95,29 +96,35 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
           settingsController.elevationIsOn.value) {
         if (doubleConfigFirebase.isActiveStopGain ==
             settingsController.stopGainIsOn.value) {
-          if (doubleConfigFirebase.isActiveStopLoss ==
-              settingsController.stopLossIsOn.value) {
-            if (doubleConfigFirebase.amountStopGain ==
-                double.parse(settingsController.stopGainController.text)) {
-              if (doubleConfigFirebase.amountStopLoss ==
-                  double.parse(settingsController.stoplossController.text)) {
-                if (doubleConfigFirebase.entryAmount ==
-                    double.parse(
-                        settingsController.firstBetPriceController.text)) {
-                  if (doubleConfigFirebase.entryWhiteAmount ==
+          if (doubleConfigFirebase.stopWithWhite ==
+              settingsController.stopWithWhite.value) {
+            if (doubleConfigFirebase.isActiveStopLoss ==
+                settingsController.stopLossIsOn.value) {
+              if (doubleConfigFirebase.amountStopGain ==
+                  double.parse(settingsController.stopGainController.text)) {
+                if (doubleConfigFirebase.amountStopLoss ==
+                    double.parse(settingsController.stoplossController.text)) {
+                  if (doubleConfigFirebase.entryAmount ==
                       double.parse(
-                          settingsController.firstBetWhiteController.text)) {
-                    final List<bool> strategiesFirebase = [];
-                    final List<bool> strategiesLocal = [];
-                    for (Strategy element in doubleConfigFirebase.strategies) {
-                      strategiesFirebase.add(element.active);
-                    }
-                    for (Strategy element
-                        in settingsController.doubleConfigCopy!.strategies) {
-                      strategiesLocal.add(element.active);
-                    }
-                    if (listEquals(strategiesFirebase, strategiesLocal)) {
-                      isEqual = true;
+                          settingsController.firstBetPriceController.text)) {
+                    if (doubleConfigFirebase.entryWhiteAmount ==
+                        double.parse(
+                            settingsController.firstBetWhiteController.text)) {
+                      final List<bool> strategiesFirebase = [];
+                      final List<bool> strategiesLocal = [];
+                      for (Strategy element
+                          in doubleConfigFirebase.strategies) {
+                        strategiesFirebase.add(element.active);
+                      }
+                      for (Strategy element
+                          in settingsController.doubleConfigCopy!.strategies) {
+                        strategiesLocal.add(element.active);
+                      }
+                      if (listEquals(strategiesFirebase, strategiesLocal)) {
+                        isEqual = true;
+                      } else {
+                        isEqual = false;
+                      }
                     } else {
                       isEqual = false;
                     }
@@ -130,8 +137,6 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
               } else {
                 isEqual = false;
               }
-            } else {
-              isEqual = false;
             }
           } else {
             isEqual = false;
@@ -629,6 +634,33 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                           ),
                         ),
                         Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Parar no branco ',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              ValueListenableBuilder(
+                                valueListenable:
+                                    settingsController.stopWithWhite,
+                                builder: (BuildContext context, bool value,
+                                        Widget? child) =>
+                                    Switch(
+                                  value: settingsController.stopWithWhite.value,
+                                  onChanged: (bool value) => settingsController
+                                          .stopWithWhite.value =
+                                      !settingsController.stopWithWhite.value,
+                                  inactiveThumbColor: const Color(0xfff12c4d),
+                                  activeColor: const Color(0xff1bb57f),
+                                  activeTrackColor: const Color(0xff0e0812),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
                           padding: const EdgeInsets.only(top: 20, bottom: 100),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -678,20 +710,21 @@ class _BlazeSettingsPageState extends State<BlazeSettingsPage> {
                               ),
                               const Spacer(),
                               Flexible(
-                                  child: ValueListenableBuilder(
-                                valueListenable: settingsController.galesIsOn,
-                                builder: (BuildContext context, bool value,
-                                        Widget? child) =>
-                                    Switch(
-                                  value: settingsController.galesIsOn.value,
-                                  onChanged: (bool value) =>
-                                      settingsController.galesIsOn.value =
-                                          !settingsController.galesIsOn.value,
-                                  inactiveThumbColor: const Color(0xfff12c4d),
-                                  activeColor: const Color(0xff1bb57f),
-                                  activeTrackColor: const Color(0xff0e0812),
+                                child: ValueListenableBuilder(
+                                  valueListenable: settingsController.galesIsOn,
+                                  builder: (BuildContext context, bool value,
+                                          Widget? child) =>
+                                      Switch(
+                                    value: settingsController.galesIsOn.value,
+                                    onChanged: (bool value) =>
+                                        settingsController.galesIsOn.value =
+                                            !settingsController.galesIsOn.value,
+                                    inactiveThumbColor: const Color(0xfff12c4d),
+                                    activeColor: const Color(0xff1bb57f),
+                                    activeTrackColor: const Color(0xff0e0812),
+                                  ),
                                 ),
-                              )),
+                              ),
                               const Spacer(flex: 2),
                               Flexible(
                                 flex: 5,

@@ -10,6 +10,7 @@ class SettingsController {
   final ValueNotifier<bool> stopLossIsOn = ValueNotifier<bool>(true);
   final ValueNotifier<bool> elevationIsOn = ValueNotifier<bool>(true);
   final ValueNotifier<bool> galesIsOn = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> stopWithWhite = ValueNotifier<bool>(true);
   final TextEditingController stopGainController = TextEditingController();
   final TextEditingController stoplossController = TextEditingController();
   final TextEditingController firstBetPriceController = TextEditingController();
@@ -36,6 +37,7 @@ class SettingsController {
     stopLossIsOn.value = doubleConfig.isActiveStopLoss;
     elevationIsOn.value = doubleConfig.isActiveElevation;
     galesIsOn.value = doubleConfig.isActiveGale;
+    stopWithWhite.value = doubleConfig.stopWithWhite;
   }
 
   void dispose() {
@@ -53,5 +55,6 @@ class SettingsController {
     editFirstBetPriceController.dispose();
     editFirstBetWhiteController.dispose();
     editMultiplierController.dispose();
+    stopWithWhite.dispose();
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
-import 'package:ia_bet/presentation/pages/blaze/components/custom_app_bar_blaze_page/custom_app_bar_blaze_page.dart';
 
 import '../../../data/model/custom_strategy_model.dart';
 import '../../../data/model/double_config_model.dart';
@@ -10,15 +9,16 @@ import '../../../domain/entities/double_config.dart';
 
 import 'blaze_settings_page.dart';
 import 'components/button_activity.dart';
+import 'components/custom_app_bar_blaze_page/custom_app_bar_blaze_page.dart';
 
-class BlazePage extends StatefulWidget {
-  const BlazePage({super.key});
+class BlazeDoublePage extends StatefulWidget {
+  const BlazeDoublePage({super.key});
 
   @override
-  State<BlazePage> createState() => _BlazePageState();
+  State<BlazeDoublePage> createState() => _BlazeDoublePageState();
 }
 
-class _BlazePageState extends State<BlazePage> {
+class _BlazeDoublePageState extends State<BlazeDoublePage> {
   @override
   void initState() {
     BlocProvider.of<DoubleConfigCubit>(context).getDoubleConfig();
@@ -167,6 +167,8 @@ class _BlazePageState extends State<BlazePage> {
                                           0,
                                       customStrategies: doubleConfigState
                                           .doubleConfig.customStrategies,
+                                      stopWithWhite: doubleConfigState
+                                          .doubleConfig.stopWithWhite,
                                     );
                                     BlocProvider.of<DoubleConfigCubit>(context)
                                         .saveDoubleConfig(doubleConfig);

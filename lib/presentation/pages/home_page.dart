@@ -6,7 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import '../../domain/entities/user_entity.dart';
 import '../bloc/user/user_cubit.dart';
 
-import 'blaze/blaze_page.dart';
+import 'blaze_crash/blaze_crash_page.dart';
+import 'blaze_double/blaze_page.dart';
 import 'canais_page.dart';
 import 'login_page.dart';
 import 'perfil_page.dart';
@@ -31,12 +32,20 @@ class _HomePageState extends State<HomePage> {
               : null,
         },
         {
-          'title': 'Blaze',
+          'title': 'Blaze double',
           'icon': SvgPicture.asset(
             'assets/images/blaze.svg',
             width: 30,
           ),
-          'route': const BlazePage(),
+          'route': const BlazeDoublePage(),
+        },
+        {
+          'title': 'Blaze crash',
+          'icon': SvgPicture.asset(
+            'assets/images/blaze.svg',
+            width: 30,
+          ),
+          'route': const BlazeCrashPage(),
         },
       ];
 
@@ -139,24 +148,22 @@ class _HomePageState extends State<HomePage> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: size.width * 0.07),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Flexible(child: snapshot.data![index]['icon']),
-                                Flexible(
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: snapshot.data![index]['icon'],
+                                ),
+                                Expanded(
                                   child: Text(
                                     snapshot.data![index]['title'],
                                     style: const TextStyle(
                                         color: Colors.black, fontSize: 18),
                                   ),
                                 ),
-                                const Spacer(
-                                  flex: 1,
-                                ),
-                                const Flexible(
-                                  child: Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: Colors.black,
-                                  ),
+                                const Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Colors.black,
                                 )
                               ],
                             ),

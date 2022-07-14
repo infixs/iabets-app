@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/data/model/double_config_model.dart';
-import 'package:ia_bet/presentation/pages/blaze/controller_settings.dart';
 
 import '../../../domain/entities/double_config.dart';
 import '../../bloc/blaze/double_config_cubit.dart';
 
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
 import 'components/gale_widget.dart';
+import 'controller_settings.dart';
 
 class GalesSettingsPage extends StatefulWidget {
   const GalesSettingsPage({Key? key}) : super(key: key);
@@ -245,7 +245,9 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                         doubleConfigState.doubleConfig.wallet ??
                                             0,
                                     customStrategies: doubleConfigState
-                                        .doubleConfig.customStrategies);
+                                        .doubleConfig.customStrategies,
+                                    stopWithWhite: doubleConfigState
+                                        .doubleConfig.stopWithWhite);
 
                                 BlocProvider.of<DoubleConfigCubit>(context)
                                     .saveDoubleConfig(doubleConfig);
@@ -400,9 +402,9 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                                   .entryWhiteAmount,
                                               gales: doubleConfigState
                                                   .doubleConfig.gales,
-                                              isActiveElevation:
-                                                  doubleConfigState.doubleConfig
-                                                      .isActiveElevation,
+                                              isActiveElevation: doubleConfigState
+                                                  .doubleConfig
+                                                  .isActiveElevation,
                                               isActiveGale: doubleConfigState
                                                   .doubleConfig.isActiveGale,
                                               isActiveStopGain: doubleConfigState
@@ -415,7 +417,8 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                               maxGales: doubleConfigState.doubleConfig.maxGales,
                                               strategies: doubleConfigState.doubleConfig.strategies,
                                               wallet: doubleConfigState.doubleConfig.wallet ?? 0,
-                                              customStrategies: doubleConfigState.doubleConfig.customStrategies);
+                                              customStrategies: doubleConfigState.doubleConfig.customStrategies,
+                                              stopWithWhite: doubleConfigState.doubleConfig.stopWithWhite);
 
                                           BlocProvider.of<DoubleConfigCubit>(
                                                   context)

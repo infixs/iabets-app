@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ia_bet/presentation/pages/blaze/controller_settings.dart';
 
 import '../../../data/model/double_config_model.dart';
 import '../../bloc/blaze/double_config_cubit.dart';
 
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
+import 'controller_settings.dart';
 
 class ElevateSettingsPage extends StatefulWidget {
   const ElevateSettingsPage({Key? key}) : super(key: key);
@@ -205,6 +205,8 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                       .doubleConfig.isActiveGale,
                                   customStrategies: doubleConfigState
                                       .doubleConfig.customStrategies,
+                                  stopWithWhite: doubleConfigState
+                                      .doubleConfig.stopWithWhite,
                                 );
 
                                 BlocProvider.of<DoubleConfigCubit>(context)
@@ -314,6 +316,8 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                                     doubleConfigState
                                                         .doubleConfig
                                                         .customStrategies,
+                                                stopWithWhite: doubleConfigState
+                                                    .doubleConfig.stopWithWhite,
                                               );
 
                                               BlocProvider.of<
@@ -425,9 +429,9 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                                   .doubleConfig.gales,
                                               isActiveGale: doubleConfigState
                                                   .doubleConfig.isActiveGale,
-                                              isActiveElevation:
-                                                  doubleConfigState.doubleConfig
-                                                      .isActiveElevation,
+                                              isActiveElevation: doubleConfigState
+                                                  .doubleConfig
+                                                  .isActiveElevation,
                                               isActiveStopGain: doubleConfigState
                                                   .doubleConfig
                                                   .isActiveStopGain,
@@ -438,7 +442,8 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                               maxGales: doubleConfigState.doubleConfig.maxGales,
                                               strategies: doubleConfigState.doubleConfig.strategies,
                                               wallet: doubleConfigState.doubleConfig.wallet ?? 0,
-                                              customStrategies: doubleConfigState.doubleConfig.customStrategies);
+                                              customStrategies: doubleConfigState.doubleConfig.customStrategies,
+                                              stopWithWhite: doubleConfigState.doubleConfig.stopWithWhite);
 
                                           BlocProvider.of<DoubleConfigCubit>(
                                                   context)
