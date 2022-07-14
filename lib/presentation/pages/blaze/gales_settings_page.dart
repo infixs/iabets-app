@@ -245,7 +245,9 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                         doubleConfigState.doubleConfig.wallet ??
                                             0,
                                     customStrategies: doubleConfigState
-                                        .doubleConfig.customStrategies);
+                                        .doubleConfig.customStrategies,
+                                    stopWithWhite: doubleConfigState
+                                        .doubleConfig.stopWithWhite);
 
                                 BlocProvider.of<DoubleConfigCubit>(context)
                                     .saveDoubleConfig(doubleConfig);
@@ -400,9 +402,9 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                                   .entryWhiteAmount,
                                               gales: doubleConfigState
                                                   .doubleConfig.gales,
-                                              isActiveElevation:
-                                                  doubleConfigState.doubleConfig
-                                                      .isActiveElevation,
+                                              isActiveElevation: doubleConfigState
+                                                  .doubleConfig
+                                                  .isActiveElevation,
                                               isActiveGale: doubleConfigState
                                                   .doubleConfig.isActiveGale,
                                               isActiveStopGain: doubleConfigState
@@ -415,7 +417,8 @@ class _GalesSettingsPageState extends State<GalesSettingsPage> {
                                               maxGales: doubleConfigState.doubleConfig.maxGales,
                                               strategies: doubleConfigState.doubleConfig.strategies,
                                               wallet: doubleConfigState.doubleConfig.wallet ?? 0,
-                                              customStrategies: doubleConfigState.doubleConfig.customStrategies);
+                                              customStrategies: doubleConfigState.doubleConfig.customStrategies,
+                                              stopWithWhite: doubleConfigState.doubleConfig.stopWithWhite);
 
                                           BlocProvider.of<DoubleConfigCubit>(
                                                   context)

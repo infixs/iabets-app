@@ -34,8 +34,7 @@ class FileLoaded {
   String? type;
   String? name;
 
-  FileLoaded({File? file, bool? loaded, String? type, String? name}) {
-    this.file = file;
+  FileLoaded({this.file, bool? loaded, String? type, String? name}) {
     this.loaded = loaded == null ? false : true;
     this.type = type ?? '';
     this.name = name ?? '';

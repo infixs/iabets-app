@@ -167,6 +167,8 @@ class _BlazePageState extends State<BlazePage> {
                                           0,
                                       customStrategies: doubleConfigState
                                           .doubleConfig.customStrategies,
+                                      stopWithWhite: doubleConfigState
+                                          .doubleConfig.stopWithWhite,
                                     );
                                     BlocProvider.of<DoubleConfigCubit>(context)
                                         .saveDoubleConfig(doubleConfig);

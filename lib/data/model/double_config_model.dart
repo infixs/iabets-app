@@ -20,65 +20,65 @@ class DoubleConfigModel extends DoubleConfigEntity {
     required super.entryAmount,
     required super.entryWhiteAmount,
     required super.customStrategies,
+    required super.stopWithWhite,
   });
 
   factory DoubleConfigModel.fromSnapshot(DocumentSnapshot snapshot) {
     final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
 
     return DoubleConfigModel(
-      enabled: data['enabled'],
-      isActiveStopGain: data['isActiveStopGain'],
-      isActiveStopLoss: data['isActiveStopLoss'],
-      isActiveGale: data['isActiveGale'],
-      amountStopGain: (data['amountStopGain'] is int)
-          ? (data['amountStopGain'] as int).toDouble()
-          : data['amountStopGain'],
-      amountStopLoss: (data['amountStopLoss'] is int)
-          ? (data['amountStopLoss'] as int).toDouble()
-          : data['amountStopLoss'],
-      maxGales: data['maxGales'],
-      maxElevation: data['maxElevation'],
-      gales: (data['gales'] as List).map((e) => Gale.fromJson(e)).toList(),
-      elevations: List<int>.from(data['elevations']),
-      isActiveElevation: data['isActiveElevation'],
-      strategies: (data['strategies'] as List)
-          .map((e) => Strategy.fromJson(e))
-          .toList(),
-      wallet: (data['wallet'] is int)
-          ? (data['wallet'] as int).toDouble()
-          : data['wallet'],
-      entryAmount: (data['entryAmount'] is int)
-          ? (data['entryAmount'] as int).toDouble()
-          : data['entryAmount'],
-      entryWhiteAmount: (data['entryWhiteAmount'] is int)
-          ? (data['entryWhiteAmount'] as int).toDouble()
-          : data['entryWhiteAmount'],
-      customStrategies: (data['customStrategies'] as List)
-          .map((e) => CustomStrategyModel.fromJson(e))
-          .toList(),
-    );
+        enabled: data['enabled'],
+        isActiveStopGain: data['isActiveStopGain'],
+        isActiveStopLoss: data['isActiveStopLoss'],
+        isActiveGale: data['isActiveGale'],
+        amountStopGain: (data['amountStopGain'] is int)
+            ? (data['amountStopGain'] as int).toDouble()
+            : data['amountStopGain'],
+        amountStopLoss: (data['amountStopLoss'] is int)
+            ? (data['amountStopLoss'] as int).toDouble()
+            : data['amountStopLoss'],
+        maxGales: data['maxGales'],
+        maxElevation: data['maxElevation'],
+        gales: (data['gales'] as List).map((e) => Gale.fromJson(e)).toList(),
+        elevations: List<int>.from(data['elevations']),
+        isActiveElevation: data['isActiveElevation'],
+        strategies: (data['strategies'] as List)
+            .map((e) => Strategy.fromJson(e))
+            .toList(),
+        wallet: (data['wallet'] is int)
+            ? (data['wallet'] as int).toDouble()
+            : data['wallet'],
+        entryAmount: (data['entryAmount'] is int)
+            ? (data['entryAmount'] as int).toDouble()
+            : data['entryAmount'],
+        entryWhiteAmount: (data['entryWhiteAmount'] is int)
+            ? (data['entryWhiteAmount'] as int).toDouble()
+            : data['entryWhiteAmount'],
+        customStrategies: (data['customStrategies'] as List)
+            .map((e) => CustomStrategyModel.fromJson(e))
+            .toList(),
+        stopWithWhite: data['stopWithWhite'] ?? true);
   }
 
-  factory DoubleConfigModel.createDefault() {
-    return DoubleConfigModel(
-      amountStopGain: 0,
-      amountStopLoss: 0,
-      elevations: [],
-      enabled: false,
-      gales: [],
-      isActiveElevation: false,
-      isActiveStopGain: false,
-      isActiveStopLoss: false,
-      isActiveGale: false,
-      maxElevation: 0,
-      maxGales: 3,
-      strategies: [],
-      wallet: 0,
-      entryAmount: 0,
-      entryWhiteAmount: 0,
-      customStrategies: [],
-    );
-  }
+  factory DoubleConfigModel.createDefault() => DoubleConfigModel(
+        amountStopGain: 0,
+        amountStopLoss: 0,
+        elevations: [],
+        enabled: false,
+        gales: [],
+        isActiveElevation: false,
+        isActiveStopGain: false,
+        isActiveStopLoss: false,
+        isActiveGale: false,
+        maxElevation: 0,
+        maxGales: 3,
+        strategies: [],
+        wallet: 0,
+        entryAmount: 0,
+        entryWhiteAmount: 0,
+        customStrategies: [],
+        stopWithWhite: true,
+      );
 
   Map<String, dynamic> toDocument() {
     final List<Map<String, dynamic>> galesList = [];
@@ -111,6 +111,7 @@ class DoubleConfigModel extends DoubleConfigEntity {
       'entryAmount': entryAmount,
       'entryWhiteAmount': entryWhiteAmount,
       'customStrategies': customStrategiesList,
+      'stopWithWhite': stopWithWhite,
     };
   }
 }

@@ -10,6 +10,7 @@ class DoubleConfigEntity {
   final bool isActiveElevation; // AFTER (RED (SUPER LOSS));
   final bool isActiveStopGain;
   final bool isActiveStopLoss;
+  bool stopWithWhite;
 
   final double amountStopGain;
   final double amountStopLoss;
@@ -41,6 +42,7 @@ class DoubleConfigEntity {
     required this.entryAmount,
     required this.entryWhiteAmount,
     required this.customStrategies,
+    required this.stopWithWhite,
   });
 }
 

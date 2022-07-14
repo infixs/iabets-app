@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ia_bet/data/model/custom_strategy_model.dart';
+import 'package:ia_bet/domain/entities/double_config.dart';
 
 import '../../../../data/model/double_config_model.dart';
-import '../../../../domain/entities/double_config.dart';
 import '../../../bloc/blaze/double_config_cubit.dart';
 
-class GaleWidget extends StatelessWidget {
-  final DoubleConfigEntity doubleConfig;
+class CustomStrategyItem extends StatelessWidget {
   final int index;
-  final List<Gale> gales;
-
-  const GaleWidget(
+  final List<CustomStrategyModel> customStrategies;
+  final DoubleConfigEntity doubleConfig;
+  const CustomStrategyItem(
       {super.key,
-      required this.gales,
       required this.index,
+      required this.customStrategies,
       required this.doubleConfig});
 
   @override
@@ -28,43 +28,10 @@ class GaleWidget extends StatelessWidget {
             Icons.open_with,
             color: Colors.white,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Vermelho/Preto',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600),
-              ),
-              Text(
-                '${gales[index].amount}',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Branco',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600),
-              ),
-              Text(
-                '${gales[index].amountProtection}',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600),
-              ),
-            ],
+          Text(
+            customStrategies[index].name,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
           ),
           CircleAvatar(
             radius: 17,
@@ -73,7 +40,7 @@ class GaleWidget extends StatelessWidget {
               padding: EdgeInsets.zero,
               splashRadius: 20,
               onPressed: () {
-                doubleConfig.gales.remove(gales[index]);
+                doubleConfig.customStrategies.remove(customStrategies[index]);
                 final DoubleConfigModel newDoubleConfig = DoubleConfigModel(
                   amountStopGain: doubleConfig.amountStopGain,
                   amountStopLoss: doubleConfig.amountStopLoss,

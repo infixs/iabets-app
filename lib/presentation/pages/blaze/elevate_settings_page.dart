@@ -205,6 +205,8 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                       .doubleConfig.isActiveGale,
                                   customStrategies: doubleConfigState
                                       .doubleConfig.customStrategies,
+                                  stopWithWhite: doubleConfigState
+                                      .doubleConfig.stopWithWhite,
                                 );
 
                                 BlocProvider.of<DoubleConfigCubit>(context)
@@ -314,6 +316,8 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                                     doubleConfigState
                                                         .doubleConfig
                                                         .customStrategies,
+                                                stopWithWhite: doubleConfigState
+                                                    .doubleConfig.stopWithWhite,
                                               );
 
                                               BlocProvider.of<
@@ -425,9 +429,9 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                                   .doubleConfig.gales,
                                               isActiveGale: doubleConfigState
                                                   .doubleConfig.isActiveGale,
-                                              isActiveElevation:
-                                                  doubleConfigState.doubleConfig
-                                                      .isActiveElevation,
+                                              isActiveElevation: doubleConfigState
+                                                  .doubleConfig
+                                                  .isActiveElevation,
                                               isActiveStopGain: doubleConfigState
                                                   .doubleConfig
                                                   .isActiveStopGain,
@@ -438,7 +442,8 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                               maxGales: doubleConfigState.doubleConfig.maxGales,
                                               strategies: doubleConfigState.doubleConfig.strategies,
                                               wallet: doubleConfigState.doubleConfig.wallet ?? 0,
-                                              customStrategies: doubleConfigState.doubleConfig.customStrategies);
+                                              customStrategies: doubleConfigState.doubleConfig.customStrategies,
+                                              stopWithWhite: doubleConfigState.doubleConfig.stopWithWhite);
 
                                           BlocProvider.of<DoubleConfigCubit>(
                                                   context)
