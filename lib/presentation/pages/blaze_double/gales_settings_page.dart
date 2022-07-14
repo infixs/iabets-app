@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ia_bet/presentation/pages/blaze/controller_settings.dart';
+import 'package:ia_bet/data/model/double_config_model.dart';
 
-import '../../../data/model/double_config_model.dart';
+import '../../../domain/entities/double_config.dart';
 import '../../bloc/blaze/double_config_cubit.dart';
 
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
+import 'components/gale_widget.dart';
+import 'controller_settings.dart';
 
-class ElevateSettingsPage extends StatefulWidget {
-  const ElevateSettingsPage({Key? key}) : super(key: key);
+class GalesSettingsPage extends StatefulWidget {
+  const GalesSettingsPage({Key? key}) : super(key: key);
 
   @override
-  State<ElevateSettingsPage> createState() => _ElevateSettingsPageState();
+  State<GalesSettingsPage> createState() => _GalesSettingsPageState();
 }
 
-class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
+class _GalesSettingsPageState extends State<GalesSettingsPage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final SettingsController settingsController = SettingsController();
 
-  void editElevations({required List<int> elevations, required int index}) =>
+  void editGale({required List<Gale> gales, required int index}) =>
       showDialog<void>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -27,17 +29,18 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
           content: Form(
             key: settingsController.formkeyEdit,
             child: SizedBox(
-              height: 250,
+              height: 350,
               child: Column(
                 children: [
                   const Text(
-                    'Editar Elevação',
+                    'Editar gale',
                     style: TextStyle(color: Colors.white),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 50, bottom: 30),
                     child: TextFormField(
-                      controller: settingsController.editMultiplierController,
+                      controller:
+                          settingsController.editFirstBetPriceController,
                       keyboardType: TextInputType.number,
                       style: const TextStyle(color: Colors.white),
                       validator: (String? input) {
@@ -57,7 +60,41 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                           borderSide:
                               BorderSide(color: Colors.white, width: 1.0),
                         ),
-                        labelText: 'Elevação',
+                        labelText: 'Vermelho ou preto',
+                        labelStyle: TextStyle(color: Colors.white),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(2),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: TextFormField(
+                      controller:
+                          settingsController.editFirstBetWhiteController,
+                      keyboardType: TextInputType.number,
+                      validator: (String? input) {
+                        if (input != null && input.isNotEmpty) {
+                          return null;
+                        } else {
+                          return 'digite algum valor';
+                        }
+                      },
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xff1bb57f), width: 1.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.0),
+                        ),
+                        labelText: 'Proteção Branco',
                         labelStyle: TextStyle(color: Colors.white),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -77,13 +114,18 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                           .validate();
 
                       if (isValid) {
-                        elevations.removeAt(index);
-                        elevations.insert(
-                            index,
-                            int.parse(settingsController
-                                .editMultiplierController.text));
-                        settingsController.editMultiplierController.clear();
-
+                        gales.removeAt(index);
+                        gales.insert(
+                          index,
+                          Gale(
+                            amount: double.parse(settingsController
+                                .editFirstBetPriceController.text),
+                            amountProtection: double.parse(settingsController
+                                .editFirstBetWhiteController.text),
+                          ),
+                        );
+                        settingsController.editFirstBetPriceController.clear();
+                        settingsController.editFirstBetWhiteController.clear();
                         Navigator.pop(context);
                       }
                     },
@@ -130,7 +172,7 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                       ),
                     ),
                     const Text(
-                      'Multiplicadores',
+                      'Gales',
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                     IconButton(
@@ -158,182 +200,71 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                 ReorderableListView.builder(
                               padding:
                                   const EdgeInsets.only(left: 20, right: 20),
-                              itemCount: doubleConfigState
-                                  .doubleConfig.elevations.length,
+                              itemCount:
+                                  doubleConfigState.doubleConfig.gales.length,
                               onReorder: (oldPosition, newPosition) =>
                                   setState(() {
                                 if (oldPosition < newPosition) {
                                   newPosition -= 1;
                                 }
-                                final int item = doubleConfigState
-                                    .doubleConfig.elevations
+                                final Gale gale = doubleConfigState
+                                    .doubleConfig.gales
                                     .removeAt(oldPosition);
-                                doubleConfigState.doubleConfig.elevations
-                                    .insert(newPosition, item);
+                                doubleConfigState.doubleConfig.gales
+                                    .insert(newPosition, gale);
 
-                                final DoubleConfigModel doubleConfig =
-                                    DoubleConfigModel(
-                                  amountStopGain: doubleConfigState
-                                      .doubleConfig.amountStopGain,
-                                  amountStopLoss: doubleConfigState
-                                      .doubleConfig.amountStopLoss,
-                                  elevations:
-                                      doubleConfigState.doubleConfig.elevations,
-                                  enabled:
-                                      doubleConfigState.doubleConfig.enabled,
-                                  entryAmount: doubleConfigState
-                                      .doubleConfig.entryAmount,
-                                  entryWhiteAmount: doubleConfigState
-                                      .doubleConfig.entryWhiteAmount,
-                                  gales: doubleConfigState.doubleConfig.gales,
-                                  isActiveElevation: doubleConfigState
-                                      .doubleConfig.isActiveElevation,
-                                  isActiveStopGain: doubleConfigState
-                                      .doubleConfig.isActiveStopGain,
-                                  isActiveStopLoss: doubleConfigState
-                                      .doubleConfig.isActiveStopLoss,
-                                  maxElevation: doubleConfigState
-                                      .doubleConfig.maxElevation,
-                                  maxGales:
-                                      doubleConfigState.doubleConfig.maxGales,
-                                  strategies:
-                                      doubleConfigState.doubleConfig.strategies,
-                                  wallet:
-                                      doubleConfigState.doubleConfig.wallet ??
-                                          0,
-                                  isActiveGale: doubleConfigState
-                                      .doubleConfig.isActiveGale,
-                                  customStrategies: doubleConfigState
-                                      .doubleConfig.customStrategies,
-                                  stopWithWhite: doubleConfigState
-                                      .doubleConfig.stopWithWhite,
-                                );
+                                final DoubleConfigModel doubleConfig = DoubleConfigModel(
+                                    amountStopGain: doubleConfigState
+                                        .doubleConfig.amountStopGain,
+                                    amountStopLoss: doubleConfigState
+                                        .doubleConfig.amountStopLoss,
+                                    elevations: doubleConfigState
+                                        .doubleConfig.elevations,
+                                    enabled:
+                                        doubleConfigState.doubleConfig.enabled,
+                                    entryAmount: doubleConfigState
+                                        .doubleConfig.entryAmount,
+                                    entryWhiteAmount: doubleConfigState
+                                        .doubleConfig.entryWhiteAmount,
+                                    gales: doubleConfigState.doubleConfig.gales,
+                                    isActiveElevation: doubleConfigState
+                                        .doubleConfig.isActiveElevation,
+                                    isActiveGale: doubleConfigState
+                                        .doubleConfig.isActiveGale,
+                                    isActiveStopGain: doubleConfigState
+                                        .doubleConfig.isActiveStopGain,
+                                    isActiveStopLoss: doubleConfigState
+                                        .doubleConfig.isActiveStopLoss,
+                                    maxElevation: doubleConfigState
+                                        .doubleConfig.maxElevation,
+                                    maxGales:
+                                        doubleConfigState.doubleConfig.maxGales,
+                                    strategies: doubleConfigState
+                                        .doubleConfig.strategies,
+                                    wallet:
+                                        doubleConfigState.doubleConfig.wallet ??
+                                            0,
+                                    customStrategies: doubleConfigState
+                                        .doubleConfig.customStrategies,
+                                    stopWithWhite: doubleConfigState
+                                        .doubleConfig.stopWithWhite);
 
                                 BlocProvider.of<DoubleConfigCubit>(context)
                                     .saveDoubleConfig(doubleConfig);
                               }),
                               itemBuilder: (BuildContext context, int index) =>
                                   GestureDetector(
-                                onTap: () => editElevations(
-                                  elevations:
-                                      doubleConfigState.doubleConfig.elevations,
-                                  index: index,
-                                ),
+                                onTap: () => editGale(
+                                    gales: doubleConfigState.doubleConfig.gales,
+                                    index: index),
                                 key: Key('$index'),
                                 child: SizedBox(
                                   height: 70,
-                                  child: Card(
-                                    color: const Color(0xff0a1117),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        const Icon(
-                                          Icons.open_with,
-                                          color: Colors.white,
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'Mutiplicador',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            Text(
-                                              '${doubleConfigState.doubleConfig.elevations[index]}x',
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                          ],
-                                        ),
-                                        CircleAvatar(
-                                          radius: 17,
-                                          backgroundColor:
-                                              const Color(0xfff12c4d),
-                                          child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            splashRadius: 20,
-                                            onPressed: () {
-                                              doubleConfigState
-                                                  .doubleConfig.elevations
-                                                  .remove(doubleConfigState
-                                                      .doubleConfig
-                                                      .elevations[index]);
-
-                                              final DoubleConfigModel
-                                                  doubleConfig =
-                                                  DoubleConfigModel(
-                                                amountStopGain:
-                                                    doubleConfigState
-                                                        .doubleConfig
-                                                        .amountStopGain,
-                                                amountStopLoss:
-                                                    doubleConfigState
-                                                        .doubleConfig
-                                                        .amountStopLoss,
-                                                elevations: doubleConfigState
-                                                    .doubleConfig.elevations,
-                                                enabled: doubleConfigState
-                                                    .doubleConfig.enabled,
-                                                entryAmount: doubleConfigState
-                                                    .doubleConfig.entryAmount,
-                                                entryWhiteAmount:
-                                                    doubleConfigState
-                                                        .doubleConfig
-                                                        .entryWhiteAmount,
-                                                gales: doubleConfigState
-                                                    .doubleConfig.gales,
-                                                isActiveGale: doubleConfigState
-                                                    .doubleConfig.isActiveGale,
-                                                isActiveElevation:
-                                                    doubleConfigState
-                                                        .doubleConfig
-                                                        .isActiveElevation,
-                                                isActiveStopGain:
-                                                    doubleConfigState
-                                                        .doubleConfig
-                                                        .isActiveStopGain,
-                                                isActiveStopLoss:
-                                                    doubleConfigState
-                                                        .doubleConfig
-                                                        .isActiveStopLoss,
-                                                maxElevation: doubleConfigState
-                                                    .doubleConfig.maxElevation,
-                                                maxGales: doubleConfigState
-                                                    .doubleConfig.maxGales,
-                                                strategies: doubleConfigState
-                                                    .doubleConfig.strategies,
-                                                wallet: doubleConfigState
-                                                        .doubleConfig.wallet ??
-                                                    0,
-                                                customStrategies:
-                                                    doubleConfigState
-                                                        .doubleConfig
-                                                        .customStrategies,
-                                                stopWithWhite: doubleConfigState
-                                                    .doubleConfig.stopWithWhite,
-                                              );
-
-                                              BlocProvider.of<
-                                                          DoubleConfigCubit>(
-                                                      context)
-                                                  .saveDoubleConfig(
-                                                      doubleConfig);
-                                            },
-                                            icon: const Icon(
-                                              Icons.close,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                  child: GaleWidget(
+                                    index: index,
+                                    gales: doubleConfigState.doubleConfig.gales,
+                                    doubleConfig:
+                                        doubleConfigState.doubleConfig,
                                   ),
                                 ),
                               ),
@@ -353,11 +284,11 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                               children: [
                                 SizedBox(
                                   height: 70,
-                                  width: size.width * 0.75,
+                                  width: size.width * 0.38,
                                   child: TextFormField(
+                                    controller: settingsController
+                                        .newFirstBetPriceController,
                                     keyboardType: TextInputType.number,
-                                    controller:
-                                        settingsController.multiplierController,
                                     style: const TextStyle(color: Colors.white),
                                     validator: (String? input) {
                                       if (input != null && input.isNotEmpty) {
@@ -377,7 +308,44 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                         borderSide: BorderSide(
                                             color: Colors.white, width: 1.0),
                                       ),
-                                      labelText: 'Valor Mutiplicador',
+                                      labelText: 'Vermelho ou preto',
+                                      labelStyle:
+                                          TextStyle(color: Colors.white),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(2),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 70,
+                                  width: size.width * 0.38,
+                                  child: TextFormField(
+                                    controller: settingsController
+                                        .newFirstBetWhiteController,
+                                    keyboardType: TextInputType.number,
+                                    validator: (String? input) {
+                                      if (input != null && input.isNotEmpty) {
+                                        return null;
+                                      } else {
+                                        return 'digite algum valor';
+                                      }
+                                    },
+                                    style: const TextStyle(color: Colors.white),
+                                    decoration: const InputDecoration(
+                                      fillColor: Colors.white,
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xff1bb57f),
+                                            width: 1.0),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.white, width: 1.0),
+                                      ),
+                                      labelText: 'Proteção Branco',
                                       labelStyle:
                                           TextStyle(color: Colors.white),
                                       border: OutlineInputBorder(
@@ -402,15 +370,22 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                             .validate();
 
                                         if (isValid) {
-                                          doubleConfigState
-                                              .doubleConfig.elevations
+                                          doubleConfigState.doubleConfig.gales
                                               .add(
-                                            int.parse(settingsController
-                                                .multiplierController.text),
+                                            Gale(
+                                              amount: double.parse(
+                                                  settingsController
+                                                      .newFirstBetPriceController
+                                                      .text),
+                                              amountProtection: double.parse(
+                                                  settingsController
+                                                      .newFirstBetWhiteController
+                                                      .text),
+                                            ),
                                           );
+
                                           FocusManager.instance.primaryFocus
                                               ?.unfocus();
-
                                           final DoubleConfigModel doubleConfig = DoubleConfigModel(
                                               amountStopGain: doubleConfigState
                                                   .doubleConfig.amountStopGain,
@@ -427,11 +402,11 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                                   .entryWhiteAmount,
                                               gales: doubleConfigState
                                                   .doubleConfig.gales,
-                                              isActiveGale: doubleConfigState
-                                                  .doubleConfig.isActiveGale,
                                               isActiveElevation: doubleConfigState
                                                   .doubleConfig
                                                   .isActiveElevation,
+                                              isActiveGale: doubleConfigState
+                                                  .doubleConfig.isActiveGale,
                                               isActiveStopGain: doubleConfigState
                                                   .doubleConfig
                                                   .isActiveStopGain,
@@ -449,7 +424,10 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                                   context)
                                               .saveDoubleConfig(doubleConfig);
                                           settingsController
-                                              .multiplierController
+                                              .newFirstBetPriceController
+                                              .clear();
+                                          settingsController
+                                              .newFirstBetWhiteController
                                               .clear();
                                         }
                                       },

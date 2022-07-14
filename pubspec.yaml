@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^1.1.1
+  intl: ^0.17.0
   mask_text_input_formatter: ^2.3.0
   image_picker: 
   path_provider: ^2.0.9
