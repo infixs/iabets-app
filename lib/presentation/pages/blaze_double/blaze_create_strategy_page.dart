@@ -18,8 +18,7 @@ import 'controller_settings.dart';
 
 class BlazeCreateStrategyPage extends StatefulWidget {
   final SettingsController settingsController;
-  const BlazeCreateStrategyPage({Key? key, required this.settingsController})
-      : super(key: key);
+  const BlazeCreateStrategyPage({super.key, required this.settingsController});
 
   @override
   State<BlazeCreateStrategyPage> createState() =>
@@ -329,6 +328,8 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                             ?.customStrategies
                             .add(customStrategyModel);
 
+                        widget.settingsController.update();
+
                         final DoubleConfigModel doubleConfig = DoubleConfigModel(
                             enabled: widget
                                 .settingsController.doubleConfigCopy!.enabled,
@@ -356,10 +357,12 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                             strategies: widget.settingsController.doubleConfigCopy!.strategies,
                             entryAmount: widget.settingsController.doubleConfigCopy!.entryAmount,
                             entryWhiteAmount: widget.settingsController.doubleConfigCopy!.entryWhiteAmount,
-                            customStrategies: widget.settingsController.doubleConfigCopy!.customStrategies, stopWithWhite: widget.settingsController.doubleConfigCopy!.stopWithWhite);
+                            customStrategies: widget.settingsController.doubleConfigCopy!.customStrategies,
+                            stopWithWhite: widget.settingsController.doubleConfigCopy!.stopWithWhite);
 
                         BlocProvider.of<DoubleConfigCubit>(context)
                             .saveDoubleConfig(doubleConfig);
+                        Navigator.pop(context);
                         Navigator.pop(context);
                       }
                     },
@@ -411,7 +414,7 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                       padding: EdgeInsets.only(left: 20, top: 10),
                       child: Text(
                         'Resultados',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     )
                   : Container(),
@@ -430,29 +433,29 @@ class _BlazeCreateStrategyPageState extends State<BlazeCreateStrategyPage> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 20, top: 10),
-                          child: Row(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.only(right: 175),
-                                child: Text(
-                                  'Entradas',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
-                                ),
-                              ),
                               const Text(
-                                'Adicionar',
+                                'Entradas',
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
+                                    color: Colors.white, fontSize: 20),
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  numberEntrys.value++;
-                                },
-                                icon: const Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Adicionar',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  ),
+                                  IconButton(
+                                    onPressed: () => numberEntrys.value++,
+                                    icon: const Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
                               )
                             ],
                           ),

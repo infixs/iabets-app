@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:ia_bet/domain/entities/double_config.dart';
 
-class SettingsController {
+class SettingsController extends ChangeNotifier {
   DoubleConfigEntity? doubleConfigCopy;
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   final GlobalKey<FormState> formkeyEdit = GlobalKey<FormState>();
@@ -40,6 +40,11 @@ class SettingsController {
     stopWithWhite.value = doubleConfig.stopWithWhite;
   }
 
+  void update() {
+    notifyListeners();
+  }
+
+  @override
   void dispose() {
     galesIsOn.dispose();
     elevationIsOn.dispose();
@@ -56,5 +61,6 @@ class SettingsController {
     editFirstBetWhiteController.dispose();
     editMultiplierController.dispose();
     stopWithWhite.dispose();
+    super.dispose();
   }
 }

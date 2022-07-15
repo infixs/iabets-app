@@ -64,6 +64,7 @@ class _BlazeCustomStrategiesManagerState
                         customStrategies:
                             doubleConfigState.doubleConfig.customStrategies,
                         index: index,
+                        settingsController: widget.settingsController,
                       ),
                     ),
                   ),

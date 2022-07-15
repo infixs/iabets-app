@@ -6,8 +6,10 @@ import 'package:ia_bet/domain/entities/double_config.dart';
 
 import '../../../../data/model/double_config_model.dart';
 import '../../../bloc/blaze/double_config_cubit.dart';
+import '../controller_settings.dart';
 
 class CustomStrategyItem extends StatelessWidget {
+  final SettingsController settingsController;
   final int index;
   final List<CustomStrategyModel> customStrategies;
   final DoubleConfigEntity doubleConfig;
@@ -15,7 +17,8 @@ class CustomStrategyItem extends StatelessWidget {
       {super.key,
       required this.index,
       required this.customStrategies,
-      required this.doubleConfig});
+      required this.doubleConfig,
+      required this.settingsController});
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +66,7 @@ class CustomStrategyItem extends StatelessWidget {
 
                 BlocProvider.of<DoubleConfigCubit>(context)
                     .saveDoubleConfig(newDoubleConfig);
+                settingsController.update();
               },
               icon: const Icon(
                 Icons.close,
