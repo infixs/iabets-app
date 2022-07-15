@@ -5,16 +5,18 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
-  const UserModel(
-      {required super.name,
-      required super.email,
-      required super.phoneNumber,
-      required super.isOnline,
-      required super.uid,
-      required super.status,
-      required super.profileUrl,
-      required super.isAdmin,
-      required super.deviceId});
+  const UserModel({
+    required super.name,
+    required super.email,
+    required super.phoneNumber,
+    required super.isOnline,
+    required super.uid,
+    required super.status,
+    required super.profileUrl,
+    required super.isAdmin,
+    required super.deviceId,
+    required super.apiToken,
+  });
 
   factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
     final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
@@ -29,6 +31,7 @@ class UserModel extends UserEntity {
       status: data['status'],
       isAdmin: data['isAdmin'],
       deviceId: data['deviceId'],
+      apiToken: data['apiToken'],
     );
   }
 
@@ -41,7 +44,8 @@ class UserModel extends UserEntity {
         "profileUrl": profileUrl,
         "status": status,
         "isAdmin": isAdmin,
-        'deviceId': deviceId
+        'deviceId': deviceId,
+        'apiToken': apiToken,
       };
 
   Future<String> getDeviceInfo() async {

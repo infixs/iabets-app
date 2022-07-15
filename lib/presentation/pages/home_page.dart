@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:ia_bet/data/datasource/api.dart';
 
 import '../../domain/entities/user_entity.dart';
 import '../bloc/user/user_cubit.dart';
@@ -20,17 +21,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<List<Map<String, dynamic>>> makeButtons() async => [
-        {
-          'title': 'Canais',
-          'icon': SvgPicture.asset(
-            'assets/images/chat.svg',
-            width: 30,
-          ),
-          'route': await getUser() != null
-              ? CanaisPage(userInfo: (await getUser() as UserEntity))
-              : null,
-        },
+  Future<List<Map<String, dynamic>>> makeButtons() async {
+    final bool crashItem = (await getProducts(
+      (await getUser() as UserEntity),
+    ))
+        .contains('Crash');
+    final bool doubleItem = (await getProducts(
+      (await getUser() as UserEntity),
+    ))
+        .contains('Automatic');
+
+    final List<Map<String, dynamic>> buttons = [
+      {
+        'title': 'Canais',
+        'icon': SvgPicture.asset(
+          'assets/images/chat.svg',
+          width: 30,
+        ),
+        'route': await getUser() != null
+            ? CanaisPage(userInfo: (await getUser() as UserEntity))
+            : null,
+      },
+    ];
+
+    if (doubleItem) {
+      buttons.add(
         {
           'title': 'Blaze double',
           'icon': SvgPicture.asset(
@@ -39,6 +54,10 @@ class _HomePageState extends State<HomePage> {
           ),
           'route': const BlazeDoublePage(),
         },
+      );
+    }
+    if (crashItem) {
+      buttons.add(
         {
           'title': 'Blaze crash',
           'icon': SvgPicture.asset(
@@ -47,7 +66,11 @@ class _HomePageState extends State<HomePage> {
           ),
           'route': const BlazeCrashPage(),
         },
-      ];
+      );
+    }
+
+    return buttons;
+  }
 
   Future<UserEntity?> getUser() async {
     if (await BlocProvider.of<UserCubit>(context).isSignInUseCase.call()) {

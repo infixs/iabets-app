@@ -80,7 +80,8 @@ class CommunicationCubit extends Cubit<CommunicationState> {
           uid: senderId,
           profileUrl: '',
           isAdmin: true,
-          deviceId: await getDeviceInfo());
+          deviceId: await getDeviceInfo(),
+          apiToken: '');
 
       await sendTextMessageUseCase.sendTextMessage(
           TextMessageEntity(

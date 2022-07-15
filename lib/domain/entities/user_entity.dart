@@ -10,6 +10,7 @@ class UserEntity extends Equatable {
   final String status;
   final String profileUrl;
   final bool isAdmin;
+  final String apiToken;
 
   const UserEntity(
       {required this.name,
@@ -20,7 +21,8 @@ class UserEntity extends Equatable {
       required this.uid,
       this.status = "Hey there! I am Using WhatsApp Clone.",
       required this.profileUrl,
-      required this.isAdmin});
+      required this.isAdmin,
+      required this.apiToken});
 
   @override
   List<Object> get props =>

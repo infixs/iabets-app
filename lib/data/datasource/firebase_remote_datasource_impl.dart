@@ -44,16 +44,17 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     final uid = await getCurrentUID();
     await userCollection.doc(uid).get().then((userDoc) async {
       final newUser = UserModel(
-              status: user.status,
-              profileUrl: user.profileUrl,
-              isOnline: user.isOnline,
-              uid: uid,
-              phoneNumber: user.phoneNumber,
-              email: user.email,
-              name: user.name,
-              isAdmin: user.isAdmin,
-              deviceId: await getDeviceInfo())
-          .toDocument();
+        status: user.status,
+        profileUrl: user.profileUrl,
+        isOnline: user.isOnline,
+        uid: uid,
+        phoneNumber: user.phoneNumber,
+        email: user.email,
+        name: user.name,
+        isAdmin: user.isAdmin,
+        deviceId: await getDeviceInfo(),
+        apiToken: user.apiToken,
+      ).toDocument();
       if (!userDoc.exists) {
         //create new user
         userCollection.doc(uid).set(newUser);

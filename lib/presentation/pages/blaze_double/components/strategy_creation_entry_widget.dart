@@ -38,7 +38,7 @@ class _StrategyCreationEntryWidgetState
         child: Row(
           children: [
             const Padding(
-              padding: EdgeInsets.only(right: 10),
+              padding: EdgeInsets.only(right: 6),
               child: Text(
                 'Resultado',
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -95,7 +95,7 @@ class _StrategyCreationEntryWidgetState
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 10, right: 10),
+              padding: EdgeInsets.only(left: 6, right: 6),
               child: Text(
                 'Entrada',
                 style: TextStyle(color: Colors.white, fontSize: 16),
