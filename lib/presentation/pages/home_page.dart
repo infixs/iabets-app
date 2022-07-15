@@ -70,6 +70,12 @@ class _HomePageState extends State<HomePage> {
         break;
       case 'logout':
         BlocProvider.of<UserCubit>(context).logout();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ),
+        );
         break;
     }
   }

@@ -19,8 +19,8 @@ class EntryStrategyModel extends EntryStrategyEntity {
       );
 
   Map<String, dynamic> toJson() {
-    String target = '';
-    String condition = '';
+    late String target;
+    late String condition;
     if (colorTarget == StrategyColors.red) {
       target = 'red';
     } else if (colorTarget == StrategyColors.black) {
