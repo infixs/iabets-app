@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
+import 'package:ia_bet/presentation/bloc/blaze/double/double_config_cubit.dart';
 
 import '../../../data/model/custom_strategy_model.dart';
 import '../../../data/model/double_config_model.dart';

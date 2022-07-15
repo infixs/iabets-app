@@ -1,6 +1,7 @@
 // Classe abstrata da api do firebase
 import 'dart:typed_data';
 
+import 'package:ia_bet/domain/entities/crash_entity.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/strategy_entity.dart';
@@ -42,4 +43,5 @@ abstract class FirebaseRemoteDataSource {
   Stream<DoubleConfigEntity> getDoubleConfig();
   Future<void> saveDoubleConfig(DoubleConfigModel doubleConfig);
   Future<List<StrategyEntity>> getStrategies();
+  Stream<CrashEntity?> getCrashEntity();
 }

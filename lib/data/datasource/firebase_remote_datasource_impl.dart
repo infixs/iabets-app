@@ -9,11 +9,13 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ia_bet/data/datasource/firebase_remote_datasource.dart';
+import 'package:ia_bet/data/model/crash_model.dart';
 import 'package:ia_bet/data/model/double_config_model.dart';
 import 'package:ia_bet/data/model/my_chat_model.dart';
 import 'package:ia_bet/data/model/strategy_model.dart';
 import 'package:ia_bet/data/model/text_message_model.dart';
 import 'package:ia_bet/data/model/user_model.dart';
+import 'package:ia_bet/domain/entities/crash_entity.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
@@ -497,6 +499,16 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
           .map((docQuerySnapshot) =>
               StrategyModel.fromSnapshot(docQuerySnapshot))
           .toList();
+    });
+  }
+
+  @override
+  Stream<CrashEntity?> getCrashEntity() {
+    final colletion =
+        fireStore.collection("configurations").doc('blazeCrashEntry');
+
+    return colletion.snapshots().map((snapshot) {
+      return snapshot.exists ? CrashModel.fromSnapshot(snapshot) : null;
     });
   }
 }

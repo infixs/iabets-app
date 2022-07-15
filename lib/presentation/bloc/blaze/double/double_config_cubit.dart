@@ -5,8 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/repositories/firebase_repository.dart';
 
-import '../../../data/model/double_config_model.dart';
-import '../../../domain/entities/strategy_entity.dart';
+import '../../../../data/model/double_config_model.dart';
+import '../../../../domain/entities/strategy_entity.dart';
 
 part 'double_config_state.dart';
 

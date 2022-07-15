@@ -29,7 +29,8 @@ import 'package:ia_bet/domain/usecases/sign_out_usecase.dart';
 import 'package:ia_bet/domain/usecases/upload_file_usecase.dart';
 import 'package:ia_bet/domain/usecases/verify_phone_number_usecase.dart';
 import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
-import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
+import 'package:ia_bet/presentation/bloc/blaze/crash/crash_cubit.dart';
+import 'package:ia_bet/presentation/bloc/blaze/double/double_config_cubit.dart';
 import 'package:ia_bet/presentation/bloc/communication/communication_cubit.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
@@ -75,6 +76,7 @@ Future<void> init() async {
 
   sl.registerFactory<DoubleConfigCubit>(() => DoubleConfigCubit(sl.call()));
 
+  sl.registerFactory<CrashCubit>(() => CrashCubit(sl.call()));
   //useCase
   sl.registerLazySingleton<GetCreateCurrentUserUseCase>(
       () => GetCreateCurrentUserUseCase(repository: sl.call()));
