@@ -18,24 +18,16 @@ class EntryStrategyModel extends EntryStrategyEntity {
                 : StrategyColors.white),
       );
 
-  Map<String, dynamic> toJson() {
-    late String target;
-    late String condition;
-    if (colorTarget == StrategyColors.red) {
-      target = 'red';
-    } else if (colorTarget == StrategyColors.black) {
-      target = 'black';
-    } else if (colorTarget == StrategyColors.white) {
-      target = 'white';
-    }
-    if (colorResult == StrategyColors.red) {
-      condition = 'red';
-    } else if (colorTarget == StrategyColors.black) {
-      condition = 'black';
-    } else if (colorTarget == StrategyColors.white) {
-      condition = 'white';
-    }
-
-    return {'condition': condition, 'target': target};
-  }
+  Map<String, dynamic> toJson() => {
+        'condition': (colorResult == StrategyColors.red)
+            ? 'red'
+            : (colorResult == StrategyColors.black)
+                ? 'black'
+                : 'white',
+        'target': (colorTarget == StrategyColors.red)
+            ? 'red'
+            : (colorTarget == StrategyColors.black)
+                ? 'black'
+                : 'white'
+      };
 }
