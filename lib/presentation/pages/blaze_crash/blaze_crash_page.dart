@@ -96,7 +96,8 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                   color: const Color(0xff0A1117),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: (crashState is CrashLoaded)
+                    child: (crashState is CrashLoaded &&
+                            !crashState.crashEntity.waiting)
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
