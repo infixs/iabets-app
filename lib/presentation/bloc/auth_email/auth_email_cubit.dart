@@ -33,7 +33,7 @@ class EmailAuthCubit extends Cubit<EmailAuthState> {
     try {
       var data = {"email": email, "password": password};
 
-      Response response = await getLogin(data);
+      final Response response = await getLogin(data);
 
       if (response.data['user'] != 'user not found') {
         await signInWithEmailUseCase.call(email: email, password: password);
@@ -80,7 +80,8 @@ class EmailAuthCubit extends Cubit<EmailAuthState> {
           isOnline: true,
           profileUrl: profileUrl,
           isAdmin: isAdmin,
-          deviceId: await getDeviceInfo());
+          deviceId: await getDeviceInfo(),
+          apiToken: apiToken);
 
       debugPrint('testando...');
       debugPrint(user.isAdmin.toString());

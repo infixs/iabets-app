@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/data/model/custom_strategy_model.dart';
 
 import '../../../data/model/double_config_model.dart';
-import '../../bloc/blaze/double_config_cubit.dart';
+import '../../bloc/blaze/double/double_config_cubit.dart';
 
 import 'blaze_create_strategy_page.dart';
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';

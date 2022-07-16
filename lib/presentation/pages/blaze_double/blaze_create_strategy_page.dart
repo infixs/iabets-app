@@ -8,7 +8,7 @@ import 'package:ia_bet/data/model/result_strategy_model.dart';
 
 import '../../../data/model/custom_strategy_model.dart';
 import '../../../domain/entities/custom_strategy_entity.dart';
-import '../../bloc/blaze/double_config_cubit.dart';
+import '../../bloc/blaze/double/double_config_cubit.dart';
 
 import 'blaze_create_strategy_controller.dart';
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';

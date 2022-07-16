@@ -8,7 +8,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/firebase_options.dart';
 import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
-import 'package:ia_bet/presentation/bloc/blaze/double_config_cubit.dart';
+import 'package:ia_bet/presentation/bloc/blaze/crash/crash_cubit.dart';
+import 'package:ia_bet/presentation/bloc/blaze/double/double_config_cubit.dart';
 import 'package:ia_bet/presentation/bloc/communication/communication_cubit.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
@@ -54,6 +55,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<DoubleConfigCubit>(
           create: (_) => di.sl<DoubleConfigCubit>(),
+        ),
+        BlocProvider<CrashCubit>(
+          create: (_) => di.sl<CrashCubit>(),
         )
       ],
       child: MaterialApp(

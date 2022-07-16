@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/model/double_config_model.dart';
-import '../../bloc/blaze/double_config_cubit.dart';
+import '../../bloc/blaze/double/double_config_cubit.dart';
 
 import 'components/custom_app_bar_settings/custom_app_bar_settings.dart';
 import 'controller_settings.dart';

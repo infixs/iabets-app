@@ -5,7 +5,7 @@ import 'package:ia_bet/data/model/custom_strategy_model.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 
 import '../../../../data/model/double_config_model.dart';
-import '../../../bloc/blaze/double_config_cubit.dart';
+import '../../../bloc/blaze/double/double_config_cubit.dart';
 import '../controller_settings.dart';
 
 class CustomStrategyItem extends StatelessWidget {

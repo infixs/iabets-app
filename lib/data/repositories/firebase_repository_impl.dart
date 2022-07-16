@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:ia_bet/data/datasource/firebase_remote_datasource.dart';
+import 'package:ia_bet/domain/entities/crash_entity.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/strategy_entity.dart';
@@ -124,5 +125,10 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   @override
   Future<List<StrategyEntity>> getStrategies() {
     return remoteDataSource.getStrategies();
+  }
+
+  @override
+  Stream<CrashEntity?> getCrashEntity() {
+    return remoteDataSource.getCrashEntity();
   }
 }
