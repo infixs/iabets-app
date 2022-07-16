@@ -22,14 +22,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Future<List<Map<String, dynamic>>> makeButtons() async {
-    final bool crashItem = (await getProducts(
-      (await getUser() as UserEntity),
-    ))
-        .contains('Crash');
-    final bool doubleItem = (await getProducts(
-      (await getUser() as UserEntity),
-    ))
-        .contains('Automatic');
+    var products = [];
+    try {
+      products = (await getProducts(
+        (await getUser() as UserEntity),
+      ));
+    } catch (e) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const LoginPage(),
+        ),
+      );
+    }
+
+    final bool crashItem = products.contains('Crash');
+    final bool doubleItem = products.contains('Automatic');
 
     final List<Map<String, dynamic>> buttons = [
       {
