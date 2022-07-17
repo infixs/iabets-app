@@ -29,11 +29,11 @@ dependencies:
 
   #firebase
   firebase_core: ^1.19.2
-  firebase_auth: 
-  cloud_firestore: 
-  firebase_storage: 
-  firebase_messaging: ^11.2.8
-  cloud_functions: ^3.2.10
+  firebase_auth: ^3.4.2
+  cloud_firestore: ^3.3.0
+  firebase_storage: ^10.3.2
+  firebase_messaging: ^12.0.0
+  cloud_functions: ^3.3.2
 
   responsive_builder: 
 
