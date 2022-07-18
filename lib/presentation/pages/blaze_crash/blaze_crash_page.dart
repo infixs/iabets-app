@@ -27,43 +27,31 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
     return BlocBuilder<CrashCubit, CrashState>(builder: (context, crashState) {
       return Scaffold(
         backgroundColor: const Color(0xff0f1923),
-        appBar: CustomAppBarSettings(
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
-              ),
-              const Text(
-                'Blaze Crash',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              )
-            ],
-          ),
-        ),
+        appBar: AppBar(elevation: 0, backgroundColor: Colors.transparent),
         body: Container(
           height: size.height,
           width: size.width,
-          decoration: BoxDecoration(
+          /*decoration: BoxDecoration(
             image: DecorationImage(
                 image: Image.asset('assets/images/APPCrash2.jpg').image,
                 fit: BoxFit.cover),
-          ),
+          ),*/
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              const Text(
+                'Imagem 1',
+                style: TextStyle(color: Colors.white),
+              ),
               SizedBox(
-                height: 100,
-                width: 250,
+                height: 120,
+                width: 300,
                 child: Card(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: const BorderSide(color: Color(0xff282C2D), width: 2),
+                    borderRadius: BorderRadius.circular(20),
+                    side: const BorderSide(color: Color(0xfffe7800), width: 2),
                   ),
-                  color: const Color(0xff0A1117),
+                  color: const Color(0xff1f1f1f),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -78,22 +66,29 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                               ? crashState.crashEntity.status
                               : '--',
                           style: const TextStyle(
-                              color: Colors.white, fontSize: 20),
+                              color: Color(0xfffe7800), fontSize: 40),
                         )
                       ],
                     ),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 250,
-                width: 250,
+              Container(
+                height: 270,
+                width: 270,
+                decoration: const BoxDecoration(boxShadow: [
+                  BoxShadow(
+                    color: Color(0xfffe7800),
+                    blurRadius: 20.0,
+                    spreadRadius: 00,
+                  ),
+                ], shape: BoxShape.circle),
                 child: Card(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: const BorderSide(color: Color(0xff282C2D), width: 2),
+                    borderRadius: BorderRadius.circular(360),
+                    side: const BorderSide(color: Color(0xfffe7800), width: 2),
                   ),
-                  color: const Color(0xff0A1117),
+                  color: const Color(0xff1f1f1f),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: (crashState is CrashLoaded &&
@@ -102,10 +97,10 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
-                                'Estratégia\nConfirmada',
+                                'Alvo\nConfirmado',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    color: Color(0xffB35D2C),
+                                    color: Colors.white,
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -115,7 +110,7 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                                 child: Text(
                                   crashState.crashEntity.titleSignal,
                                   style: const TextStyle(
-                                      color: Colors.white, fontSize: 50),
+                                      color: Color(0xfffe7800), fontSize: 50),
                                 ),
                               ),
                               const Text(
@@ -128,7 +123,7 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                                     color: Colors.white, fontSize: 30),
                               ),
                               const Text(
-                                'RODADA APÓS',
+                                'Oportunidade\n apos o alvo',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ],
@@ -147,6 +142,10 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                           ),
                   ),
                 ),
+              ),
+              const Text(
+                'Imagem 2',
+                style: TextStyle(color: Colors.white),
               ),
             ],
           ),
