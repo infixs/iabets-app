@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/blaze/crash/crash_cubit.dart';
 import '../../bloc/blaze/crash/crash_state.dart';
-import '../blaze_double/components/custom_app_bar_settings/custom_app_bar_settings.dart';
 
 class BlazeCrashPage extends StatefulWidget {
   const BlazeCrashPage({super.key});
@@ -26,22 +25,24 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
 
     return BlocBuilder<CrashCubit, CrashState>(builder: (context, crashState) {
       return Scaffold(
+        extendBodyBehindAppBar: true,
         backgroundColor: const Color(0xff0f1923),
         appBar: AppBar(elevation: 0, backgroundColor: Colors.transparent),
         body: Container(
           height: size.height,
           width: size.width,
-          /*decoration: BoxDecoration(
-            image: DecorationImage(
-                image: Image.asset('assets/images/APPCrash2.jpg').image,
-                fit: BoxFit.cover),
-          ),*/
+          decoration: BoxDecoration(
+            gradient: RadialGradient(colors: <Color>[
+              Colors.grey.shade700,
+              Colors.black,
+            ], radius: 1),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const Text(
-                'Imagem 1',
-                style: TextStyle(color: Colors.white),
+              Image.asset(
+                'assets/images/iabetscrash.png',
+                width: 140,
               ),
               SizedBox(
                 height: 120,
@@ -59,14 +60,20 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                       children: [
                         const Text(
                           'CHANCE DE CRASH FAVORÁVEL',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w600),
                         ),
                         Text(
                           (crashState is CrashLoaded)
                               ? crashState.crashEntity.status
                               : '--',
                           style: const TextStyle(
-                              color: Color(0xfffe7800), fontSize: 40),
+                              color: Color(0xfffe7800),
+                              fontSize: 40,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold),
                         )
                       ],
                     ),
@@ -74,8 +81,8 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                 ),
               ),
               Container(
-                height: 270,
-                width: 270,
+                height: 275,
+                width: 275,
                 decoration: const BoxDecoration(boxShadow: [
                   BoxShadow(
                     color: Color(0xfffe7800),
@@ -102,6 +109,7 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 22,
+                                    fontFamily: 'Montserrat',
                                     fontWeight: FontWeight.bold),
                               ),
                               Padding(
@@ -110,21 +118,33 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                                 child: Text(
                                   crashState.crashEntity.titleSignal,
                                   style: const TextStyle(
-                                      color: Color(0xfffe7800), fontSize: 50),
+                                      color: Color(0xfffe7800),
+                                      fontSize: 50,
+                                      fontFamily: 'Nasalization',
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ),
                               const Text(
                                 'Entrar da',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w600),
                               ),
                               Text(
                                 crashState.crashEntity.orientationSignal,
                                 style: const TextStyle(
-                                    color: Colors.white, fontSize: 30),
+                                    color: Colors.white,
+                                    fontSize: 30,
+                                    fontFamily: 'Nasalization',
+                                    fontWeight: FontWeight.w600),
                               ),
                               const Text(
                                 'Oportunidade\n apos o alvo',
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w600),
                               ),
                             ],
                           )
@@ -143,9 +163,9 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                   ),
                 ),
               ),
-              const Text(
-                'Imagem 2',
-                style: TextStyle(color: Colors.white),
+              Image.asset(
+                'assets/images/voce_nao_esta_sozinho.png',
+                width: 80,
               ),
             ],
           ),

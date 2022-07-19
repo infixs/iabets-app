@@ -90,3 +90,13 @@ flutter:
           weight: 300
         - asset: assets/fonts/Roboto/Roboto-Bold.ttf
           weight: 600
+
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat/static/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat/static/Montserrat-Bold.ttf
+
+    - family: Nasalization
+      fonts:
+        - asset: assets/fonts/Nasalization/nasalization-rg.otf
+        
