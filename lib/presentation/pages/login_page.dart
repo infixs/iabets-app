@@ -18,17 +18,18 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-final TextEditingController _emailController = TextEditingController();
-final TextEditingController _passwordController = TextEditingController();
-
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
 
   @override
   void initState() {
-    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
+    super.initState();
   }
 
   @override
@@ -63,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
               BlocProvider.of<AuthCubit>(context).loggedIn().whenComplete(() {
                 debugPrint('Login page: depois do getCurrentUserWithReturn..');
 
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (_) => const HomePage(),

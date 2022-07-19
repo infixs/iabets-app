@@ -1,6 +1,6 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ia_bet/data/datasource/api.dart';
@@ -11,7 +11,6 @@ import '../bloc/user/user_cubit.dart';
 import 'blaze_crash/blaze_crash_page.dart';
 import 'blaze_double/blaze_page.dart';
 import 'canais_page.dart';
-import 'canal_page.dart';
 import 'login_page.dart';
 import 'perfil_page.dart';
 
@@ -36,6 +35,38 @@ class _HomePageState extends State<HomePage> {
         );
       }
     });
+  }
+
+  void requestNotificationPermission(context, List<String> products) async {
+    final String? token = await FirebaseMessaging.instance.getToken();
+
+    if (token == null) {
+      return;
+    } else {
+      BlocProvider.of<UserCubit>(context).setUserToken(token);
+
+      final NotificationSettings settings =
+          await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+
+      if (settings.authorizationStatus == AuthorizationStatus.authorized ||
+          settings.authorizationStatus == AuthorizationStatus.provisional) {
+        for (var product in products) {
+          {
+            FirebaseMessaging.instance.subscribeToTopic(product);
+          }
+        }
+      } else {
+        debugPrint('User declined or has not accepted permission');
+      }
+    }
   }
 
   Future<List<Map<String, dynamic>>> makeButtons() async {
@@ -126,12 +157,6 @@ class _HomePageState extends State<HomePage> {
         break;
       case 'logout':
         BlocProvider.of<UserCubit>(context).logout();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ),
-        );
         break;
     }
   }
@@ -255,33 +280,5 @@ class _HomePageState extends State<HomePage> {
         }
       },
     );
-  }
-}
-
-void requestNotificationPermission(context, List<String> products) async {
-  String token = await FirebaseMessaging.instance.getToken() as String;
-
-  BlocProvider.of<UserCubit>(context).setUserToken(token);
-
-  NotificationSettings settings =
-      await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
-
-  if (settings.authorizationStatus == AuthorizationStatus.authorized ||
-      settings.authorizationStatus == AuthorizationStatus.provisional) {
-    for (var product in products) {
-      {
-        FirebaseMessaging.instance.subscribeToTopic(product);
-      }
-    }
-  } else {
-    debugPrint('User declined or has not accepted permission');
   }
 }

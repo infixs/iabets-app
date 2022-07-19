@@ -11,7 +11,7 @@ final BaseOptions options = BaseOptions(
     receiveTimeout: 30000,
     headers: {'Accept': 'application/json'});
 
-late final String apiToken;
+late String apiToken;
 
 Future<Response> getLogin(var userLogin) async {
   final Dio dio = Dio(options);
