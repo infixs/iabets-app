@@ -14,9 +14,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class CanaisPage extends StatefulWidget {
   final UserEntity userInfo;
-  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
-  CanaisPage({Key? key, required this.userInfo}) : super(key: key);
+  const CanaisPage({Key? key, required this.userInfo}) : super(key: key);
 
   @override
   State<CanaisPage> createState() => _CanaisPageState();
@@ -65,7 +64,6 @@ class _CanaisPageState extends State<CanaisPage> {
 
   @override
   Widget build(BuildContext context) {
-    requestNotificationPermission(context);
     debugPrint('Home Page: Estou no build...');
     return WillPopScope(
       onWillPop: () async => true,
@@ -417,33 +415,6 @@ class _CanaisPageState extends State<CanaisPage> {
         );
       },
     );
-  }
-
-  void requestNotificationPermission(context) async {
-    String token = await FirebaseMessaging.instance.getToken() as String;
-
-    BlocProvider.of<UserCubit>(context).setUserToken(token);
-
-    NotificationSettings settings = await widget._messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      debugPrint('User granted permission');
-      FirebaseMessaging.instance.subscribeToTopic('chat');
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.provisional) {
-      debugPrint('User granted provisional permission');
-      FirebaseMessaging.instance.subscribeToTopic('chat');
-    } else {
-      debugPrint('User declined or has not accepted permission');
-    }
   }
 }
 
