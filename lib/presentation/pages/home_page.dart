@@ -58,6 +58,14 @@ class _HomePageState extends State<HomePage> {
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized ||
           settings.authorizationStatus == AuthorizationStatus.provisional) {
+        if (!products.contains('crash')) {
+          FirebaseMessaging.instance.unsubscribeFromTopic('crash');
+        }
+
+        if (!products.contains('automatic')) {
+          FirebaseMessaging.instance.unsubscribeFromTopic('automatic');
+        }
+
         for (var product in products) {
           {
             FirebaseMessaging.instance.subscribeToTopic(product);
@@ -180,6 +188,15 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.refresh_rounded),
+                tooltip: 'Atualizar Produtos',
+                onPressed: () {
+                  setState(() {});
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Seus produtos foram atualizados')));
+                },
+              ),
               PopupMenuButton<String>(
                 onSelected: handleMenuClick,
                 itemBuilder: (BuildContext bcontext) => [
