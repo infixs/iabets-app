@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
               //545590pqjlrd
             }
             if (emailAuthState is PhoneAuthFailure) {
-              BlocProvider.of<EmailAuthCubit>(context).emit(PhoneAuthInitial());
+              BlocProvider.of<EmailAuthCubit>(context).authFailure();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Colors.red,
@@ -176,20 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                                 hintText: 'Senha',
                               ),
                             ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                child: const Text(
-                                  'Esqueci minha senha',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      decoration: TextDecoration.underline),
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
-                            const SizedBox(height: 0),
+                            const SizedBox(height: 12),
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(

@@ -27,6 +27,10 @@ class EmailAuthCubit extends Cubit<EmailAuthState> {
 
   //get getCreateCurrentUserUseCase => null;
 
+  void authFailure() {
+    emit(PhoneAuthInitial());
+  }
+
   Future<void> submitVerifyPhoneNumber(
       {required String email, required String password}) async {
     emit(PhoneAuthLoading());

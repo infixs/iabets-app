@@ -110,6 +110,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       'channelName': title,
       'message': message
     });
+    debugPrint(resp.toString());
   }
 
   @override
@@ -453,6 +454,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       String canalName, String name, Uint8List file) async {
     final TaskSnapshot resultTask =
         await FirebaseStorage.instance.ref('$canalName}/$name').putData(file);
+    debugPrint(resultTask.toString());
   }
 
   @override
