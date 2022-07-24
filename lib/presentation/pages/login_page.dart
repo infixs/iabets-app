@@ -181,17 +181,19 @@ class _LoginPageState extends State<LoginPage> {
                               width: double.infinity,
                               child: ElevatedButton(
                                   style: ButtonStyle(
-                                      padding:
-                                          MaterialStateProperty.all<EdgeInsets>(
-                                              const EdgeInsets.all(15)),
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              kSecondColor)),
-                                  child: const Text('Efetuar login',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.w700)),
+                                    padding:
+                                        MaterialStateProperty.all<EdgeInsets>(
+                                            const EdgeInsets.all(15)),
+                                    backgroundColor:
+                                        MaterialStateProperty.all(kSecondColor),
+                                  ),
+                                  child: const Text(
+                                    'Efetuar login',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w700),
+                                  ),
                                   onPressed: () async {
                                     debugPrint(_emailController.text);
                                     if (_emailController.text.isNotEmpty &&

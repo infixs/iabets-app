@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:bloc/bloc.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:equatable/equatable.dart';
@@ -55,9 +57,14 @@ class UserCubit extends Cubit<UserState> {
     return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
   }
 
-  void logout() {
-    signOutUseCase.call();
-    emit(UserLogout());
+  Future<void> logout() async {
+    try {
+      await signOutUseCase.call();
+      emit(UserLogout());
+    } catch (error, stackTrace) {
+      debugPrint(error.toString());
+      debugPrint(stackTrace.toString());
+    }
   }
 
   Future<void> getCurrentUser() async {

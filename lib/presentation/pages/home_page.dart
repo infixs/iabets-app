@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void handleMenuClick(String value) {
+  void handleMenuClick(String value) async {
     switch (value) {
       case 'config':
         Navigator.push(
@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
         );
         break;
       case 'logout':
-        BlocProvider.of<UserCubit>(context).logout();
+        await BlocProvider.of<UserCubit>(context).logout();
         break;
     }
   }
