@@ -102,6 +102,11 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   }
 
   @override
+  Future<bool> resetPassword({required String email}) async {
+    return remoteDataSource.resetPassword(email: email);
+  }
+
+  @override
   Future<void> uploadFileMessage(
       String canalName, String name, Uint8List file) {
     return remoteDataSource.uploadFileMessage(canalName, name, file);

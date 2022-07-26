@@ -13,6 +13,7 @@ import 'package:ia_bet/domain/usecases/get_current_usercase.dart';
 import 'package:ia_bet/domain/usecases/set_user_token_usecase.dart';
 
 import '../../../domain/usecases/is_sign_in_usecase.dart';
+import '../../../domain/usecases/reset_password_usercase.dart';
 import '../../../domain/usecases/sign_out_usecase.dart';
 
 part 'user_state.dart';
@@ -24,6 +25,7 @@ class UserCubit extends Cubit<UserState> {
   final SetUserTokenUseCase setUserTokenUseCase;
   final IsSignInUseCase isSignInUseCase;
   final SignOutUseCase signOutUseCase;
+  final ResetPasswordUseCase resetPasswordUseCase;
   late final List<UserEntity> allusersGlobal;
 
   UserCubit({
@@ -33,6 +35,7 @@ class UserCubit extends Cubit<UserState> {
     required this.getCurrentUserUseCase,
     required this.isSignInUseCase,
     required this.signOutUseCase,
+    required this.resetPasswordUseCase,
   }) : super(UserInitial());
 
   Future<void> getAllUsers() async {
@@ -65,6 +68,10 @@ class UserCubit extends Cubit<UserState> {
       debugPrint(error.toString());
       debugPrint(stackTrace.toString());
     }
+  }
+
+  Future<bool> resetPassword(String email) async {
+    return resetPasswordUseCase.call(email);
   }
 
   Future<void> getCurrentUser() async {

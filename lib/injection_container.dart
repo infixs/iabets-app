@@ -20,6 +20,7 @@ import 'package:ia_bet/domain/usecases/get_one_to_one_single_user_chat_channel_u
 import 'package:ia_bet/domain/usecases/get_text_messages_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_url_file_usecase.dart';
 import 'package:ia_bet/domain/usecases/is_sign_in_usecase.dart';
+import 'package:ia_bet/domain/usecases/reset_password_usercase.dart';
 import 'package:ia_bet/domain/usecases/send_push_message_usecase.dart';
 import 'package:ia_bet/domain/usecases/send_text_message_usecase.dart';
 import 'package:ia_bet/domain/usecases/set_user_token_usecase.dart';
@@ -67,6 +68,7 @@ Future<void> init() async {
         getCurrentUserUseCase: sl.call(),
         isSignInUseCase: sl.call(),
         signOutUseCase: sl.call(),
+        resetPasswordUseCase: sl.call(),
       ));
 
   sl.registerFactory<EmailAuthCubit>(() => EmailAuthCubit(
@@ -92,7 +94,9 @@ Future<void> init() async {
       () => VerifyPhoneNumberUseCase(repository: sl.call()));
   sl.registerLazySingleton<SignInWithEmailUseCase>(
       () => SignInWithEmailUseCase(repository: sl.call()));
-
+  sl.registerLazySingleton<ResetPasswordUseCase>(
+    () => ResetPasswordUseCase(repository: sl.call()),
+  );
   sl.registerLazySingleton<GetAllUserUseCase>(
       () => GetAllUserUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetCurrentUserUseCase>(
