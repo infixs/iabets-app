@@ -79,7 +79,8 @@ class UserCubit extends Cubit<UserState> {
       final userStreamData = getCurrentUserUseCase.call();
       userStreamData.listen((user) async {
         if (user.deviceId != await getDeviceInfo()) {
-          logout();
+          debugPrint(logout().toString());
+          //  logout();
         }
         emit(CurrentUserChanged(user));
       });
