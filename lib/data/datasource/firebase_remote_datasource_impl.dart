@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ia_bet/data/datasource/firebase_remote_datasource.dart';
@@ -21,6 +20,7 @@ import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 
+import '../../constants/device_id.dart';
 import '../../domain/entities/strategy_entity.dart';
 
 class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
@@ -34,11 +34,6 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       {required this.auth,
       required this.fireStore,
       required this.fireFunctions});
-
-  Future<String> getDeviceInfo() async {
-    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
-  }
 
   @override
   Future<void> getCreateCurrentUser(UserEntity user) async {
@@ -54,7 +49,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         email: user.email,
         name: user.name,
         isAdmin: user.isAdmin,
-        deviceId: await getDeviceInfo(),
+        deviceId: Deviceid.deviceId,
         apiToken: user.apiToken,
       ).toDocument();
       if (!userDoc.exists) {
@@ -65,6 +60,14 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         userCollection.doc(uid).update(newUser);
       }
     });
+  }
+
+  @override
+  Future<void> setDeviceidToken() async {
+    final uid = await getCurrentUID();
+    final DocumentReference docRef = fireStore.collection("users").doc(uid);
+
+    docRef.update({'deviceId': Deviceid.deviceId});
   }
 
   @override

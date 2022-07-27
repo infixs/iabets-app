@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
@@ -20,6 +19,8 @@ import 'package:ia_bet/domain/usecases/get_text_messages_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_url_file_usecase.dart';
 import 'package:ia_bet/domain/usecases/send_text_message_usecase.dart';
 import 'package:ia_bet/domain/usecases/upload_file_usecase.dart';
+
+import '../../../constants/device_id.dart';
 
 part 'communication_state.dart';
 
@@ -46,11 +47,6 @@ class CommunicationCubit extends Cubit<CommunicationState> {
       required this.deleteMessagesUseCase,
       required this.editMessageUseCase})
       : super(CommunicationInitial());
-
-  Future<String> getDeviceInfo() async {
-    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
-  }
 
   Future<void> sendTextMessage(
       {required String senderId,
@@ -80,7 +76,7 @@ class CommunicationCubit extends Cubit<CommunicationState> {
           uid: senderId,
           profileUrl: '',
           isAdmin: true,
-          deviceId: await getDeviceInfo(),
+          deviceId: Deviceid.deviceId,
           apiToken: '');
 
       await sendTextMessageUseCase.sendTextMessage(

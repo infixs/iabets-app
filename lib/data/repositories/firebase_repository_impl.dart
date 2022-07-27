@@ -136,4 +136,9 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   Stream<CrashEntity?> getCrashEntity() {
     return remoteDataSource.getCrashEntity();
   }
+
+  @override
+  Future<void> setDeviceidToken() async {
+    remoteDataSource.setDeviceidToken();
+  }
 }

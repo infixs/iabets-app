@@ -1,8 +1,9 @@
 // user model
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
+
+import '../../constants/device_id.dart';
 
 class UserModel extends UserEntity {
   const UserModel({
@@ -30,7 +31,7 @@ class UserModel extends UserEntity {
       profileUrl: data['profileUrl'],
       status: data['status'],
       isAdmin: data['isAdmin'],
-      deviceId: data['deviceId'],
+      deviceId: data['deviceId'] ?? Deviceid.deviceId,
       apiToken: data['apiToken'],
     );
   }
@@ -47,9 +48,4 @@ class UserModel extends UserEntity {
         'deviceId': deviceId,
         'apiToken': apiToken,
       };
-
-  Future<String> getDeviceInfo() async {
-    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
-  }
 }

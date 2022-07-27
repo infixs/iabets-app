@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:ia_bet/presentation/bloc/communication/communication_cubit.dart'
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
 
+import 'constants/device_id.dart';
 import 'injection_container.dart' as di;
 import 'presentation/pages/home_page.dart';
 import 'presentation/pages/login_page.dart';
@@ -24,6 +26,7 @@ void main() async {
   );
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();
+  Deviceid.deviceId = await getDeviceInfo();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: kPrimaryColor,
@@ -31,8 +34,12 @@ void main() async {
       statusBarIconBrightness: Brightness.light,
     ),
   );
-
   runApp(const MyApp());
+}
+
+Future<String> getDeviceInfo() async {
+  final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
 }
 
 class MyApp extends StatelessWidget {

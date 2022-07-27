@@ -23,6 +23,7 @@ abstract class FirebaseRemoteDataSource {
   Future<void> getCreateCurrentUser(UserEntity user);
   Stream<UserEntity> getCurrentUser();
   Future<void> setUserToken(String token);
+  Future<void> setDeviceidToken();
 
   Stream<List<UserEntity>> getAllUsers();
   Stream<List<TextMessageEntity>> getMessages(String channelId);

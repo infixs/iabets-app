@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 import 'package:bloc/bloc.dart';
-import 'package:device_info_plus/device_info_plus.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
@@ -12,6 +12,7 @@ import 'package:ia_bet/domain/usecases/get_all_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_current_usercase.dart';
 import 'package:ia_bet/domain/usecases/set_user_token_usecase.dart';
 
+import '../../../constants/device_id.dart';
 import '../../../domain/usecases/is_sign_in_usecase.dart';
 import '../../../domain/usecases/reset_password_usercase.dart';
 import '../../../domain/usecases/sign_out_usecase.dart';
@@ -55,11 +56,6 @@ class UserCubit extends Cubit<UserState> {
     return (state as CurrentUserChanged).user.isAdmin == true;
   }
 
-  Future<String> getDeviceInfo() async {
-    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
-  }
-
   Future<void> logout() async {
     try {
       await signOutUseCase.call();
@@ -78,9 +74,8 @@ class UserCubit extends Cubit<UserState> {
     try {
       final userStreamData = getCurrentUserUseCase.call();
       userStreamData.listen((user) async {
-        if (user.deviceId != await getDeviceInfo()) {
-          debugPrint(logout().toString());
-          //  logout();
+        if (user.deviceId != Deviceid.deviceId) {
+          logout();
         }
         emit(CurrentUserChanged(user));
       });

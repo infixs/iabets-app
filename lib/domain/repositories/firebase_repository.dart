@@ -22,6 +22,7 @@ abstract class FirebaseRepository {
   Future<String> getCurrentUID();
   Future<void> getCreateCurrentUser(UserEntity user);
   Future<void> setUserToken(String token);
+  Future<void> setDeviceidToken();
 
   Stream<List<UserEntity>> getAllUsers();
   Stream<UserEntity> getCurrentUser();

@@ -46,6 +46,7 @@ Future<void> init() async {
         signOutUseCase: sl.call(),
         isSignInUseCase: sl.call(),
         getCurrentUidUseCase: sl.call(),
+        firebaseRepository: sl.call(),
       ));
 
   sl.registerFactory<CommunicationCubit>(() => CommunicationCubit(

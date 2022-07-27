@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 import 'package:bloc/bloc.dart';
-import 'package:device_info_plus/device_info_plus.dart';
+
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ia_bet/data/datasource/api.dart';
@@ -11,6 +11,8 @@ import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/domain/usecases/get_create_current_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_current_uid_usecase.dart';
 import 'package:ia_bet/domain/usecases/sign_in_with_email_usecase.dart';
+
+import '../../../constants/device_id.dart';
 
 part 'auth_email_state.dart';
 
@@ -35,7 +37,10 @@ class EmailAuthCubit extends Cubit<EmailAuthState> {
       {required String email, required String password}) async {
     emit(PhoneAuthLoading());
     try {
-      var data = {"email": email, "password": password};
+      final Map<String, String> data = {
+        "email": email.trim(),
+        "password": password.trim()
+      };
 
       final Response response = await getLogin(data);
 
@@ -45,12 +50,14 @@ class EmailAuthCubit extends Cubit<EmailAuthState> {
         var uid = await getCurrentUidUseCase.call();
 
         await submitProfileInfo(
-            name: response.data['user']['name'] ?? email,
-            profileUrl: '',
-            phoneNumber: '',
-            email: email,
-            uid: uid,
-            isAdmin: response.data['user']['is_admin'] == 1 ? true : false);
+          name: response.data['user']['name'] ?? email,
+          profileUrl: '',
+          phoneNumber: '',
+          email: email,
+          uid: uid,
+          isAdmin: response.data['user']['is_admin'] == 1 ? true : false,
+          deviceId: Deviceid.deviceId,
+        );
       }
 
       emit(PhoneAuthSmsCodeReceived());
@@ -63,18 +70,14 @@ class EmailAuthCubit extends Cubit<EmailAuthState> {
     }
   }
 
-  Future<String> getDeviceInfo() async {
-    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
-  }
-
   Future<void> submitProfileInfo(
       {required String name,
       required String profileUrl,
       required String phoneNumber,
       required String email,
       required String uid,
-      required bool isAdmin}) async {
+      required bool isAdmin,
+      required String deviceId}) async {
     try {
       final UserEntity user = UserEntity(
           uid: uid,
@@ -84,7 +87,7 @@ class EmailAuthCubit extends Cubit<EmailAuthState> {
           isOnline: true,
           profileUrl: profileUrl,
           isAdmin: isAdmin,
-          deviceId: await getDeviceInfo(),
+          deviceId: Deviceid.deviceId,
           apiToken: apiToken);
 
       debugPrint('testando...');
