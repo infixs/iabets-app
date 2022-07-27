@@ -31,18 +31,21 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
         body: Container(
           height: size.height,
           width: size.width,
-          decoration: BoxDecoration(
-            gradient: RadialGradient(colors: <Color>[
-              Colors.grey.shade700,
-              Colors.black,
-            ], radius: 1),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/crash_background_oficial.jpg'),
+              fit: BoxFit.cover,
+            ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Image.asset(
-                'assets/images/iabetscrash.png',
-                width: 140,
+              Padding(
+                padding: const EdgeInsets.only(top: 50),
+                child: Image.asset(
+                  'assets/images/iabetscrash.png',
+                  width: 170,
+                ),
               ),
               SizedBox(
                 height: 120,
@@ -52,7 +55,7 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                     borderRadius: BorderRadius.circular(20),
                     side: const BorderSide(color: Color(0xfffe7800), width: 2),
                   ),
-                  color: const Color(0xff1f1f1f),
+                  color: Colors.black,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -67,7 +70,7 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                         ),
                         Text(
                           (crashState is CrashLoaded)
-                              ? crashState.crashEntity.status
+                              ? crashState.crashEntity.status.toUpperCase()
                               : '--',
                           style: const TextStyle(
                               color: Color(0xfffe7800),
@@ -95,7 +98,7 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                     borderRadius: BorderRadius.circular(360),
                     side: const BorderSide(color: Color(0xfffe7800), width: 2),
                   ),
-                  color: const Color(0xff1f1f1f),
+                  color: Colors.black,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: (crashState is CrashLoaded &&
@@ -127,9 +130,9 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                               const Text(
                                 'Entrar da',
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.w600),
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                ),
                               ),
                               Text(
                                 crashState.crashEntity.orientationSignal,
@@ -142,9 +145,9 @@ class _BlazeCrashPageState extends State<BlazeCrashPage> {
                               const Text(
                                 'Oportunidade\n apos o alvo',
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.w600),
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                ),
                               ),
                             ],
                           )

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ia_bet/data/datasource/api.dart';
 
+import '../../constants/products_app.dart';
 import '../../domain/entities/user_entity.dart';
 import '../bloc/user/user_cubit.dart';
 
@@ -21,7 +22,9 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with ProductsApp {
+  final List<String> myProducts = [];
+
   @override
   void initState() {
     super.initState();
@@ -58,18 +61,14 @@ class _HomePageState extends State<HomePage> {
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized ||
           settings.authorizationStatus == AuthorizationStatus.provisional) {
-        if (!products.contains('crash')) {
-          FirebaseMessaging.instance.unsubscribeFromTopic('crash');
-        }
-
-        if (!products.contains('automatic')) {
-          FirebaseMessaging.instance.unsubscribeFromTopic('automatic');
+        for (String product in products) {
+          if (!ProductsApp.existingProducts.contains(product)) {
+            FirebaseMessaging.instance.unsubscribeFromTopic(product);
+          }
         }
 
         for (var product in products) {
-          {
-            FirebaseMessaging.instance.subscribeToTopic(product);
-          }
+          FirebaseMessaging.instance.subscribeToTopic(product);
         }
       } else {
         debugPrint('User declined or has not accepted permission');
@@ -78,7 +77,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<Map<String, dynamic>>> makeButtons() async {
-    var products = [];
+    late final List<String> products;
     try {
       products = (await getProducts(
         (await getUser() as UserEntity),
@@ -96,11 +95,16 @@ class _HomePageState extends State<HomePage> {
     final bool doubleItem = products.contains('Automatic');
 
     if (mounted) {
-      requestNotificationPermission(context, [
-        'chat',
-        ...(crashItem ? ['crash'] : []),
-        ...(doubleItem ? ['automatic'] : [])
-      ]);
+      myProducts.add('chat');
+
+      if (crashItem) {
+        myProducts.add('crash');
+      }
+      if (doubleItem) {
+        myProducts.add('automatic');
+      }
+
+      requestNotificationPermission(context, myProducts);
     }
 
     final List<Map<String, dynamic>> buttons = [
@@ -153,6 +157,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void unsubscribeOnLogout() {
+    for (String product in myProducts) {
+      if (!ProductsApp.existingProducts.contains(product)) {
+        FirebaseMessaging.instance.unsubscribeFromTopic(product);
+      }
+    }
+  }
+
   void handleMenuClick(String value) async {
     switch (value) {
       case 'config':
@@ -164,6 +176,7 @@ class _HomePageState extends State<HomePage> {
         );
         break;
       case 'logout':
+        unsubscribeOnLogout();
         await BlocProvider.of<UserCubit>(context).logout();
         break;
     }

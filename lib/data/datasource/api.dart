@@ -26,7 +26,7 @@ Future<Response> getLogin(var userLogin) async {
   return response;
 }
 
-Future<List> getProducts(UserEntity user) async {
+Future<List<String>> getProducts(UserEntity user) async {
   final Dio dio = Dio();
   final List<String> listProductsId = [];
 
