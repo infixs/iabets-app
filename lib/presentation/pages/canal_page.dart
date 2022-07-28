@@ -139,7 +139,7 @@ class _CanalPageState extends State<CanalPage> {
               ),
             ),
           ),
-          backgroundColor: kBackgroundColor,
+          backgroundColor: CustomColors.kBackgroundColor,
           appBar: AppBar(
             titleSpacing: 0,
             elevation: 0,
@@ -504,7 +504,7 @@ class _CanalPageState extends State<CanalPage> {
                               color: (messages.messages[index].recipientUID ==
                                       widget.senderUID
                                   ? const Color(0x00F2F2F7)
-                                  : kPrimaryColor),
+                                  : CustomColors.kPrimaryColor),
                             ),
                           )
                         : Container()

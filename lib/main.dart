@@ -30,12 +30,14 @@ void main() async {
   await di.init();
   try {
     Deviceid.deviceId = await getDeviceInfo();
-  } catch (e) {
+  } catch (error, stackTrace) {
     Deviceid.deviceId = 'none|catch';
+    debugPrint(error.toString());
+    debugPrint(stackTrace.toString());
   }
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: kPrimaryColor,
+      statusBarColor: CustomColors.kPrimaryColor,
       statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.light,
     ),
@@ -44,21 +46,20 @@ void main() async {
 }
 
 Future<String> getDeviceInfo() async {
-  var deviceInfo = DeviceInfoPlugin();
+  final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   if (Platform.isIOS) {
-    // import 'dart:io'
-    var iosDeviceInfo = await deviceInfo.iosInfo;
+    final IosDeviceInfo iosDeviceInfo = await deviceInfo.iosInfo;
     return iosDeviceInfo.identifierForVendor ??
         (await deviceInfo.deviceInfo).toMap()['id'] ??
         'none|isIOS'; // unique ID on iOS
   } else if (Platform.isAndroid) {
-    var androidDeviceInfo = await deviceInfo.androidInfo;
+    final AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
     return androidDeviceInfo.androidId ??
         (await deviceInfo.deviceInfo).toMap()['id'] ??
         'none|isAndroid'; // unique ID on Android
+  } else {
+    return 'none|notFound';
   }
-
-  return 'none|notFound';
 }
 
 class MyApp extends StatelessWidget {
@@ -91,16 +92,16 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: const MaterialColor(0xFF263C43, {
-            50: kPrimaryColor,
-            100: kPrimaryColor,
-            200: kPrimaryColor,
-            300: kPrimaryColor,
-            400: kPrimaryColor,
-            500: kPrimaryColor,
-            600: kPrimaryColor,
-            700: kPrimaryColor,
-            800: kPrimaryColor,
-            900: kPrimaryColor,
+            50: CustomColors.kPrimaryColor,
+            100: CustomColors.kPrimaryColor,
+            200: CustomColors.kPrimaryColor,
+            300: CustomColors.kPrimaryColor,
+            400: CustomColors.kPrimaryColor,
+            500: CustomColors.kPrimaryColor,
+            600: CustomColors.kPrimaryColor,
+            700: CustomColors.kPrimaryColor,
+            800: CustomColors.kPrimaryColor,
+            900: CustomColors.kPrimaryColor,
           }),
           fontFamily: 'Roboto',
         ),

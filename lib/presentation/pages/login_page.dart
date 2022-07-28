@@ -19,7 +19,7 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with CustomTheme {
   final formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   late TextEditingController _emailController;
@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        backgroundColor: kBackgroundColor,
+        backgroundColor: CustomColors.kBackgroundColor,
         key: _scaffoldKey,
         body: MultiBlocProvider(
           providers: [
@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                                               const EdgeInsets.all(15)),
                                       backgroundColor:
                                           MaterialStateProperty.all(
-                                              kSecondColor),
+                                              CustomColors.kSecondColor),
                                     ),
                                     child: const Text(
                                       'Efetuar login',

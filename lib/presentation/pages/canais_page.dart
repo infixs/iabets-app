@@ -23,7 +23,7 @@ class CanaisPage extends StatefulWidget {
 
 TextEditingController _canalController = TextEditingController();
 
-class _CanaisPageState extends State<CanaisPage> {
+class _CanaisPageState extends State<CanaisPage> with CustomTheme {
 /*   Future<void> setupInteractedMessage() async {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
@@ -71,13 +71,13 @@ class _CanaisPageState extends State<CanaisPage> {
           builder: (context, myChatState) {
         debugPrint('Home Page: Bloc MyChatCubit...');
         return Scaffold(
-          backgroundColor: kBackgroundColor,
+          backgroundColor: CustomColors.kBackgroundColor,
           appBar: AppBar(
             iconTheme: const IconThemeData(
               color: Colors.white,
             ),
             elevation: 0,
-            backgroundColor: kPrimaryColor,
+            backgroundColor: CustomColors.kPrimaryColor,
             title: const Text(
               "IABets",
               style: TextStyle(
@@ -152,7 +152,7 @@ class _CanaisPageState extends State<CanaisPage> {
                               decoration: const BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8)),
-                                color: kPrimaryColor,
+                                color: CustomColors.kPrimaryColor,
                               ),
                               child: SvgPicture.asset(
                                 "assets/icons/placar.svg",
@@ -224,11 +224,12 @@ class _CanaisPageState extends State<CanaisPage> {
                             child: Container(
                               padding: const EdgeInsets.all(15),
                               decoration: const BoxDecoration(
-                                color: kPrimaryColor,
+                                color: CustomColors.kPrimaryColor,
                                 shape: BoxShape.circle,
                               ),
                               child: const Center(
-                                child: Icon(Icons.add, color: kSecondColor),
+                                child: Icon(Icons.add,
+                                    color: CustomColors.kSecondColor),
                               ),
                             ),
                           ),
@@ -270,15 +271,15 @@ class _CanaisPageState extends State<CanaisPage> {
           borderRadius: BorderRadius.circular(8),
         ),
         suffixIcon: const Material(
-          color: kPrimaryColor,
-          shadowColor: kPrimaryColor,
+          color: CustomColors.kPrimaryColor,
+          shadowColor: CustomColors.kPrimaryColor,
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(8.0),
             bottomRight: Radius.circular(8.0),
           ),
           child: Icon(
             Icons.search_rounded,
-            color: kSecondColor,
+            color: CustomColors.kSecondColor,
           ),
         ),
       ),
@@ -314,7 +315,7 @@ class _CanaisPageState extends State<CanaisPage> {
                     ),
                     title: Text(myChatData.myChat[index].channelId,
                         style: const TextStyle(
-                            color: kSecondColor,
+                            color: CustomColors.kSecondColor,
                             fontSize: 16.0,
                             fontWeight: FontWeight.w600)),
                     subtitle: Text(

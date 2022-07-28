@@ -11,7 +11,7 @@ class PerfilPage extends StatefulWidget {
   State<PerfilPage> createState() => _PerfilPageState();
 }
 
-class _PerfilPageState extends State<PerfilPage> {
+class _PerfilPageState extends State<PerfilPage> with CustomTheme {
   final ImagePicker _picker = ImagePicker();
   final MaskTextInputFormatter celularMask = MaskTextInputFormatter(
       mask: '(##) #####-####', filter: {"#": RegExp(r'[0-9]')});
@@ -19,9 +19,9 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kBackgroundColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       appBar: AppBar(
-        leading: const BackButton(color: kSecondColor),
+        leading: const BackButton(color: CustomColors.kSecondColor),
         elevation: 0,
         centerTitle: true,
         title: const Text("Perfil",
@@ -70,7 +70,8 @@ class _PerfilPageState extends State<PerfilPage> {
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.w400)),
                           const SizedBox(width: 10),
-                          const Icon(Icons.edit, size: 15, color: kSecondColor),
+                          const Icon(Icons.edit,
+                              size: 15, color: CustomColors.kSecondColor),
                         ],
                       ),
                       onTap: () =>
@@ -139,8 +140,8 @@ class _PerfilPageState extends State<PerfilPage> {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(kSecondColor)),
+                            backgroundColor: MaterialStateProperty.all(
+                                CustomColors.kSecondColor)),
                         child: const Text('Salvar alterações',
                             style: TextStyle(
                                 color: Colors.white,

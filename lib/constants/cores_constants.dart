@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-const kPrimaryColor = Color(0xFF263C43);
-const kSecondColor = Color(0xFF0ED41D);
-const kBackgroundColor = Color(0xFFFFFFFF);
-const textSilver = Color.fromARGB(255, 148, 148, 148);
+class CustomColors {
+  static const kPrimaryColor = Color(0xFF263C43);
+  static const kSecondColor = Color(0xFF0ED41D);
+  static const kBackgroundColor = Color(0xFFFFFFFF);
+  static const textSilver = Color.fromARGB(255, 148, 148, 148);
+}
