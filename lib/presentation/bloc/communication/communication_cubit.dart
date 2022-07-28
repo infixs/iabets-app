@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
@@ -17,6 +19,8 @@ import 'package:ia_bet/domain/usecases/get_text_messages_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_url_file_usecase.dart';
 import 'package:ia_bet/domain/usecases/send_text_message_usecase.dart';
 import 'package:ia_bet/domain/usecases/upload_file_usecase.dart';
+
+import '../../../constants/device_id.dart';
 
 part 'communication_state.dart';
 
@@ -64,14 +68,16 @@ class CommunicationCubit extends Cubit<CommunicationState> {
 
       allUsers = await userStreamData.first;*/
 
-      UserEntity userDefault = new UserEntity(
+      final UserEntity userDefault = UserEntity(
           name: senderName,
           email: 'admin@iabets.com.br',
           phoneNumber: '+55',
           isOnline: false,
           uid: senderId,
           profileUrl: '',
-          isAdmin: true);
+          isAdmin: true,
+          deviceId: Deviceid.deviceId,
+          apiToken: '');
 
       await sendTextMessageUseCase.sendTextMessage(
           TextMessageEntity(
@@ -83,10 +89,9 @@ class CommunicationCubit extends Cubit<CommunicationState> {
             recipientName: senderName,
             recipientUID: senderId,
             file: file,
-            isResponse: isResponse == null ? false : isResponse,
-            responseText: responseText == null ? '' : responseText,
-            responseSenderName:
-                responseSenderName == null ? '' : responseSenderName,
+            isResponse: isResponse ?? false,
+            responseText: responseText ?? '',
+            responseSenderName: responseSenderName ?? '',
             senderName: senderName,
           ),
           canalName,
@@ -130,10 +135,10 @@ class CommunicationCubit extends Cubit<CommunicationState> {
             element);
       });*/
     } on SocketException catch (e) {
-      print(e);
+      debugPrint(e.toString());
       emit(CommunicationFailure());
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       emit(CommunicationFailure());
     }
   }
@@ -167,9 +172,9 @@ class CommunicationCubit extends Cubit<CommunicationState> {
 
     List<String> deleteMessages = [];
 
-    messages.forEach((message) {
+    for (int message in messages) {
       deleteMessages.add(currentMessages[message].messageId);
-    });
+    }
 
     deleteMessagesUseCase.call(channelId, deleteMessages);
   }
@@ -181,9 +186,9 @@ class CommunicationCubit extends Cubit<CommunicationState> {
     String messageId =
         (state as CommunicationLoaded).messages[messageIndex].messageId;
 
-    print(channelId);
-    print(messageId);
-    print(messageText);
+    debugPrint(channelId);
+    debugPrint(messageId);
+    debugPrint(messageText);
     editMessageUseCase.call(channelId, messageId, messageText);
   }
 

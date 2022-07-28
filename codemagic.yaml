@@ -4,6 +4,7 @@ workflows:
     max_build_duration: 120
     instance_type: mac_pro
     environment:
+      flutter: 3.0.5
       cocoapods: 1.11.2
       java: 11.0.13
       xcode: 13.2.1
@@ -78,8 +79,7 @@ workflows:
       - name: Flutter build ipa and automatic versioning
         script: |
           flutter build ipa --release \
-          --no-sound-null-safety \
-          --build-name=3.3.0 \
+          --build-name=5.0.3 \
           --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1)) \
           --export-options-plist=/Users/builder/export_options.plist
     artifacts:

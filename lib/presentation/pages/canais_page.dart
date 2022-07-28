@@ -6,20 +6,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/constants/text_input_decoration.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
-import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
 import 'package:ia_bet/presentation/pages/canal_page.dart';
-import 'package:ia_bet/presentation/pages/login_page.dart';
-import 'package:ia_bet/presentation/pages/perfil_page.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
 class CanaisPage extends StatefulWidget {
   final UserEntity userInfo;
-  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
-  CanaisPage({Key? key, required this.userInfo}) : super(key: key);
+  const CanaisPage({Key? key, required this.userInfo}) : super(key: key);
 
   @override
   State<CanaisPage> createState() => _CanaisPageState();
@@ -50,66 +46,46 @@ class _CanaisPageState extends State<CanaisPage> {
     BlocProvider.of<MyChatCubit>(context).getMyChat(uid: '111');
     super.initState();
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      if (message.data.containsKey('channelId'))
+      if (message.data.containsKey('channelId')) {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CanalPage(
-                      canalName: message.data['channelId'],
-                      senderName: widget.userInfo.name,
-                      senderUID: widget.userInfo.uid,
-                      userInfo: widget.userInfo,
-                    )));
-      /*setState(() {
-            print('A new onMessageOpenedApp event was published!');
-            Navigator.pushNamed(context, '/message',
-            arguments: MessageArguments(message, true));
-          }); */
+          context,
+          MaterialPageRoute(
+            builder: (context) => CanalPage(
+              canalName: message.data['channelId'],
+              senderName: widget.userInfo.name,
+              senderUID: widget.userInfo.uid,
+              userInfo: widget.userInfo,
+            ),
+          ),
+        );
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    requestNotificationPermission(context);
-    print('Home Page: Estou no build...');
+    debugPrint('Home Page: Estou no build...');
     return WillPopScope(
       onWillPop: () async => true,
       child: BlocBuilder<MyChatCubit, MyChatState>(
           builder: (context, myChatState) {
-        print('Home Page: Bloc MyChatCubit...');
+        debugPrint('Home Page: Bloc MyChatCubit...');
         return Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: AppBar(
-            iconTheme: IconThemeData(
+            iconTheme: const IconThemeData(
               color: Colors.white,
             ),
-            automaticallyImplyLeading: false,
             elevation: 0,
-            centerTitle: false,
             backgroundColor: kPrimaryColor,
-            title: Text("IABets",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                )),
-            actions: [
-              PopupMenuButton<String>(
-                onSelected: handleMenuClick,
-                itemBuilder: (BuildContext bcontext) {
-                  return [
-                    PopupMenuItem<String>(
-                      value: 'config',
-                      child: Text('Configurações'),
-                    ),
-                    PopupMenuItem<String>(value: 'logout', child: Text('Sair'))
-                  ];
-                },
+            title: const Text(
+              "IABets",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
-              /*IconButton(
-                    icon: Icon(Icons.logout, color: Colors.red),
-                    onPressed: () => Navigator.of(context).pop())*/
-            ],
+            ),
           ),
           body: Stack(children: [
             Positioned(
@@ -119,7 +95,7 @@ class _CanaisPageState extends State<CanaisPage> {
               bottom: 0,
               child: ShaderMask(
                 shaderCallback: (rect) {
-                  return LinearGradient(
+                  return const LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [Colors.black, Colors.transparent],
@@ -172,8 +148,8 @@ class _CanaisPageState extends State<CanaisPage> {
                               launchURL('https://placar.iabetsoficial.com.br/');
                             },
                             child: Container(
-                              padding: EdgeInsets.all(15),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(15),
+                              decoration: const BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8)),
                                 color: kPrimaryColor,
@@ -187,8 +163,8 @@ class _CanaisPageState extends State<CanaisPage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 5),
-                          Text("Placar",
+                          const SizedBox(height: 5),
+                          const Text("Placar",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
@@ -218,7 +194,7 @@ class _CanaisPageState extends State<CanaisPage> {
                               ),
                             ),
                             onTap: () {
-                              print(2);
+                              debugPrint(2);
                               launchURL(
                                   'https://iabetsoficial.com.br/calculadora');
                             },
@@ -236,28 +212,27 @@ class _CanaisPageState extends State<CanaisPage> {
                   ),
                   BlocBuilder<UserCubit, UserState>(
                       builder: (context, userState) {
-                    print('Home Page: Estou no bloc builder do UserState');
+                    debugPrint('Home Page: Estou no bloc builder do UserState');
                     if (userState is CurrentUserChanged &&
                         userState.user.isAdmin) {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              child: Container(
-                                padding: EdgeInsets.all(15),
-                                decoration: BoxDecoration(
-                                  color: kPrimaryColor,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: Icon(Icons.add, color: kSecondColor),
-                                ),
+                            behavior: HitTestBehavior.translucent,
+                            onTap: _showDialog,
+                            child: Container(
+                              padding: const EdgeInsets.all(15),
+                              decoration: const BoxDecoration(
+                                color: kPrimaryColor,
+                                shape: BoxShape.circle,
                               ),
-                              onTap: () {
-                                _showDialog();
-                              }),
-                          SizedBox(height: 5),
+                              child: const Center(
+                                child: Icon(Icons.add, color: kSecondColor),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
                         ],
                       );
                     } else {
@@ -282,19 +257,19 @@ class _CanaisPageState extends State<CanaisPage> {
         fillColor: Colors.grey[300],
         contentPadding:
             const EdgeInsets.only(left: 15.0, bottom: 8.0, top: 8.0),
-        hintStyle: TextStyle(
+        hintStyle: const TextStyle(
             fontSize: 16, fontWeight: FontWeight.w300, color: Colors.grey),
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
             fontSize: 16, fontWeight: FontWeight.w300, color: Colors.grey),
         focusedBorder: OutlineInputBorder(
-          borderSide: new BorderSide(color: Colors.grey.shade300),
-          borderRadius: new BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: new BorderSide(color: Colors.grey.shade300),
-          borderRadius: new BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
         ),
-        suffixIcon: Material(
+        suffixIcon: const Material(
           color: kPrimaryColor,
           shadowColor: kPrimaryColor,
           borderRadius: BorderRadius.only(
@@ -313,7 +288,7 @@ class _CanaisPageState extends State<CanaisPage> {
   //Listar Canais
 
   Widget listaCanaisWidget(MyChatLoaded myChatData) {
-    final nowTime = new DateTime.now();
+    final nowTime = DateTime.now();
     return myChatData.myChat.isEmpty
         ? Container()
         : ListView.builder(
@@ -325,20 +300,20 @@ class _CanaisPageState extends State<CanaisPage> {
               return Column(
                 children: [
                   ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                     leading: Container(
                       height: 48,
                       width: 48,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(48)),
-                          image: new DecorationImage(
+                          image: DecorationImage(
                               fit: BoxFit.contain,
                               alignment: Alignment.center,
                               image:
                                   AssetImage("assets/images/canal-image.png"))),
                     ),
                     title: Text(myChatData.myChat[index].channelId,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: kSecondColor,
                             fontSize: 16.0,
                             fontWeight: FontWeight.w600)),
@@ -353,7 +328,7 @@ class _CanaisPageState extends State<CanaisPage> {
                                         .indexOf('\n'))
                             : myChatData.myChat[index].recentTextMessage,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 15.0,
                             fontWeight: FontWeight.w400)),
@@ -361,19 +336,19 @@ class _CanaisPageState extends State<CanaisPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Padding(
-                              padding: EdgeInsets.only(top: 6),
+                              padding: const EdgeInsets.only(top: 6),
                               child: Text(
                                   chatTime.day != nowTime.day
                                       ? timeago.format(
                                           nowTime.subtract(difference),
                                           locale: 'pt_BR')
                                       : "${chatTime.hour.toString().padLeft(2, '0')}:${chatTime.minute.toString().padLeft(2, '0')}",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.w400))),
                           Padding(
-                              padding: EdgeInsets.only(top: 5, right: 2),
+                              padding: const EdgeInsets.only(top: 5, right: 2),
                               child: SvgPicture.asset(
                                 "assets/icons/pin.svg",
                                 height: 15,
@@ -399,27 +374,13 @@ class _CanaisPageState extends State<CanaisPage> {
             });
   }
 
-  void handleMenuClick(String value) async {
-    switch (value) {
-      case 'config':
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PerfilPage()));
-        break;
-      case 'logout':
-        await BlocProvider.of<AuthCubit>(context).loggedOut();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
-        break;
-    }
-  }
-
   void _showDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // retorna um objeto do tipo Dialog
         return AlertDialog(
-          title: new Text("Novo Canal:"),
+          title: const Text("Novo Canal:"),
           content: TextFormField(
             controller: _canalController,
             keyboardType: TextInputType.text,
@@ -429,8 +390,8 @@ class _CanaisPageState extends State<CanaisPage> {
           ),
           actions: <Widget>[
             // define os botões na base do dialogo
-            new FlatButton(
-              child: new Text("Salvar"),
+            ElevatedButton(
+              child: const Text("Salvar"),
               onPressed: () async {
                 BlocProvider.of<UserCubit>(context).createChatChannel(
                     uid: widget.userInfo.uid, name: _canalController.text);
@@ -438,14 +399,16 @@ class _CanaisPageState extends State<CanaisPage> {
                 // Navigator.of(context).pop();
                 //Abrir ChatScreen
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CanalPage(
-                              canalName: _canalController.text,
-                              senderName: widget.userInfo.name,
-                              senderUID: widget.userInfo.uid,
-                              userInfo: widget.userInfo,
-                            )));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CanalPage(
+                      canalName: _canalController.text,
+                      senderName: widget.userInfo.name,
+                      senderUID: widget.userInfo.uid,
+                      userInfo: widget.userInfo,
+                    ),
+                  ),
+                );
               },
             ),
           ],
@@ -453,35 +416,10 @@ class _CanaisPageState extends State<CanaisPage> {
       },
     );
   }
-
-  void requestNotificationPermission(context) async {
-    String token = await FirebaseMessaging.instance.getToken() as String;
-
-    BlocProvider.of<UserCubit>(context).setUserToken(token);
-
-    NotificationSettings settings = await widget._messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-      FirebaseMessaging.instance.subscribeToTopic('chat');
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
-      FirebaseMessaging.instance.subscribeToTopic('chat');
-    } else {
-      print('User declined or has not accepted permission');
-    }
-  }
 }
 
-void launchURL(url) async {
-  if (!await launch(url)) throw 'Could not launch $url';
+void launchURL(String url) async {
+  if (!await launchUrl(Uri.parse(url))) {
+    throw Exception('Could not launch $url');
+  }
 }

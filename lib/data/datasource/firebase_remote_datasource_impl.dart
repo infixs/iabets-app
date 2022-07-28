@@ -8,16 +8,19 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ia_bet/data/datasource/firebase_remote_datasource.dart';
+import 'package:ia_bet/data/model/crash_model.dart';
 import 'package:ia_bet/data/model/double_config_model.dart';
 import 'package:ia_bet/data/model/my_chat_model.dart';
 import 'package:ia_bet/data/model/strategy_model.dart';
 import 'package:ia_bet/data/model/text_message_model.dart';
 import 'package:ia_bet/data/model/user_model.dart';
+import 'package:ia_bet/domain/entities/crash_entity.dart';
 import 'package:ia_bet/domain/entities/double_config.dart';
 import 'package:ia_bet/domain/entities/my_chat_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 
+import '../../constants/device_id.dart';
 import '../../domain/entities/strategy_entity.dart';
 
 class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
@@ -36,17 +39,19 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   Future<void> getCreateCurrentUser(UserEntity user) async {
     final userCollection = fireStore.collection("users");
     final uid = await getCurrentUID();
-    await userCollection.doc(uid).get().then((userDoc) {
+    await userCollection.doc(uid).get().then((userDoc) async {
       final newUser = UserModel(
-              status: user.status,
-              profileUrl: user.profileUrl,
-              isOnline: user.isOnline,
-              uid: uid,
-              phoneNumber: user.phoneNumber,
-              email: user.email,
-              name: user.name,
-              isAdmin: user.isAdmin)
-          .toDocument();
+        status: user.status,
+        profileUrl: user.profileUrl,
+        isOnline: user.isOnline,
+        uid: uid,
+        phoneNumber: user.phoneNumber,
+        email: user.email,
+        name: user.name,
+        isAdmin: user.isAdmin,
+        deviceId: Deviceid.deviceId,
+        apiToken: user.apiToken,
+      ).toDocument();
       if (!userDoc.exists) {
         //create new user
         userCollection.doc(uid).set(newUser);
@@ -58,6 +63,14 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   }
 
   @override
+  Future<void> setDeviceidToken() async {
+    final uid = await getCurrentUID();
+    final DocumentReference docRef = fireStore.collection("users").doc(uid);
+
+    docRef.update({'deviceId': Deviceid.deviceId});
+  }
+
+  @override
   Future<String> getCurrentUID() async => auth.currentUser!.uid;
 
   @override
@@ -66,20 +79,22 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     if (auth.currentUser == null) {
       throw Exception('User not logged');
     }
-    final uid = auth.currentUser!.uid;
+    final uid = auth.currentUser?.uid;
     return userCollection.doc(uid).snapshots().map((snapshot) {
       return UserModel.fromSnapshot(snapshot);
     });
   }
 
   @override
-  Future<bool> isSignIn() async => auth.currentUser!.uid != null;
+  Future<bool> isSignIn() async => auth.currentUser != null ? true : false;
 
   @override
   Future<void> setUserToken(String token) async {
     final userCollection = fireStore.collection("users");
-    final uid = auth.currentUser!.uid;
-    await userCollection.doc(uid).update({'token': token});
+    final uid = auth.currentUser?.uid;
+    if (uid != null) {
+      await userCollection.doc(uid).update({'token': token});
+    }
   }
 
   @override
@@ -92,12 +107,13 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   @override
   Future<void> sendPushMessage(
       String channelId, String title, String message) async {
-    HttpsCallable callable = fireFunctions.httpsCallable('sendMessage');
+    final HttpsCallable callable = fireFunctions.httpsCallable('sendMessage');
     final resp = callable.call(<String, dynamic>{
       'channelId': channelId,
       'channelName': title,
       'message': message
     });
+    debugPrint(resp.toString());
   }
 
   @override
@@ -106,12 +122,12 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   @override
   Future<void> signInWithEmail(
       {required String email, required String password}) async {
-    print(email);
+    debugPrint(email);
 
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      print(e);
+      debugPrint(e.toString());
 
       if (e.code == 'user-not-found') {
         try {
@@ -129,26 +145,25 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     }
   }
 
+  void phoneVerificationCompleted(AuthCredential authCredential) {
+    debugPrint("phone verified : Token ${authCredential.token}");
+  }
+
+  void phoneVerificationFailed(FirebaseAuthException firebaseAuthException) {
+    debugPrint(
+      "phone failed : ${firebaseAuthException.message},${firebaseAuthException.code}",
+    );
+  }
+
+  void phoneCodeAutoRetrievalTimeout(String verificationId) {
+    _verificationId = verificationId;
+    debugPrint("time out :$verificationId");
+  }
+
+  void phoneCodeSent(String verificationId, [int? forceResendingToken]) {}
+
   @override
   Future<void> verifyPhoneNumber(String phoneNumber) async {
-    final PhoneVerificationCompleted phoneVerificationCompleted =
-        (AuthCredential authCredential) {
-      print("phone verified : Token ${authCredential.token}");
-    };
-
-    final PhoneVerificationFailed phoneVerificationFailed =
-        (FirebaseAuthException firebaseAuthException) {
-      print(
-        "phone failed : ${firebaseAuthException.message},${firebaseAuthException.code}",
-      );
-    };
-    final PhoneCodeAutoRetrievalTimeout phoneCodeAutoRetrievalTimeout =
-        (String verificationId) {
-      this._verificationId = verificationId;
-      print("time out :$verificationId");
-    };
-    final PhoneCodeSent phoneCodeSent =
-        (String verificationId, [int? forceResendingToken]) {};
     auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: phoneVerificationCompleted,
@@ -206,13 +221,13 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     myChatRef.doc(myChatEntity.channelId).get().then((myChatDoc) {
       if (!myChatDoc.exists) {
-        print('teste1223');
+        debugPrint('teste1223');
         //Create
         myChatRef.doc(myChatEntity.channelId).set(myNewChat);
         otherChatRef.doc(myChatEntity.channelId).set(otherNewChat);
         return;
       } else {
-        print('teste321');
+        debugPrint('teste321');
         //Update
         myChatRef.doc(myChatEntity.channelId).update(myNewChat);
         otherChatRef.doc(myChatEntity.channelId).update(otherNewChat);
@@ -229,8 +244,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     final userCollectionRef = fireStore.collection("users");
     final oneToOneChatChannelRef = fireStore.collection('myChatChannel');
 
-    final _chatChannelId = oneToOneChatChannelRef.doc().id;
-    var channelMap = {
+    final Map<String, String> channelMap = {
       "channelId": name,
       "channelType": "oneToOneChat",
       "name": name,
@@ -238,7 +252,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     };
     oneToOneChatChannelRef.doc(name).set(channelMap);
 
-    MyChatEntity myChatEntity = MyChatEntity(
+    final MyChatEntity myChatEntity = MyChatEntity(
       time: Timestamp.now(),
       senderUID: '111',
       recentTextMessage: "",
@@ -361,11 +375,11 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
         .doc(channelId)
         .collection('messages');
 
-    WriteBatch messagesBatch = fireStore.batch();
+    final WriteBatch messagesBatch = fireStore.batch();
 
-    messages.forEach((message) {
+    for (String message in messages) {
       messagesBatch.delete(messagesRef.doc(message));
-    });
+    }
 
     return await messagesBatch.commit();
   }
@@ -383,7 +397,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   }
 
   @override
-  Future<String> getOneToOneSingleUserChannelId(String uid, String canalName) {
+  Future<String?> getOneToOneSingleUserChannelId(String uid, String canalName) {
     final userCollectionRef = fireStore;
     return userCollectionRef
         .doc(uid)
@@ -394,7 +408,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       if (engagedChatChannel.docs.isNotEmpty) {
         return engagedChatChannel.docs.first.data()['channelId'];
       }
-      return Future.value(null);
+      return null;
     });
   }
 
@@ -443,6 +457,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       String canalName, String name, Uint8List file) async {
     final TaskSnapshot resultTask =
         await FirebaseStorage.instance.ref('$canalName}/$name').putData(file);
+    debugPrint(resultTask.toString());
   }
 
   @override
@@ -479,6 +494,7 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
     doubleConfigDoc.set(doubleConfig.toDocument(), SetOptions(merge: true));
   }
 
+  @override
   Future<List<StrategyEntity>> getStrategies() async {
     final strategiesCollection = fireStore.collection("blazeDoubleStrategies");
     return Future(() async {
@@ -490,6 +506,16 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
           .map((docQuerySnapshot) =>
               StrategyModel.fromSnapshot(docQuerySnapshot))
           .toList();
+    });
+  }
+
+  @override
+  Stream<CrashEntity?> getCrashEntity() {
+    final colletion =
+        fireStore.collection("configurations").doc('blazeCrashEntry');
+
+    return colletion.snapshots().map((snapshot) {
+      return snapshot.exists ? CrashModel.fromSnapshot(snapshot) : null;
     });
   }
 }

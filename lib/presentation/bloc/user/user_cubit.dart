@@ -1,12 +1,21 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:bloc/bloc.dart';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/domain/usecases/create_one_to_one_chat_channel_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_all_user_usecase.dart';
 import 'package:ia_bet/domain/usecases/get_current_usercase.dart';
 import 'package:ia_bet/domain/usecases/set_user_token_usecase.dart';
+
+import '../../../constants/device_id.dart';
+import '../../../domain/usecases/is_sign_in_usecase.dart';
+
+import '../../../domain/usecases/sign_out_usecase.dart';
 
 part 'user_state.dart';
 
@@ -15,14 +24,18 @@ class UserCubit extends Cubit<UserState> {
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final CreateOneToOneChatChannelUseCase createOneToOneChatChannelUseCase;
   final SetUserTokenUseCase setUserTokenUseCase;
-  var allusersGlobal;
+  final IsSignInUseCase isSignInUseCase;
+  final SignOutUseCase signOutUseCase;
+  late final List<UserEntity> allusersGlobal;
 
-  UserCubit(
-      {required this.getAllUserUseCase,
-      required this.createOneToOneChatChannelUseCase,
-      required this.setUserTokenUseCase,
-      required this.getCurrentUserUseCase})
-      : super(UserInitial());
+  UserCubit({
+    required this.getAllUserUseCase,
+    required this.createOneToOneChatChannelUseCase,
+    required this.setUserTokenUseCase,
+    required this.getCurrentUserUseCase,
+    required this.isSignInUseCase,
+    required this.signOutUseCase,
+  }) : super(UserInitial());
 
   Future<void> getAllUsers() async {
     try {
@@ -41,10 +54,23 @@ class UserCubit extends Cubit<UserState> {
     return (state as CurrentUserChanged).user.isAdmin == true;
   }
 
+  Future<void> logout() async {
+    try {
+      await signOutUseCase.call();
+      emit(UserLogout());
+    } catch (error, stackTrace) {
+      debugPrint(error.toString());
+      debugPrint(stackTrace.toString());
+    }
+  }
+
   Future<void> getCurrentUser() async {
     try {
       final userStreamData = getCurrentUserUseCase.call();
-      userStreamData.listen((user) {
+      userStreamData.listen((user) async {
+        if (user.deviceId != Deviceid.deviceId) {
+          logout();
+        }
         emit(CurrentUserChanged(user));
       });
     } on SocketException catch (_) {
@@ -86,10 +112,8 @@ class UserCubit extends Cubit<UserState> {
   }
 
   Future<List<UserEntity>> getAllUsersWithReturn() async {
-    List<UserEntity> allUsers = [];
     final userStreamData = getAllUserUseCase.call();
     userStreamData.listen((users) {
-      allUsers = users;
       allusersGlobal = users;
     });
 

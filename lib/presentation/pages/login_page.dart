@@ -10,134 +10,148 @@ import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 import 'package:ia_bet/presentation/bloc/auth_email/auth_email_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
 import 'package:ia_bet/presentation/pages/home_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
-
-TextEditingController _emailController = TextEditingController();
-TextEditingController _passwordController = TextEditingController();
-late final users;
 
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
-  final _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
 
   @override
   void initState() {
-    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async => false,
-        child: Scaffold(
-          backgroundColor: kBackgroundColor,
-          key: _scaffoldKey,
-          body: MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (_) => di.sl<AuthCubit>()..appStarted(),
-              ),
-              BlocProvider<UserCubit>(
-                create: (_) => di.sl<UserCubit>()..getCurrentUser(),
-              ),
-              BlocProvider<EmailAuthCubit>(
-                create: (_) => di.sl<EmailAuthCubit>(),
-              ),
-            ],
-            child: BlocConsumer<EmailAuthCubit, EmailAuthState>(
-                listener: (context, emailAuthState) async {
-              if (emailAuthState is PhoneAuthSmsCodeReceived) {
-                await BlocProvider.of<AuthCubit>(context).loggedIn();
-                //545590pqjlrd
-                var user = await BlocProvider.of<UserCubit>(context)
-                    .getCurrentUserWithReturn();
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: kBackgroundColor,
+        key: _scaffoldKey,
+        body: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => di.sl<AuthCubit>()..appStarted(),
+            ),
+            BlocProvider<UserCubit>(
+              create: (_) => di.sl<UserCubit>()..getCurrentUser(),
+            ),
+            BlocProvider<EmailAuthCubit>(
+              create: (_) => di.sl<EmailAuthCubit>(),
+            ),
+          ],
+          child: BlocConsumer<EmailAuthCubit, EmailAuthState>(
+              listener: (context, emailAuthState) {
+            if (emailAuthState is PhoneAuthSmsCodeReceived) {
+              BlocProvider.of<AuthCubit>(context).loggedIn().whenComplete(() {
+                debugPrint('Login page: depois do getCurrentUserWithReturn..');
 
-                print('Login page: depois do getCurrentUserWithReturn..');
-
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => HomePage()));
-              }
-
-              if (emailAuthState is PhoneAuthFailure) {
-                BlocProvider.of<EmailAuthCubit>(context)
-                    .emit(PhoneAuthInitial());
-                Scaffold.of(context).showSnackBar(SnackBar(
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const HomePage(),
+                  ),
+                );
+              });
+              //545590pqjlrd
+            }
+            if (emailAuthState is PhoneAuthFailure) {
+              BlocProvider.of<EmailAuthCubit>(context).authFailure();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
                   backgroundColor: Colors.red,
                   content: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      children: const [
                         Text("Verifique seu usuário ou senha."),
                         Icon(Icons.error_outline)
                       ],
                     ),
                   ),
-                ));
-              }
-            }, builder: (context, emailAuthState) {
-              if (emailAuthState is PhoneAuthLoading) {
-                return Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              }
-              if (emailAuthState is PhoneAuthInitial) {
-                return Stack(children: [
-                  Positioned(
-                    top: MediaQuery.of(context).size.height * 0.75,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      decoration: BoxDecoration(
-                        image: new DecorationImage(
-                          fit: BoxFit.contain,
-                          image: AssetImage(
-                            "assets/images/marcadagua-full.png",
-                          ),
+                ),
+              );
+            }
+          }, builder: (context, emailAuthState) {
+            if (emailAuthState is PhoneAuthLoading) {
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            if (emailAuthState is PhoneAuthInitial) {
+              return Stack(children: [
+                Positioned(
+                  top: MediaQuery.of(context).size.height * 0.75,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.contain,
+                        image: AssetImage(
+                          "assets/images/marcadagua-full.png",
                         ),
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: SingleChildScrollView(
-                      child: Form(
-                        key: formKey,
-                        child: Padding(
-                          padding: EdgeInsets.all(30),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(height: 50),
-                              SvgPicture.asset(
+                ),
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: formKey,
+                      child: Padding(
+                        padding: const EdgeInsets.all(30),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 50, bottom: 35),
+                              child: SvgPicture.asset(
                                 "assets/images/logo.svg",
                                 fit: BoxFit.cover,
                                 alignment: Alignment.center,
                               ),
-                              SizedBox(height: 35),
-                              RichText(
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 50),
+                              child: RichText(
                                 textAlign: TextAlign.center,
-                                text: TextSpan(
+                                text: const TextSpan(
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w300,
                                         fontSize: 18.0),
-                                    children: const <TextSpan>[
+                                    children: <TextSpan>[
                                       TextSpan(text: 'A '),
                                       TextSpan(
                                           text: ' melhor plataforma ',
@@ -150,16 +164,18 @@ class _LoginPageState extends State<LoginPage> {
                                               fontWeight: FontWeight.w300)),
                                     ]),
                               ),
-                              SizedBox(height: 50),
-                              TextFormField(
-                                controller: _emailController,
-                                keyboardType: TextInputType.text,
-                                decoration: textInputDecoration.copyWith(
-                                  hintText: 'Email',
-                                ),
+                            ),
+                            TextFormField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.text,
+                              decoration: textInputDecoration.copyWith(
+                                hintText: 'Email',
                               ),
-                              SizedBox(height: 10),
-                              TextFormField(
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 10, bottom: 12),
+                              child: TextFormField(
                                 controller: _passwordController,
                                 keyboardType: TextInputType.text,
                                 obscureText: true,
@@ -167,36 +183,29 @@ class _LoginPageState extends State<LoginPage> {
                                   hintText: 'Senha',
                                 ),
                               ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  child: Text(
-                                    'Esqueci minha senha',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.white,
-                                        decoration: TextDecoration.underline),
-                                  ),
-                                  onPressed: () {},
-                                ),
-                              ),
-                              SizedBox(height: 0),
-                              SizedBox(
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
                                     style: ButtonStyle(
-                                        padding: MaterialStateProperty.all<
-                                            EdgeInsets>(EdgeInsets.all(15)),
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                kSecondColor)),
-                                    child: Text('Efetuar login',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.w700)),
+                                      padding:
+                                          MaterialStateProperty.all<EdgeInsets>(
+                                              const EdgeInsets.all(15)),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              kSecondColor),
+                                    ),
+                                    child: const Text(
+                                      'Efetuar login',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w700),
+                                    ),
                                     onPressed: () async {
-                                      print(_emailController.text);
+                                      debugPrint(_emailController.text);
                                       if (_emailController.text.isNotEmpty &&
                                           _passwordController.text.isNotEmpty) {
                                         await BlocProvider.of<EmailAuthCubit>(
@@ -208,18 +217,36 @@ class _LoginPageState extends State<LoginPage> {
                                       }
                                     }),
                               ),
-                              SizedBox(height: 30),
-                            ],
-                          ),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                try {
+                                  if (!await launchUrl(
+                                      Uri.parse(
+                                          'https://placar.iabetsoficial.com.br/password/reset'),
+                                      mode: LaunchMode.inAppWebView)) {
+                                    throw Exception(
+                                        'Error in url launcher | not implemented ');
+                                  }
+                                } catch (error, stackStrace) {
+                                  debugPrint(error.toString());
+                                  debugPrint(stackStrace.toString());
+                                }
+                              },
+                              child: const Text('Esqueceu a senha?'),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                ]);
-              }
-              return Container();
-            }),
-          ),
-        ));
+                ),
+              ]);
+            }
+            return Container();
+          }),
+        ),
+      ),
+    );
   }
 }

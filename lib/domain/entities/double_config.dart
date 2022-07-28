@@ -1,3 +1,5 @@
+import '../../data/model/custom_strategy_model.dart';
+
 class DoubleConfigEntity {
   final bool enabled;
 
@@ -8,6 +10,7 @@ class DoubleConfigEntity {
   final bool isActiveElevation; // AFTER (RED (SUPER LOSS));
   final bool isActiveStopGain;
   final bool isActiveStopLoss;
+  bool stopWithWhite;
 
   final double amountStopGain;
   final double amountStopLoss;
@@ -16,11 +19,13 @@ class DoubleConfigEntity {
   final double entryAmount;
   final double entryWhiteAmount;
 
-  final List<Strategy> strategies;
+  List<Strategy> strategies;
   final List<Gale> gales;
   final List<int> elevations;
 
-  const DoubleConfigEntity({
+  final List<CustomStrategyModel> customStrategies;
+
+  DoubleConfigEntity({
     required this.enabled,
     required this.maxGales,
     required this.maxElevation,
@@ -36,6 +41,8 @@ class DoubleConfigEntity {
     required this.wallet,
     required this.entryAmount,
     required this.entryWhiteAmount,
+    required this.customStrategies,
+    required this.stopWithWhite,
   });
 }
 

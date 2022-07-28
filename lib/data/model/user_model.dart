@@ -3,31 +3,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 
+import '../../constants/device_id.dart';
 
 class UserModel extends UserEntity {
-  UserModel({
-    required String name,
-    required String email,
-    required String phoneNumber,
-    required bool isOnline,
-    required String uid,
-    required String status,
-    required String profileUrl,
-    required bool isAdmin
-  }) : super(
-          name: name,
-          email: email,
-          phoneNumber: phoneNumber,
-          isOnline: isOnline,
-          uid: uid,
-          status: status,
-          profileUrl: profileUrl,
-          isAdmin: isAdmin
-        );
+  const UserModel({
+    required super.name,
+    required super.email,
+    required super.phoneNumber,
+    required super.isOnline,
+    required super.uid,
+    required super.status,
+    required super.profileUrl,
+    required super.isAdmin,
+    required super.deviceId,
+    required super.apiToken,
+  });
 
   factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
-
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
 
     return UserModel(
       name: data['name'],
@@ -37,20 +30,22 @@ class UserModel extends UserEntity {
       isOnline: data['isOnline'],
       profileUrl: data['profileUrl'],
       status: data['status'],
-      isAdmin: data['isAdmin']
+      isAdmin: data['isAdmin'],
+      deviceId: data['deviceId'] ?? Deviceid.deviceId,
+      apiToken: data['apiToken'],
     );
   }
 
-  Map<String, dynamic> toDocument() {
-    return {
-      "name": name,
-      "email": email,
-      "phoneNumber": phoneNumber,
-      "uid": uid,
-      "isOnline": isOnline,
-      "profileUrl": profileUrl,
-      "status": status,
-      "isAdmin": isAdmin
-    };
-  }
+  Map<String, dynamic> toDocument() => {
+        "name": name,
+        "email": email,
+        "phoneNumber": phoneNumber,
+        "uid": uid,
+        "isOnline": isOnline,
+        "profileUrl": profileUrl,
+        "status": status,
+        "isAdmin": isAdmin,
+        'deviceId': deviceId,
+        'apiToken': apiToken,
+      };
 }

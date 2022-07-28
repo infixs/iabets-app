@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class UserEntity extends Equatable {
+  final String deviceId;
   final String name;
   final String email;
   final String phoneNumber;
@@ -9,16 +10,19 @@ class UserEntity extends Equatable {
   final String status;
   final String profileUrl;
   final bool isAdmin;
+  final String apiToken;
 
-  UserEntity(
+  const UserEntity(
       {required this.name,
+      required this.deviceId,
       required this.email,
       required this.phoneNumber,
       required this.isOnline,
       required this.uid,
       this.status = "Hey there! I am Using WhatsApp Clone.",
       required this.profileUrl,
-      required this.isAdmin});
+      required this.isAdmin,
+      required this.apiToken});
 
   @override
   List<Object> get props =>
