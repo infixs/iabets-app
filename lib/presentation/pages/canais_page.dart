@@ -418,6 +418,8 @@ class _CanaisPageState extends State<CanaisPage> {
   }
 }
 
-void launchURL(url) async {
-  if (!await launch(url)) throw 'Could not launch $url';
+void launchURL(String url) async {
+  if (!await launchUrl(Uri.parse(url))) {
+    throw Exception('Could not launch $url');
+  }
 }

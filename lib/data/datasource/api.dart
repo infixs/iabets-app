@@ -26,16 +26,38 @@ Future<Response> getLogin(var userLogin) async {
   return response;
 }
 
-Future<List<String>> getProducts(UserEntity user) async {
+Future<List<Map<String, dynamic>>> getProducts(UserEntity user) async {
   final Dio dio = Dio();
-  final List<String> listProductsId = [];
+  final List<Map<String, dynamic>> products = [];
 
   dio.options.headers["authorization"] = "Bearer ${user.apiToken}";
 
   final Response response =
       await dio.get('http://placar.iabetsoficial.com.br/api/v1/products');
   for (var element in (response.data as List)) {
-    listProductsId.add(element['product']);
+    products.add(
+        {'product': element['product'], 'created_at': element['created_at']});
   }
-  return listProductsId;
+
+  return products;
+}
+
+Future<bool> resetPassword(String email) async {
+  final Dio dio = Dio();
+
+  try {
+    final Response response = await dio.post(
+        'http://placar.iabetsoficial.com.br/api/user/forgotpassword',
+        data: {'email': email.trim()});
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error, stackTrace) {
+    debugPrint(error.toString());
+    debugPrint(stackTrace.toString());
+    return false;
+  }
 }

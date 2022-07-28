@@ -10,8 +10,7 @@ import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 import 'package:ia_bet/presentation/bloc/auth_email/auth_email_cubit.dart';
 import 'package:ia_bet/presentation/bloc/user/user_cubit.dart';
 import 'package:ia_bet/presentation/pages/home_page.dart';
-
-import 'forgot_password_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -220,13 +219,20 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             TextButton(
-                              onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const ForgotPasswordPage(),
-                                ),
-                              ),
+                              onPressed: () async {
+                                try {
+                                  if (!await launchUrl(
+                                      Uri.parse(
+                                          'https://placar.iabetsoficial.com.br/password/reset'),
+                                      mode: LaunchMode.inAppWebView)) {
+                                    throw Exception(
+                                        'Error in url launcher | not implemented ');
+                                  }
+                                } catch (error, stackStrace) {
+                                  debugPrint(error.toString());
+                                  debugPrint(stackStrace.toString());
+                                }
+                              },
                               child: const Text('Esqueceu a senha?'),
                             ),
                           ],

@@ -836,8 +836,10 @@ class _CanalPageState extends State<CanalPage> {
     return RichText(text: TextSpan(children: textMessage));
   }
 
-  Future<void> launchURL(url) async {
-    if (!await launch(url)) throw 'Could not launch $url';
+  Future<void> launchURL(String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      throw Exception('Could not launch $url');
+    }
   }
 
   void _deleteMessages() async {
@@ -1084,7 +1086,3 @@ Future<File> getLocalFileOrDownload(FileEntity fileEntity) async {
 
   return file;
 }
-/*
-void _launchURL(url) async {
-  if (!await launch(url)) throw 'Could not launch $url';
-}*/

@@ -16,7 +16,7 @@ abstract class FirebaseRepository {
   Future<void> signInWithPhoneNumber(String smsPinCode);
   Future<void> signInWithEmail(
       {required String email, required String password});
-  Future<bool> resetPassword({required String email});
+
   Future<bool> isSignIn();
   Future<void> signOut();
   Future<String> getCurrentUID();

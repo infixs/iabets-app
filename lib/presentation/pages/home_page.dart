@@ -77,7 +77,12 @@ class _HomePageState extends State<HomePage> with ProductsApp {
   }
 
   Future<List<Map<String, dynamic>>> makeButtons() async {
-    late final List<String> products;
+    late final List<Map<String, dynamic>> products;
+    bool crashItemHasBeenPurchased = false;
+    bool doubleItemHasBeenPurchased = false;
+    bool crashItemWaitingTimeHasPassed = false;
+    int crashItemExpectedDays = 1;
+
     try {
       products = (await getProducts(
         (await getUser() as UserEntity),
@@ -91,16 +96,32 @@ class _HomePageState extends State<HomePage> with ProductsApp {
       );
     }
 
-    final bool crashItem = products.contains('Crash');
-    final bool doubleItem = products.contains('Automatic');
+    for (var element in products) {
+      if (element['product'] == 'Crash') {
+        crashItemHasBeenPurchased = true;
+
+        final List<String> createdAtRaw =
+            (element['created_at'] as String).split('-');
+        final DateTime createdAt = (DateTime(int.parse(createdAtRaw[0]),
+            int.parse(createdAtRaw[1]), int.parse(createdAtRaw[2])));
+
+        crashItemExpectedDays = DateTime.now().difference(createdAt).inDays;
+        if (crashItemExpectedDays > 7) {
+          crashItemWaitingTimeHasPassed = true;
+        }
+      }
+      if (element['product'] == 'Automatic') {
+        doubleItemHasBeenPurchased = true;
+      }
+    }
 
     if (mounted) {
       myProducts.add('chat');
 
-      if (crashItem) {
+      if (crashItemHasBeenPurchased && crashItemWaitingTimeHasPassed) {
         myProducts.add('crash');
       }
-      if (doubleItem) {
+      if (doubleItemHasBeenPurchased) {
         myProducts.add('automatic');
       }
 
@@ -117,10 +138,11 @@ class _HomePageState extends State<HomePage> with ProductsApp {
         'route': await getUser() != null
             ? CanaisPage(userInfo: (await getUser() as UserEntity))
             : null,
+        'WaitingTimeHasPassed': true,
       },
     ];
 
-    if (doubleItem) {
+    if (doubleItemHasBeenPurchased) {
       buttons.add(
         {
           'title': 'Blaze double',
@@ -129,18 +151,22 @@ class _HomePageState extends State<HomePage> with ProductsApp {
             width: 30,
           ),
           'route': const BlazeDoublePage(),
+          'WaitingTimeHasPassed': true
         },
       );
     }
-    if (crashItem) {
+    if (crashItemHasBeenPurchased) {
       buttons.add(
         {
           'title': 'Blaze crash',
           'icon': SvgPicture.asset(
             'assets/images/blaze.svg',
             width: 30,
+            color: !crashItemWaitingTimeHasPassed ? Colors.grey.shade800 : null,
           ),
           'route': const BlazeCrashPage(),
+          'WaitingTimeHasPassed': crashItemWaitingTimeHasPassed,
+          'daysToWait': crashItemExpectedDays
         },
       );
     }
@@ -252,15 +278,17 @@ class _HomePageState extends State<HomePage> with ProductsApp {
                             padding: EdgeInsets.zero,
                             primary: Colors.grey.shade300.withAlpha(120),
                           ),
-                          onPressed: () =>
-                              snapshot.data![index]['route'] != null
+                          onPressed: snapshot.data![index]
+                                  ['WaitingTimeHasPassed']
+                              ? () => snapshot.data![index]['route'] != null
                                   ? Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
                                               snapshot.data![index]['route']),
                                     )
-                                  : null,
+                                  : null
+                              : null,
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: size.width * 0.07),
@@ -272,15 +300,35 @@ class _HomePageState extends State<HomePage> with ProductsApp {
                                   child: snapshot.data![index]['icon'],
                                 ),
                                 Expanded(
+                                  flex: 2,
                                   child: Text(
                                     snapshot.data![index]['title'],
-                                    style: const TextStyle(
-                                        color: Colors.black, fontSize: 18),
+                                    style: snapshot.data![index]
+                                            ['WaitingTimeHasPassed']
+                                        ? const TextStyle(
+                                            color: Colors.black, fontSize: 18)
+                                        : TextStyle(
+                                            color: Colors.grey.shade800,
+                                            fontSize: 18),
                                   ),
                                 ),
-                                const Icon(
+                                !snapshot.data![index]['WaitingTimeHasPassed']
+                                    ? Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          '(Libera em ${snapshot.data![index]['daysToWait']} ${snapshot.data![index]['daysToWait'] > 1 ? 'dias' : 'dia'})',
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18),
+                                        ),
+                                      )
+                                    : Container(),
+                                Icon(
                                   Icons.arrow_forward_ios_rounded,
-                                  color: Colors.black,
+                                  color: snapshot.data![index]
+                                          ['WaitingTimeHasPassed']
+                                      ? Colors.black
+                                      : Colors.grey.shade800,
                                 )
                               ],
                             ),

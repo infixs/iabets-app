@@ -51,7 +51,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   #link
-  url_launcher: ^6.0.20
+  url_launcher: ^6.1.5
 
   #file_picker
   file_picker: ^4.4.0

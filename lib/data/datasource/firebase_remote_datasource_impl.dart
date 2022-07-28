@@ -518,16 +518,4 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
       return snapshot.exists ? CrashModel.fromSnapshot(snapshot) : null;
     });
   }
-
-  @override
-  Future<bool> resetPassword({required String email}) async {
-    try {
-      await auth.sendPasswordResetEmail(email: email.trim());
-      return true;
-    } catch (error, stackTrace) {
-      debugPrint(error.toString());
-      debugPrint(stackTrace.toString());
-      return false;
-    }
-  }
 }
