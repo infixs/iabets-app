@@ -31,7 +31,6 @@ void main() async {
   try {
     Deviceid.deviceId = await getDeviceInfo();
   } catch (error, stackTrace) {
-    Deviceid.deviceId = 'none|catch';
     debugPrint(error.toString());
     debugPrint(stackTrace.toString());
   }
@@ -47,6 +46,7 @@ void main() async {
 
 Future<String> getDeviceInfo() async {
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
   if (Platform.isIOS) {
     final IosDeviceInfo iosDeviceInfo = await deviceInfo.iosInfo;
     return iosDeviceInfo.identifierForVendor ??
@@ -58,7 +58,7 @@ Future<String> getDeviceInfo() async {
         (await deviceInfo.deviceInfo).toMap()['id'] ??
         'none|isAndroid'; // unique ID on Android
   } else {
-    return 'none|notFound';
+    return (await deviceInfo.deviceInfo).toMap()['id'];
   }
 }
 

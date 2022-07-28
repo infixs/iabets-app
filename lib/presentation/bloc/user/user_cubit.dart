@@ -54,10 +54,10 @@ class UserCubit extends Cubit<UserState> {
     return (state as CurrentUserChanged).user.isAdmin == true;
   }
 
-  Future<void> logout() async {
+  Future<void> logout(UserEntity user) async {
     try {
       await signOutUseCase.call();
-      emit(UserLogout());
+      emit(UserLogout(user));
     } catch (error, stackTrace) {
       debugPrint(error.toString());
       debugPrint(stackTrace.toString());
@@ -69,7 +69,7 @@ class UserCubit extends Cubit<UserState> {
       final userStreamData = getCurrentUserUseCase.call();
       userStreamData.listen((user) async {
         if (user.deviceId != Deviceid.deviceId) {
-          logout();
+          logout(user);
         }
         emit(CurrentUserChanged(user));
       });

@@ -22,12 +22,12 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with ProductsApp ,ConnectionWithApi{
+class _HomePageState extends State<HomePage>
+    with ProductsApp, ConnectionWithApi {
   final List<String> myProducts = [];
 
   @override
   void initState() {
-    super.initState();
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       if (message.data.containsKey('crash')) {
         Navigator.push(
@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> with ProductsApp ,ConnectionWithApi
         );
       }
     });
+    super.initState();
   }
 
   void requestNotificationPermission(context, List<String> products) async {
@@ -81,7 +82,7 @@ class _HomePageState extends State<HomePage> with ProductsApp ,ConnectionWithApi
     bool crashItemHasBeenPurchased = false;
     bool doubleItemHasBeenPurchased = false;
     bool crashItemWaitingTimeHasPassed = false;
-    int crashItemExpectedDays = 1;
+    int crashItemDaysToRelease = 1;
 
     try {
       products = (await getProducts(
@@ -105,8 +106,10 @@ class _HomePageState extends State<HomePage> with ProductsApp ,ConnectionWithApi
         final DateTime createdAt = (DateTime(int.parse(createdAtRaw[0]),
             int.parse(createdAtRaw[1]), int.parse(createdAtRaw[2])));
 
-        crashItemExpectedDays = DateTime.now().difference(createdAt).inDays;
-        if (crashItemExpectedDays > 7) {
+        final int pastDays = (DateTime.now().difference(createdAt).inDays);
+        crashItemDaysToRelease = 7 - pastDays;
+
+        if (crashItemDaysToRelease <= 0) {
           crashItemWaitingTimeHasPassed = true;
         }
       }
@@ -166,7 +169,7 @@ class _HomePageState extends State<HomePage> with ProductsApp ,ConnectionWithApi
           ),
           'route': const BlazeCrashPage(),
           'WaitingTimeHasPassed': crashItemWaitingTimeHasPassed,
-          'daysToWait': crashItemExpectedDays
+          'daysToWait': crashItemDaysToRelease
         },
       );
     }
@@ -202,9 +205,20 @@ class _HomePageState extends State<HomePage> with ProductsApp ,ConnectionWithApi
         );
         break;
       case 'logout':
-        unsubscribeOnLogout();
-        await BlocProvider.of<UserCubit>(context).logout();
-        break;
+        try {
+          unsubscribeOnLogout();
+          await BlocProvider.of<UserCubit>(context)
+              .logout(await getUser() as UserEntity);
+        } catch (error, stackTrace) {
+          debugPrint(error.toString());
+          debugPrint(stackTrace.toString());
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LoginPage(),
+            ),
+          );
+        }
     }
   }
 

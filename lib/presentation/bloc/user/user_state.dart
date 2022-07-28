@@ -36,6 +36,9 @@ class UserFailure extends UserState {
 }
 
 class UserLogout extends UserState {
+  final UserEntity user;
+  const UserLogout(this.user);
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [user];
 }

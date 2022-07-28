@@ -42,6 +42,8 @@ mixin ConnectionWithApi {
       products.add(
           {'product': element['product'], 'created_at': element['created_at']});
     }
+    debugPrint('Api products -----');
+    debugPrint(products.toString());
 
     return products;
   }
