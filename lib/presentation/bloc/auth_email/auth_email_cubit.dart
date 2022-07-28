@@ -16,7 +16,7 @@ import '../../../constants/device_id.dart';
 
 part 'auth_email_state.dart';
 
-class EmailAuthCubit extends Cubit<EmailAuthState> {
+class EmailAuthCubit extends Cubit<EmailAuthState> with ConnectionWithApi {
   final SignInWithEmailUseCase signInWithEmailUseCase;
   final GetCurrentUidUseCase getCurrentUidUseCase;
   final GetCreateCurrentUserUseCase getCreateCurrentUserUseCase;

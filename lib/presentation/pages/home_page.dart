@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with ProductsApp {
+class _HomePageState extends State<HomePage> with ProductsApp ,ConnectionWithApi{
   final List<String> myProducts = [];
 
   @override
