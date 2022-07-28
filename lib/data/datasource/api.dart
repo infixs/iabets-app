@@ -17,7 +17,10 @@ Future<Response> getLogin(var userLogin) async {
   final Dio dio = Dio(options);
   final Response response = await dio.request(
     '',
-    data: {"email": userLogin['email'], "password": userLogin['password']},
+    data: {
+      "email": userLogin['email'].toString().trim(),
+      "password": userLogin['password']
+    },
     options: Options(method: 'POST'),
   );
   apiToken = response.data['token'];

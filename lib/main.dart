@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -26,7 +28,11 @@ void main() async {
   );
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();
-  Deviceid.deviceId = await getDeviceInfo();
+  try {
+    Deviceid.deviceId = await getDeviceInfo();
+  } catch (e) {
+    Deviceid.deviceId = 'none|catch';
+  }
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: kPrimaryColor,
@@ -38,8 +44,21 @@ void main() async {
 }
 
 Future<String> getDeviceInfo() async {
-  final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-  return (await deviceInfoPlugin.deviceInfo).toMap()['id'];
+  var deviceInfo = DeviceInfoPlugin();
+  if (Platform.isIOS) {
+    // import 'dart:io'
+    var iosDeviceInfo = await deviceInfo.iosInfo;
+    return iosDeviceInfo.identifierForVendor ??
+        (await deviceInfo.deviceInfo).toMap()['id'] ??
+        'none|isIOS'; // unique ID on iOS
+  } else if (Platform.isAndroid) {
+    var androidDeviceInfo = await deviceInfo.androidInfo;
+    return androidDeviceInfo.androidId ??
+        (await deviceInfo.deviceInfo).toMap()['id'] ??
+        'none|isAndroid'; // unique ID on Android
+  }
+
+  return 'none|notFound';
 }
 
 class MyApp extends StatelessWidget {
