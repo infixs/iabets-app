@@ -3,3 +3,10 @@ Senha da chave
 IABetsFullApp#!@
 
 flutter build appbundle --no-sound-null-safety pra gerar o aab do googleplay
+
+
+
+flutter run --profile --cache-sksl --purge-persistent-cache
+
+
+usa flutter build appbundle --bundle-sksl-path flutter_01.sksl.json --obfuscate --split-debug-info=.
