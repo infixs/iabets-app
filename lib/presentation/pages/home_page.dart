@@ -24,10 +24,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with ProductsApp, ConnectionWithApi {
+  late Future<List<Map<String, dynamic>>> buttons;
   final List<String> myProducts = [];
 
   @override
   void initState() {
+    buttons = makeButtons();
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       if (message.data.containsKey('crash')) {
         Navigator.push(
@@ -245,7 +247,9 @@ class _HomePageState extends State<HomePage>
                 icon: const Icon(Icons.refresh_rounded),
                 tooltip: 'Atualizar Produtos',
                 onPressed: () {
-                  setState(() {});
+                  setState(() {
+                    buttons = makeButtons();
+                  });
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text('Seus produtos foram atualizados')));
                 },
@@ -276,7 +280,7 @@ class _HomePageState extends State<HomePage>
                 ),
               ),
               FutureBuilder(
-                future: makeButtons(),
+                future: buttons,
                 builder: (BuildContext context,
                     AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.done &&

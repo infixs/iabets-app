@@ -406,7 +406,12 @@ class _ElevateSettingsPageState extends State<ElevateSettingsPage> {
                                               .doubleConfig.elevations
                                               .add(
                                             int.parse(settingsController
-                                                .multiplierController.text),
+                                                .multiplierController.text
+                                                .replaceAllMapped(
+                                                    RegExp(r'\.[0-9]+'),
+                                                    (match) {
+                                              return "";
+                                            })),
                                           );
                                           FocusManager.instance.primaryFocus
                                               ?.unfocus();

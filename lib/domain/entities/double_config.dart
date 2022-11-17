@@ -53,7 +53,7 @@ class Strategy {
 
   Strategy.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        active = json['active'],
+        active = json['active'] ?? false,
         name = json['name'];
 
   Map<String, dynamic> toJson() => {'id': id, 'name': name, 'active': active};
