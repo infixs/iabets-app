@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ia_bet/data/datasource/api.dart';
+import 'package:ia_bet/presentation/pages/playpix_aviator/blaze_crash_page.dart';
 
 import '../../constants/products_app.dart';
 import '../../domain/entities/user_entity.dart';
@@ -83,6 +84,7 @@ class _HomePageState extends State<HomePage>
     late final List<Map<String, dynamic>> products;
     bool crashItemHasBeenPurchased = false;
     bool doubleItemHasBeenPurchased = false;
+    bool aviatorItemHasBeenPurchased = false;
     bool crashItemWaitingTimeHasPassed = false;
     int crashItemDaysToRelease = 1;
 
@@ -118,10 +120,14 @@ class _HomePageState extends State<HomePage>
       if (element['product'] == 'Automatic') {
         doubleItemHasBeenPurchased = true;
       }
+      if (element['product'] == 'AviatorApp') {
+        aviatorItemHasBeenPurchased = true;
+      }
     }
 
     if (mounted) {
       myProducts.add('chat');
+      myProducts.add('aviator');
 
       if (crashItemHasBeenPurchased && crashItemWaitingTimeHasPassed) {
         myProducts.add('crash');
@@ -146,6 +152,20 @@ class _HomePageState extends State<HomePage>
         'WaitingTimeHasPassed': true,
       },
     ];
+
+    if (aviatorItemHasBeenPurchased) {
+      buttons.add(
+        {
+          'title': 'Aviator',
+          'icon': Image.asset(
+            'assets/images/aviator.png',
+            width: 30,
+          ),
+          'route': const PlayPixAviatorPage(),
+          'WaitingTimeHasPassed': true
+        },
+      );
+    }
 
     if (doubleItemHasBeenPurchased) {
       buttons.add(
