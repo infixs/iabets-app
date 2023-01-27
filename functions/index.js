@@ -86,3 +86,48 @@ exports.crashUpdate = functions.region('southamerica-east1').firestore
         console.log("Error sending message:", error);
       });
   });
+
+
+  exports.aviatorUpdate = functions.region('southamerica-east1').firestore
+  .document('configurations/playpixAviatorEntry')
+  .onUpdate((change, context) => {
+
+    const newValue = change.after.data().waiting;
+    const previousValue = change.before.data().waiting;
+
+    if (!(previousValue && !newValue))
+      return null;
+
+    admin
+      .messaging()
+      .send({
+        topic: "aviator",
+        data: {
+          crash: "true"
+        },
+        notification: {
+          title: "Nova entrada Aviator",
+          body: "Veja aqui a nova entrada do Aviator",
+          //imageUrl: "https://my-cdn.com/extreme-weather.png",
+        },
+        android: {
+          priority: "high",
+        },
+        apns: {
+          payload: {
+            aps: {
+              contentAvailable: true,
+            },
+          },
+          headers: {
+            "apns-priority": "10"
+          },
+        },
+      })
+      .then((response) => {
+        console.log("Successfully sent message:", response);
+      })
+      .catch((error) => {
+        console.log("Error sending message:", error);
+      });
+  });

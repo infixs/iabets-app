@@ -12,6 +12,7 @@ import 'package:ia_bet/constants/cores_constants.dart';
 import 'package:ia_bet/firebase_options.dart';
 import 'package:ia_bet/presentation/bloc/auth/auth_cubit.dart';
 import 'package:ia_bet/presentation/bloc/blaze/crash/crash_cubit.dart';
+import 'package:ia_bet/presentation/bloc/blaze/aviator/aviator_cubit.dart';
 import 'package:ia_bet/presentation/bloc/blaze/double/double_config_cubit.dart';
 import 'package:ia_bet/presentation/bloc/communication/communication_cubit.dart';
 import 'package:ia_bet/presentation/bloc/my_chat/my_chat_cubit.dart';
@@ -85,6 +86,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<CrashCubit>(
           create: (_) => di.sl<CrashCubit>(),
+        ),
+        BlocProvider<AviatorCubit>(
+          create: (_) => di.sl<AviatorCubit>(),
         )
       ],
       child: MaterialApp(

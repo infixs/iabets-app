@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/blaze/crash/crash_cubit.dart';
-import '../../bloc/blaze/crash/crash_state.dart';
+import '../../bloc/blaze/aviator/aviator_cubit.dart';
+import '../../bloc/blaze/aviator/aviator_state.dart';
 
 class PlayPixAviatorPage extends StatefulWidget {
   const PlayPixAviatorPage({super.key});
@@ -15,7 +15,7 @@ class PlayPixAviatorPage extends StatefulWidget {
 class _PlayPixAviatorPageState extends State<PlayPixAviatorPage> {
   @override
   void initState() {
-    BlocProvider.of<CrashCubit>(context).getCrash();
+    BlocProvider.of<AviatorCubit>(context).getAviator();
     super.initState();
   }
 
@@ -23,7 +23,8 @@ class _PlayPixAviatorPageState extends State<PlayPixAviatorPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return BlocBuilder<CrashCubit, CrashState>(builder: (context, crashState) {
+    return BlocBuilder<AviatorCubit, AviatorState>(
+        builder: (context, aviatorState) {
       return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: const Color(0xff0f1923),
@@ -62,15 +63,16 @@ class _PlayPixAviatorPageState extends State<PlayPixAviatorPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         const Text(
-                          'CHANCE DE CRASH FAVORÁVEL',
+                          'CHANCE DE ALTITUDE FAVORÁVEL',
                           style: TextStyle(
+                              fontSize: 12,
                               color: Colors.white,
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          (crashState is CrashLoaded)
-                              ? crashState.crashEntity.status.toUpperCase()
+                          (aviatorState is AviatorLoaded)
+                              ? aviatorState.aviatorEntity.status.toUpperCase()
                               : '--',
                           style: const TextStyle(
                               color: Color(0xfffe7800),
@@ -96,8 +98,8 @@ class _PlayPixAviatorPageState extends State<PlayPixAviatorPage> {
                   color: Colors.transparent,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: (crashState is CrashLoaded &&
-                            !crashState.crashEntity.waiting)
+                    child: (aviatorState is AviatorLoaded &&
+                            !aviatorState.aviatorEntity.waiting)
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -114,7 +116,7 @@ class _PlayPixAviatorPageState extends State<PlayPixAviatorPage> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 12),
                                 child: Text(
-                                  crashState.crashEntity.titleSignal,
+                                  aviatorState.aviatorEntity.titleSignal,
                                   style: const TextStyle(
                                       color: Color(0xfffe7800),
                                       fontSize: 50,
@@ -130,7 +132,7 @@ class _PlayPixAviatorPageState extends State<PlayPixAviatorPage> {
                                 ),
                               ),
                               Text(
-                                crashState.crashEntity.orientationSignal,
+                                aviatorState.aviatorEntity.orientationSignal,
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 30,

@@ -9,6 +9,7 @@ import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 import 'package:ia_bet/domain/repositories/firebase_repository.dart';
 
+import '../../domain/entities/aviator_entity.dart';
 import '../model/double_config_model.dart';
 
 class FirebaseRepositoryImpl implements FirebaseRepository {
@@ -130,6 +131,11 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   @override
   Stream<CrashEntity?> getCrashEntity() {
     return remoteDataSource.getCrashEntity();
+  }
+
+  @override
+  Stream<AviatorEntity?> getAviatorEntity() {
+    return remoteDataSource.getAviatorEntity();
   }
 
   @override

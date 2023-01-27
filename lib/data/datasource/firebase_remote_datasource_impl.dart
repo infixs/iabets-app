@@ -21,7 +21,9 @@ import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 
 import '../../constants/device_id.dart';
+import '../../domain/entities/aviator_entity.dart';
 import '../../domain/entities/strategy_entity.dart';
+import '../model/aviator_model.dart';
 
 class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
   final FirebaseAuth auth;
@@ -516,6 +518,16 @@ class FirebaseRemoteDataSourceImpl implements FirebaseRemoteDataSource {
 
     return colletion.snapshots().map((snapshot) {
       return snapshot.exists ? CrashModel.fromSnapshot(snapshot) : null;
+    });
+  }
+
+  @override
+  Stream<AviatorEntity?> getAviatorEntity() {
+    final colletion =
+        fireStore.collection("configurations").doc('playpixAviatorEntry');
+
+    return colletion.snapshots().map((snapshot) {
+      return snapshot.exists ? AviatorModel.fromSnapshot(snapshot) : null;
     });
   }
 }

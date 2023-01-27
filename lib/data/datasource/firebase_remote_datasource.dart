@@ -8,6 +8,7 @@ import 'package:ia_bet/domain/entities/strategy_entity.dart';
 import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 
+import '../../domain/entities/aviator_entity.dart';
 import '../model/double_config_model.dart';
 
 abstract class FirebaseRemoteDataSource {
@@ -46,4 +47,5 @@ abstract class FirebaseRemoteDataSource {
   Future<void> saveDoubleConfig(DoubleConfigModel doubleConfig);
   Future<List<StrategyEntity>> getStrategies();
   Stream<CrashEntity?> getCrashEntity();
+  Stream<AviatorEntity?> getAviatorEntity();
 }

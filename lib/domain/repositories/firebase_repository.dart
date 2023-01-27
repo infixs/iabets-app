@@ -9,6 +9,7 @@ import 'package:ia_bet/domain/entities/text_message_entity.dart';
 import 'package:ia_bet/domain/entities/user_entity.dart';
 
 import '../../data/model/double_config_model.dart';
+import '../entities/aviator_entity.dart';
 import '../entities/crash_entity.dart';
 
 abstract class FirebaseRepository {
@@ -49,4 +50,5 @@ abstract class FirebaseRepository {
   Future<void> saveDoubleConfig(DoubleConfigModel doubleConfig);
   Future<List<StrategyEntity>> getStrategies();
   Stream<CrashEntity?> getCrashEntity();
+  Stream<AviatorEntity?> getAviatorEntity();
 }

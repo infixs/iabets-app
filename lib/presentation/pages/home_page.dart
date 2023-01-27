@@ -40,6 +40,14 @@ class _HomePageState extends State<HomePage>
           ),
         );
       }
+      if (message.data.containsKey('aviator')) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const PlayPixAviatorPage(),
+          ),
+        );
+      }
     });
     super.initState();
   }
